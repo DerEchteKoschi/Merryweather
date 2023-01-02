@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Distribution{% endblock %}
+
+{% block body %}
+    <h1>Edit Distribution</h1>
+
+    {{ include('distribution/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('app_distribution_index') }}">back to list</a>
+
+    {{ include('distribution/_delete_form.html.twig') }}
+{% endblock %}

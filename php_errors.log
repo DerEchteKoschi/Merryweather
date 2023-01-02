@@ -1,0 +1,8 @@
+[02-Jan-2023 21:52:41 UTC] PHP Fatal error:  Composer detected issues in your platform: Your Composer dependencies require a PHP version ">= 8.1.0". You are running 7.2.7. in C:\dev\projects\Merryweather\vendor\composer\platform_check.php on line 24
+[02-Jan-2023 21:52:41 UTC] PHP Stack trace:
+[02-Jan-2023 21:52:41 UTC] PHP   1. {main}() C:\dev\projects\Merryweather\bin\console:0
+[02-Jan-2023 21:52:41 UTC] PHP   2. require_once() C:\dev\projects\Merryweather\bin\console:11
+[02-Jan-2023 21:52:41 UTC] PHP   3. require_once() C:\dev\projects\Merryweather\vendor\autoload_runtime.php:5
+[02-Jan-2023 21:52:41 UTC] PHP   4. ComposerAutoloaderInit6a29fd17eaf25d71517285d22b6ecb34::getLoader() C:\dev\projects\Merryweather\vendor\autoload.php:25
+[02-Jan-2023 21:52:41 UTC] PHP   5. require() C:\dev\projects\Merryweather\vendor\composer\autoload_real.php:25
+[02-Jan-2023 21:52:41 UTC] PHP   6. trigger_error() C:\dev\projects\Merryweather\vendor\composer\platform_check.php:24
