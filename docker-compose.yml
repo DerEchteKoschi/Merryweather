@@ -1,0 +1,51 @@
+version: '3.4'
+
+services:
+  nginx:
+    depends_on:
+      - php
+    image: nginx:1.21-alpine
+    volumes:
+      - ./.docker/nginx/templates:/etc/nginx/templates:ro
+      - ./public:/usr/src/public:ro
+    environment:
+      DOCUMENT_ROOT: /usr/src/public
+      LISTEN_PORT: 80
+      UPSTREAM_FPM_SERVER: php:9000
+      NGINX_CLIENT_MAX_BODY_SIZE: ${NGINX_CLIENT_MAX_BODY_SIZE:-20M}
+    ports:
+      - 8090:80
+
+  db:
+    image: mariadb
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: merryweather
+      MYSQL_USER: merryweather
+      MYSQL_PASSWORD: merryweather
+    ports:
+      - 6033:3306
+    volumes:
+      - data:/var/lib/mysql:rw,cached
+
+  php:
+    build:
+      target: development
+      context: .docker/php
+      args:
+        MYUID: 501
+        MYGID: 501
+    volumes:
+      - .:/usr/src:rw,cached
+      - var:/usr/src/var:rw,cached
+    environment:
+      XDEBUG_MODE: debug
+      XDEBUG_CONFIG: client_host=host.docker.internal
+      XDEBUG_SESSION: PHPSTORM
+      PHP_IDE_CONFIG: serverName=localhost
+      PHP_POST_MAX_SIZE: 21M
+      PHP_UPLOAD_MAX_FILESIZE: 20M
+
+volumes:
+  var:
+  data:
