@@ -4,6 +4,7 @@ namespace App\Command;
 
 use App\Entity\User;
 use App\Repository\UserRepository;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -693,7 +694,7 @@ class CreateUserCommand extends Command
         $isAdmin = $input->getArgument('admin');
 
         if ($isAdmin) {
-            $io->note(sprintf('You passed an argument: %s', $isAdmin));
+            $io->note('Generating an admin!');
         }
 
         $user = new User();
@@ -704,8 +705,9 @@ class CreateUserCommand extends Command
         $user->setLastname($io->ask('Lastname'));
         $user->setEmail($io->ask('email'));
         $user->setPassword($this->passwordHasher->hashPassword($user, $io->ask('password', $this->suggestPassword())));
-        $user->setActive(true);
-        $user->setScore(0);
+        $user->setActive($io->confirm('set active', true));
+        $user->setScore(3);
+        //$user->setNeedToChangePassword($io->confirm('need to change password after login', true));
 
         if ($isAdmin) {
             $user->setRoles(['ROLE_USER', 'ROLE_ADMIN']);
@@ -713,7 +715,16 @@ class CreateUserCommand extends Command
             $user->setRoles(['ROLE_USER']);
         }
 
-        $this->userRepository->save($user, true);
+        try {
+            $this->userRepository->save($user, true);
+        } catch (UniqueConstraintViolationException $e) {
+            $io->error('Unique constraint violation: phonenumber or display name already registered');
+            return Command::FAILURE;
+        } catch (\Throwable $t) {
+            $io->error('Unexpected failure '. $t->getMessage());
+
+            return Command::FAILURE;
+        }
 
         return Command::SUCCESS;
     }
@@ -725,7 +736,7 @@ class CreateUserCommand extends Command
     {
         $passParts = [];
         $size = count(self::PASSWORD_PARTS);
-        for ($i = 0; $i < 4; $i++) {
+        for ($i = 0; $i < 3; $i++) {
             $passParts[] = self::PASSWORD_PARTS[random_int(0, $size - 1)];
         }
 

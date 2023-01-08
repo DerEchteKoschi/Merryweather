@@ -17,7 +17,7 @@ class Slot
     #[ORM\JoinColumn(nullable: false)]
     private ?Distribution $distribution = null;
 
-    #[ORM\ManyToOne(inversedBy: 'removeme')]
+    #[ORM\ManyToOne()]
     private ?User $user = null;
 
     #[ORM\Column]

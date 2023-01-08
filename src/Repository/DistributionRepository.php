@@ -21,6 +21,11 @@ class DistributionRepository extends ServiceEntityRepository
         parent::__construct($registry, Distribution::class);
     }
 
+    public function findCurrentDistribution(): ?Distribution
+    {
+        return $this->findAll()[0];
+    }
+
     public function save(Distribution $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
