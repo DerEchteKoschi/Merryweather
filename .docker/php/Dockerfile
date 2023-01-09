@@ -7,14 +7,21 @@ RUN set -e \
     # Install dependencies \
     && apk update \
     && apk upgrade \
-    && apk add --update --no-cache autoconf automake bash bash-completion make gcc g++ libtool pkgconfig php8-pecl-xdebug
-    # Enable Xdebug
+    && apk add --update --no-cache autoconf automake bash bash-completion make gcc g++ libtool pkgconfig
+#    && docker-php-ext-enable xdebug
+    # Enable Xdebug \
 RUN export CFLAGS="$PHP_CFLAGS" CPPFLAGS="$PHP_CPPFLAGS" LDFLAGS="$PHP_LDFLAGS" \
     && docker-php-ext-install -j$(nproc) \
         opcache \
         mysqli pdo pdo_mysql
+RUN apk add --no-cache --virtual .build-deps $PHPIZE_DEPS
+RUN apk add --update linux-headers
+RUN pecl install xdebug-3.1.5
+RUN docker-php-ext-enable xdebug
+RUN apk del -f .build-deps
 
-
+# Configure Xdebug
+#RUN echo "xdebug.log=/usr/src/var/log/xdebug.log" >> /usr/local/etc/php/conf.d/xdebug.ini
 # base image
 FROM $PHP_FPM_IMAGE AS base
 
@@ -34,6 +41,32 @@ RUN set -e \
     # Add runtime user
     && addgroup -g $MYGID -S $MYGROUP  \
     && adduser -u $MYUID -S -D -G $MYGROUP $MYUSER
+
+ENV APP_DIR=/usr/src
+WORKDIR $APP_DIR/
+RUN chown $MYUSER:$MYGROUP $APP_DIR/
+
+RUN mkdir $APP_DIR/var && chown $MYUSER:$MYGROUP $APP_DIR/var
+
+USER $MYUSER
+
+ENV PHP_DISPLAY_ERRORS=0
+ENV PHP_EXPOSE=0
+ENV PHP_MEMORY_LIMIT=128M
+
+ENV XDEBUG_MODE=off
+
+EXPOSE 9000
+CMD ["php-fpm", "--nodaemonize"]
+
+
+# development dependencies
+FROM $COMPOSER_IMAGE AS composer
+# development/test/ci image
+FROM base AS development
+
+COPY --from=composer /usr/bin/composer /usr/local/bin/
+USER root
 
 RUN addgroup -g 1000 node \
     && adduser -u 1000 -G node -s /bin/sh -D node \
@@ -123,31 +156,6 @@ RUN apk add --no-cache --virtual .build-deps-yarn curl gnupg tar \
   # smoke test
   && yarn --version
 RUN apk add mc
-
-ENV APP_DIR=/usr/src
-WORKDIR $APP_DIR/
-RUN chown $MYUSER:$MYGROUP $APP_DIR/
-
-RUN mkdir $APP_DIR/var && chown $MYUSER:$MYGROUP $APP_DIR/var
-
-USER $MYUSER
-
-ENV PHP_DISPLAY_ERRORS=0
-ENV PHP_EXPOSE=0
-ENV PHP_MEMORY_LIMIT=128M
-
-ENV XDEBUG_MODE=off
-
-EXPOSE 9000
-CMD ["php-fpm", "--nodaemonize"]
-
-
-# development dependencies
-FROM $COMPOSER_IMAGE AS composer
-# development/test/ci image
-FROM base AS development
-
-COPY --from=composer /usr/bin/composer /usr/local/bin/
 
 ENV PHP_DISPLAY_ERRORS=1
 ENV PHP_EXPOSE=1
