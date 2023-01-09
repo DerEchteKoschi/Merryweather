@@ -17,7 +17,7 @@ services:
       - 8090:80
 
   db:
-    image: mariadb
+    image: mariadb:10.8.3
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: merryweather

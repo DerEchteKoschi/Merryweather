@@ -40,18 +40,19 @@ class CreateDistributionCommand extends Command
         $activeFrom = $activeTill->sub(new \DateInterval('P' . $duration . 'D'));
 
         $title = $io->ask('Description', sprintf('Verteilung [%s] buchbar ab [%s]', $activeTill->format('d.m.Y'), $activeFrom->format('d.m.Y H:i:s')));
+        $from =$io->ask('Verteilung ab:', '17:00');
+        $starTime = new \DateTimeImmutable($from);
 
         $dist = new Distribution();
         $dist->setText($title);
         $dist->setActiveFrom($activeFrom);
         $dist->setActiveTill($activeTill);
+        $dist->setStartAt($starTime);
         $this->distributionRepository->save($dist, true);
 
-        $from =$io->ask('Verteilung ab:', '17:00');
         $till = $io->ask('Verteilung bis:', '19:30');
         $size = $io->ask('Slotgröße in Minuten:', '10');
 
-        $starTime = new \DateTimeImmutable($from);
         $targetTime = new \DateTimeImmutable($till);
 
         $current = $starTime;

@@ -28,6 +28,9 @@ class Distribution
     #[ORM\OneToMany(mappedBy: 'distribution', targetEntity: Slot::class, orphanRemoval: true)]
     private Collection $slots;
 
+    #[ORM\Column(type: Types::TIME_IMMUTABLE)]
+    private ?\DateTimeImmutable $startAt = null;
+
     public function __construct()
     {
         $this->slots = new ArrayCollection();
@@ -100,6 +103,18 @@ class Distribution
                 $slot->setDistribution(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getStartAt(): ?\DateTimeImmutable
+    {
+        return $this->startAt;
+    }
+
+    public function setStartAt(\DateTimeImmutable $startAt): self
+    {
+        $this->startAt = $startAt;
 
         return $this;
     }
