@@ -23,7 +23,9 @@ class DistributionRepository extends ServiceEntityRepository
 
     public function findCurrentDistribution(): ?Distribution
     {
-        return $this->findAll()[0];
+        $all = $this->findAll();
+
+        return empty($all) ? null : $all[0];
     }
 
     public function save(Distribution $entity, bool $flush = false): void

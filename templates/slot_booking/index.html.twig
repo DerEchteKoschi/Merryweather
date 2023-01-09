@@ -4,6 +4,14 @@
 
 {% block body %}
 
+    {% if dist is null %}
+        keine Verteilung gefunden
+    {% else %}
+        {% for slots in dist.slots %}
+            {{ slots.text }}<br/>
+        {% endfor %}
+    {% endif %}
+    <!--
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-12">
@@ -36,4 +44,5 @@
             </div>
         </div>
     </div>
+    -->
 {% endblock %}
