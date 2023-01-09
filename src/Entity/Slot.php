@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\SlotRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: SlotRepository::class)]
@@ -20,20 +21,35 @@ class Slot
     #[ORM\ManyToOne()]
     private ?User $user = null;
 
-    #[ORM\Column]
-    private ?int $sequence = null;
-
     #[ORM\Column(length: 255)]
     private ?string $text = null;
+
+    #[ORM\Column(type: Types::TIME_IMMUTABLE)]
+    private ?\DateTimeImmutable $startAt = null;
+
+    public function getDistribution(): ?Distribution
+    {
+        return $this->distribution;
+    }
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getDistribution(): ?Distribution
+    public function getStartAt(): ?\DateTimeImmutable
     {
-        return $this->distribution;
+        return $this->startAt;
+    }
+
+    public function getText(): ?string
+    {
+        return $this->text;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
     }
 
     public function setDistribution(?Distribution $distribution): self
@@ -43,38 +59,23 @@ class Slot
         return $this;
     }
 
-    public function getUser(): ?User
+    public function setStartAt(\DateTimeImmutable $startAt): self
     {
-        return $this->user;
-    }
-
-    public function setUser(?User $user): self
-    {
-        $this->user = $user;
+        $this->startAt = $startAt;
 
         return $this;
-    }
-
-    public function getSequence(): ?int
-    {
-        return $this->sequence;
-    }
-
-    public function setSequence(int $sequence): self
-    {
-        $this->sequence = $sequence;
-
-        return $this;
-    }
-
-    public function getText(): ?string
-    {
-        return $this->text;
     }
 
     public function setText(string $text): self
     {
         $this->text = $text;
+
+        return $this;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
 
         return $this;
     }
