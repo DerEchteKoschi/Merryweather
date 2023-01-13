@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\DistributionRepository;
+use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -17,10 +18,10 @@ class Distribution
     private ?int $id = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $active_from = null;
+    private ?DateTimeInterface $active_from = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $active_till = null;
+    private ?DateTimeInterface $active_till = null;
 
     #[ORM\Column(length: 255)]
     private ?string $text = null;
@@ -38,24 +39,24 @@ class Distribution
         return $this->id;
     }
 
-    public function getActiveFrom(): ?\DateTimeInterface
+    public function getActiveFrom(): ?DateTimeInterface
     {
         return $this->active_from;
     }
 
-    public function setActiveFrom(\DateTimeInterface $active_from): self
+    public function setActiveFrom(DateTimeInterface $active_from): self
     {
         $this->active_from = $active_from;
 
         return $this;
     }
 
-    public function getActiveTill(): ?\DateTimeInterface
+    public function getActiveTill(): ?DateTimeInterface
     {
         return $this->active_till;
     }
 
-    public function setActiveTill(\DateTimeInterface $active_till): self
+    public function setActiveTill(DateTimeInterface $active_till): self
     {
         $this->active_till = $active_till;
 
@@ -94,11 +95,9 @@ class Distribution
 
     public function removeSlot(Slot $slot): self
     {
-        if ($this->slots->removeElement($slot)) {
-            // set the owning side to null (unless already changed)
-            if ($slot->getDistribution() === $this) {
-                $slot->setDistribution(null);
-            }
+        // set the owning side to null (unless already changed)
+        if ($this->slots->removeElement($slot) && $slot->getDistribution() === $this) {
+            $slot->setDistribution(null);
         }
 
         return $this;

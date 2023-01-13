@@ -1,0 +1,32 @@
+{# templates/login/index.html.twig #}
+{% extends 'base.html.twig' %}
+{% block body %}
+    <article class="my-3">
+        <div class="justify-content-center d-flexlux"><img src="/img/logo.png" alt="MerryWeather" width="100"></div>
+        <div class="bd-heading sticky-xl-top align-self-start mt-5 mb-3 mt-xl-0 mb-xl-2">
+            <h3>Login</h3>
+        </div>
+        <div>
+            <div>
+                <div>
+                    <form class="row" role="form" action="{{ path('app_login') }}" method="post">
+                        <input type="hidden" name="_target_path" value="/">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="username" name="_username" value="{{ last_username }}" placeholder="32168">
+                            <label for="username">Telefonnummer</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="password" class="form-control" id="password" name="_password" placeholder="Kennwort">
+                            <label for="password">Kennwort</label>
+                        </div>
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-primary">
+                                Anmelden
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </article>
+{% endblock %}

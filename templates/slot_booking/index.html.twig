@@ -4,45 +4,76 @@
 
 {% block body %}
 
+<div class="list-group">
+    <a href="#" class="list-group-item list-group-item-action active">Home</a>
     {% if dist is null %}
         keine Verteilung gefunden
     {% else %}
-        {% for slots in dist.slots %}
-            {{ slots.text }}<br/>
+        <div class="list-group-item">
+            {{ dist.text }}
+        </div>
+        {% for slot in dist.slots %}
+
+
+            <div class="list-group-item">
+                <h4 class="list-group-item-heading">
+                    {{ slot.text }}
+                </h4>
+                <p class="list-group-item-text">
+                    ...
+                </p>
+            </div>
         {% endfor %}
     {% endif %}
-    <!--
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="alert alert-dismissable alert-warning">
-
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
-                        ×
-                    </button>
-                    <h4>
-                        Alert!
-                    </h4> <strong>Warning!</strong> Best check yo self, you're not looking too good. <a href="#" class="alert-link">alert link</a>
-                </div>
-                <div class="list-group">
-                    <a href="#" class="list-group-item list-group-item-action active">Home</a>
-                    <div class="list-group-item">
-                        List header
-                    </div>
-                    <div class="list-group-item">
-                        <h4 class="list-group-item-heading">
-                            List group item heading
-                        </h4>
-                        <p class="list-group-item-text">
-                            ...
-                        </p>
-                    </div>
-                    <div class="list-group-item justify-content-between">
-                        Help <span class="badge badge-secondary badge-pill">14</span>
-                    </div> <a href="#" class="list-group-item list-group-item-action active justify-content-between">Home <span class="badge badge-light badge-pill">14</span></a>
-                </div>
-            </div>
-        </div>
+    <div class="list-group-item justify-content-between">
+        Help <span class="badge badge-secondary badge-pill">14</span>
     </div>
-    -->
-{% endblock %}
+    <a href="#" class="list-group-item list-group-item-action active justify-content-between">Home <span class="badge badge-light badge-pill">14</span></a>
+</div>
+    <article class="my-3" id="list-group">
+        <div class="bd-heading sticky-xl-top align-self-start mt-5 mb-3 mt-xl-0 mb-xl-2">
+            <h3>List group</h3>
+            <a class="d-flex align-items-center" href="https://getbootstrap.com/docs/5.3/components/list-group/">Documentation</a>
+        </div>
+
+        <div>
+            <div class="bd-example-snippet bd-code-snippet"><div class="bd-example">
+                    <ul class="list-group">
+                        <li class="list-group-item disabled" aria-disabled="true">A disabled item</li>
+                        <li class="list-group-item">A second item</li>
+                        <li class="list-group-item">A third item</li>
+                        <li class="list-group-item">A fourth item</li>
+                        <li class="list-group-item">And a fifth one</li>
+                    </ul>
+                </div></div>
+
+
+            <div class="bd-example-snippet bd-code-snippet"><div class="bd-example">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">An item</li>
+                        <li class="list-group-item">A second item</li>
+                        <li class="list-group-item">A third item</li>
+                        <li class="list-group-item">A fourth item</li>
+                        <li class="list-group-item">And a fifth one</li>
+                    </ul>
+                </div></div>
+
+
+            <div class="bd-example-snippet bd-code-snippet"><div class="bd-example">
+                    <div class="list-group">
+                        <a href="#" class="list-group-item list-group-item-action">A simple default list group item</a>
+
+                        <a href="#" class="list-group-item list-group-item-action list-group-item-primary">A simple primary list group item</a>
+                        <a href="#" class="list-group-item list-group-item-action list-group-item-secondary">A simple secondary list group item</a>
+                        <a href="#" class="list-group-item list-group-item-action list-group-item-success">A simple success list group item</a>
+                        <a href="#" class="list-group-item list-group-item-action list-group-item-danger">A simple danger list group item</a>
+                        <a href="#" class="list-group-item list-group-item-action list-group-item-warning">A simple warning list group item</a>
+                        <a href="#" class="list-group-item list-group-item-action list-group-item-info">A simple info list group item</a>
+                        <a href="#" class="list-group-item list-group-item-action list-group-item-light">A simple light list group item</a>
+                        <a href="#" class="list-group-item list-group-item-action list-group-item-dark">A simple dark list group item</a>
+                    </div>
+                </div></div>
+
+        </div>
+    </article>
+    {% endblock %}

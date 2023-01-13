@@ -6,6 +6,10 @@ use App\Entity\Distribution;
 use App\Entity\Slot;
 use App\Repository\DistributionRepository;
 use App\Repository\SlotRepository;
+use DateInterval;
+use DateTimeImmutable;
+use DateTimeZone;
+use Exception;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -31,13 +35,16 @@ class CreateDistributionCommand extends Command
     {
     }
 
+    /**
+     * @throws Exception
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
         $date = $io->ask('Datum', date('d.m.Y'));
         $duration = $io->ask('Tage vorher buchbar', 6);
-        $activeTill = new \DateTimeImmutable($date, new \DateTimeZone('Europe/Berlin'));
-        $activeFrom = $activeTill->sub(new \DateInterval('P' . $duration . 'D'));
+        $activeTill = new DateTimeImmutable($date, new DateTimeZone('Europe/Berlin'));
+        $activeFrom = $activeTill->sub(new DateInterval('P' . $duration . 'D'));
 
         $title = $io->ask('Description', sprintf('Verteilung [%s] buchbar ab [%s]', $activeTill->format('d.m.Y'), $activeFrom->format('d.m.Y H:i:s')));
 
@@ -48,17 +55,17 @@ class CreateDistributionCommand extends Command
         $this->distributionRepository->save($dist, true);
 
         $from =$io->ask('Verteilung ab:', '17:00');
-        $startTime = new \DateTimeImmutable($from);
+        $startTime = new DateTimeImmutable($from);
         $till = $io->ask('Verteilung bis:', '19:30');
         $size = $io->ask('Slotgröße in Minuten:', '10');
 
-        $targetTime = new \DateTimeImmutable($till);
+        $targetTime = new DateTimeImmutable($till);
 
         while ($startTime < $targetTime) {
             $slot = new Slot();
             $slot->setStartAt($startTime);
             $slot->setText($dist->getText() . ': Slot ' . $startTime->format('H:i'));
-            $startTime = $startTime->add(new \DateInterval('PT' . $size . 'M'));
+            $startTime = $startTime->add(new DateInterval('PT' . $size . 'M'));
             $slot->setDistribution($dist);
             $this->slotRepository->save($slot);
         }

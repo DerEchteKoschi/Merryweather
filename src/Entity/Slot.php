@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\SlotRepository;
+use DateTimeImmutable;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -18,14 +19,14 @@ class Slot
     #[ORM\JoinColumn(nullable: false)]
     private ?Distribution $distribution = null;
 
-    #[ORM\ManyToOne()]
+    #[ORM\ManyToOne]
     private ?User $user = null;
 
     #[ORM\Column(length: 255)]
     private ?string $text = null;
 
     #[ORM\Column(type: Types::TIME_IMMUTABLE)]
-    private ?\DateTimeImmutable $startAt = null;
+    private ?DateTimeImmutable $startAt = null;
 
     public function getDistribution(): ?Distribution
     {
@@ -37,7 +38,7 @@ class Slot
         return $this->id;
     }
 
-    public function getStartAt(): ?\DateTimeImmutable
+    public function getStartAt(): ?DateTimeImmutable
     {
         return $this->startAt;
     }
@@ -59,7 +60,7 @@ class Slot
         return $this;
     }
 
-    public function setStartAt(\DateTimeImmutable $startAt): self
+    public function setStartAt(DateTimeImmutable $startAt): self
     {
         $this->startAt = $startAt;
 

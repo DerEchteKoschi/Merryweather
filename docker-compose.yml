@@ -14,7 +14,7 @@ services:
       UPSTREAM_FPM_SERVER: php:9000
       NGINX_CLIENT_MAX_BODY_SIZE: ${NGINX_CLIENT_MAX_BODY_SIZE:-20M}
     ports:
-      - 8090:80
+      - "8090:80"
 
   db:
     image: mariadb:10.8.3
@@ -24,7 +24,7 @@ services:
       MYSQL_USER: merryweather
       MYSQL_PASSWORD: merryweather
     ports:
-      - 6033:3306
+      - "6033:3306"
     volumes:
       - data:/var/lib/mysql:rw,cached
 

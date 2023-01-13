@@ -21,12 +21,13 @@
         "symfony/security-bundle": "6.2.*",
         "symfony/twig-bundle": "6.2.*",
         "symfony/validator": "6.2.*",
-        "symfony/webpack-encore-bundle": "^1.16",
         "symfony/yaml": "6.2.*"
     },
     "require-dev": {
+        "roave/security-advisories": "dev-latest",
         "symfony/maker-bundle": "^1.48",
-        "roave/security-advisories": "dev-latest"
+        "symfony/stopwatch": "6.2.*",
+        "symfony/web-profiler-bundle": "6.2.*"
     },
     "config": {
         "allow-plugins": {

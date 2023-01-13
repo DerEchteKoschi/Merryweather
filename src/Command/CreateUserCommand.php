@@ -5,6 +5,7 @@ namespace App\Command;
 use App\Entity\User;
 use App\Repository\UserRepository;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
+use Exception;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -12,6 +13,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Throwable;
 
 #[AsCommand(
     name: 'Create:User',
@@ -688,6 +690,9 @@ class CreateUserCommand extends Command
             ->addArgument('admin', InputArgument::OPTIONAL, 'creates an admin user');
     }
 
+    /**
+     * @throws Exception
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
@@ -705,7 +710,7 @@ class CreateUserCommand extends Command
         $user->setLastname($io->ask('Lastname'));
         $user->setEmail($io->ask('email'));
         $user->setPassword($this->passwordHasher->hashPassword($user, $io->ask('password', $this->suggestPassword())));
-        $user->setActive($io->confirm('set active', true));
+        $user->setActive($io->confirm('set active'));
         $user->setScore(3);
         //$user->setNeedToChangePassword($io->confirm('need to change password after login', true));
 
@@ -717,10 +722,10 @@ class CreateUserCommand extends Command
 
         try {
             $this->userRepository->save($user, true);
-        } catch (UniqueConstraintViolationException $e) {
+        } /** @noinspection PhpRedundantCatchClauseInspection */ catch (UniqueConstraintViolationException) {
             $io->error('Unique constraint violation: phonenumber or display name already registered');
             return Command::FAILURE;
-        } catch (\Throwable $t) {
+        } catch (Throwable $t) {
             $io->error('Unexpected failure '. $t->getMessage());
 
             return Command::FAILURE;
@@ -730,7 +735,7 @@ class CreateUserCommand extends Command
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     private function suggestPassword(): string
     {
