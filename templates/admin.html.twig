@@ -1,0 +1,10 @@
+<li class="nav-item dropdown">
+    {% set currentPath = path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) %}
+    <a class="nav-link dropdown-toggle {% if currentPath starts with '/admin' %}active{% endif %}"  href="/admin" role="button" data-bs-toggle="dropdown">
+        Admin
+    </a>
+    <ul class="dropdown-menu">
+        <li><a class="dropdown-item" href="/admin/user">Benutzer</a></li>
+        <li><a class="dropdown-item" href="/admin/distribution">Verteilungen</a></li>
+    </ul>
+</li>

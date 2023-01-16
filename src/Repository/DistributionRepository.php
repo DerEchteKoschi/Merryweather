@@ -21,11 +21,17 @@ class DistributionRepository extends ServiceEntityRepository
         parent::__construct($registry, Distribution::class);
     }
 
-    public function findCurrentDistribution(): ?Distribution
+    /**
+     * @return Distribution[]
+     */
+    public function findCurrentDistributions(): array
     {
-        $all = $this->findAll();
+        $qb = $this->createQueryBuilder('dist')
+        ->where('dist.active_from <= :now')
+        ->andWhere('dist.active_till >= :now')
+        ->setParameter('now', new \DateTimeImmutable('now'));
 
-        return empty($all) ? null : $all[0];
+        return $qb->getQuery()->execute();
     }
 
     public function save(Distribution $entity, bool $flush = false): void

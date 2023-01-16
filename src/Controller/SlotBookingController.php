@@ -12,9 +12,9 @@ class SlotBookingController extends AbstractController
     #[Route('/', name: 'app_slots')]
     public function index(DistributionRepository $distributionRepository): Response
     {
-        $dist = $distributionRepository->findCurrentDistribution();
+        $dists = $distributionRepository->findCurrentDistributions();
         return $this->render('slot_booking/index.html.twig', [
-            'dist' => $dist
+            'dists' => $dists
         ]);
     }
 

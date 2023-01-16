@@ -4,17 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>MerryWeather: {% block title %}Welcome!{% endblock %}</title>
-    <link rel="icon" href="/favicon.ico">
+    <link rel="icon" href="{{ asset('/favicon.ico') }}">
     {% block stylesheets %}
         {{ encore_entry_link_tags('app') }}
     {% endblock %}
-    <link rel="stylesheet" href="/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/css/app.css">
+    <link rel="stylesheet" href="{{ asset('/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('/css/app.css') }}">
     {% block javascripts %}
         {{ encore_entry_script_tags('app') }}
     {% endblock %}
-    <script src='/js/jquery-3.6.3.min.js'></script>
-    <script src='/js/bootstrap.bundle.min.js'></script>
+    <script src='{{ asset('/js/jquery-3.6.3.min.js') }}></script>
+    <script src='{{ asset('/js/bootstrap.bundle.min.js') }}></script>
 </head>
 <body class="bg-light">
 {% if app.user %}
@@ -22,9 +22,11 @@
 {% endif %}
 <div class="container-fluid bg-body">
     <section>
-        {% if app.flashes %}
+        {% set flashes = app.flashes %}
+        {% set num = flashes|length %}
+        {% if num > 0 %}
             <article class="my-3">
-                {% for type,messages in app.flashes %}
+                {% for type,messages in flashes %}
                     {% for message in messages %}
                         <div class="alert alert-{{ type }} alert-dismissible fade show" role="alert">
                             {{ message|raw }}

@@ -4,32 +4,31 @@
 
 {% block body %}
 
-<div class="list-group">
-    <a href="#" class="list-group-item list-group-item-action active">Home</a>
-    {% if dist is null %}
-        keine Verteilung gefunden
-    {% else %}
-        <div class="list-group-item">
-            {{ dist.text }}
+    <div class="list-group">
+        <a href="#" class="list-group-item list-group-item-action active">Home</a>
+        {% if dists|length < 1 %}
+            keine Verteilung(en) gefunden
+        {% else %}
+            {% for dist in dists %}
+                <div class="list-group-item">
+                    {{ dist.text }}
+                </div>
+                {% for slot in dist.slots %}
+
+
+                    <div class="list-group-item">
+                        <p class="list-group-item-text">
+                            {{ slot.text }}
+                        </p>
+                    </div>
+                {% endfor %}
+            {% endfor %}
+        {% endif %}
+        <div class="list-group-item justify-content-between">
+            Help <span class="badge badge-secondary badge-pill">14</span>
         </div>
-        {% for slot in dist.slots %}
-
-
-            <div class="list-group-item">
-                <h4 class="list-group-item-heading">
-                    {{ slot.text }}
-                </h4>
-                <p class="list-group-item-text">
-                    ...
-                </p>
-            </div>
-        {% endfor %}
-    {% endif %}
-    <div class="list-group-item justify-content-between">
-        Help <span class="badge badge-secondary badge-pill">14</span>
+        <a href="#" class="list-group-item list-group-item-action active justify-content-between">Home <span class="badge badge-light badge-pill">14</span></a>
     </div>
-    <a href="#" class="list-group-item list-group-item-action active justify-content-between">Home <span class="badge badge-light badge-pill">14</span></a>
-</div>
     <article class="my-3" id="list-group">
         <div class="bd-heading sticky-xl-top align-self-start mt-5 mb-3 mt-xl-0 mb-xl-2">
             <h3>List group</h3>
@@ -37,7 +36,8 @@
         </div>
 
         <div>
-            <div class="bd-example-snippet bd-code-snippet"><div class="bd-example">
+            <div class="bd-example-snippet bd-code-snippet">
+                <div class="bd-example">
                     <ul class="list-group">
                         <li class="list-group-item disabled" aria-disabled="true">A disabled item</li>
                         <li class="list-group-item">A second item</li>
@@ -45,10 +45,12 @@
                         <li class="list-group-item">A fourth item</li>
                         <li class="list-group-item">And a fifth one</li>
                     </ul>
-                </div></div>
+                </div>
+            </div>
 
 
-            <div class="bd-example-snippet bd-code-snippet"><div class="bd-example">
+            <div class="bd-example-snippet bd-code-snippet">
+                <div class="bd-example">
                     <ul class="list-group list-group-flush">
                         <li class="list-group-item">An item</li>
                         <li class="list-group-item">A second item</li>
@@ -56,10 +58,12 @@
                         <li class="list-group-item">A fourth item</li>
                         <li class="list-group-item">And a fifth one</li>
                     </ul>
-                </div></div>
+                </div>
+            </div>
 
 
-            <div class="bd-example-snippet bd-code-snippet"><div class="bd-example">
+            <div class="bd-example-snippet bd-code-snippet">
+                <div class="bd-example">
                     <div class="list-group">
                         <a href="#" class="list-group-item list-group-item-action">A simple default list group item</a>
 
@@ -72,8 +76,9 @@
                         <a href="#" class="list-group-item list-group-item-action list-group-item-light">A simple light list group item</a>
                         <a href="#" class="list-group-item list-group-item-action list-group-item-dark">A simple dark list group item</a>
                     </div>
-                </div></div>
+                </div>
+            </div>
 
         </div>
     </article>
-    {% endblock %}
+{% endblock %}

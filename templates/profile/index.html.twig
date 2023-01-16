@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mein Profil{% endblock %}
+
+{% block body %}
+    <form class="row">
+        <div class="form-group row">
+            <label for="staticDisplayName" class="col-sm-2 col-form-label">Anzeigename</label>
+            <div class="col-sm-10">
+                <input type="text" readonly class="form-control-plaintext" id="staticDisplayName" value="{{ app.user.displayName }}">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="staticPhoneNumber" class="col-sm-2 col-form-label">Telefonnummer</label>
+            <div class="col-sm-10">
+                <input type="text" readonly class="form-control-plaintext" id="staticPhoneNumber" value="{{ app.user.phone }}">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="staticEmail" class="col-sm-2 col-form-label">eMail</label>
+            <div class="col-sm-10">
+                <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{ app.user.email ? app.user.email : 'unbekannt' }}">
+            </div>
+        </div>
+    </form>
+        <hr>
+    <form class="row" method="post" action="/profile/changePassword">
+        <div class="form-floating mb-3">
+            <input type="password" class="form-control" id="inputPasswordCurrent" name="_inputPasswordCurrent">
+            <label for="inputPasswordCurrent">aktuelles Kennwort</label>
+        </div>
+        <div class="form-floating mb-3">
+            <input type="password" class="form-control" id="inputPasswordNew" name="_inputPasswordNew">
+            <label for="inputPasswordNew">neues Kennwort</label>
+        </div>
+        <div class="form-floating mb-3">
+            <input type="password" class="form-control" id="inputPasswordNewRepeat" name="_inputPasswordNewRepeat">
+            <label for="inputPasswordNewRepeat">neues Kennwort wiederholen</label>
+        </div>
+        <div class="col-12">
+            <button type="submit" class="btn btn-primary">
+                Kennwort ändern
+            </button>
+        </div>
+    </form>
+{% endblock %}
