@@ -10,7 +10,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: DistributionRepository::class)]
-class Distribution
+class Distribution implements \Stringable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -101,5 +101,10 @@ class Distribution
         }
 
         return $this;
+    }
+
+    public function __toString(): string
+    {
+        return sprintf('%s [%s]',$this->text, $this->active_till->format('d.m.Y'));
     }
 }

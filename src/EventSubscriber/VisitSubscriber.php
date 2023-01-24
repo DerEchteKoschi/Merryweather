@@ -17,12 +17,14 @@ class VisitSubscriber implements EventSubscriberInterface
 
     public function onKernelFinishRequest(FinishRequestEvent $event): void
     {
-        $user = $this->security->getUser();
-        if ($user instanceof User) {
-            $visitDate = (new \DateTimeImmutable('now'))->setTime(0,0);
-            if($user->getLastVisit() !== $visitDate) {
-                $user->setLastVisit($visitDate);
-                $this->userRepository->save($user, true);
+        if ($this->userRepository->isEntityManagerOpen()) {
+            $user = $this->security->getUser();
+            if ($user instanceof User) {
+                $visitDate = (new \DateTimeImmutable('now'))->setTime(0, 0);
+                if ($user->getLastVisit() !== $visitDate) {
+                    $user->setLastVisit($visitDate);
+                    $this->userRepository->save($user, true);
+                }
             }
         }
     }

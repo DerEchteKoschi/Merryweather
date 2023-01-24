@@ -4,3 +4,11 @@
 .form-group {
     margin-bottom: 1rem;
 }
+@media (min-width: 576px) {
+    .day {
+        height: 7.2857vw;
+    }
+}
+.dist-add {
+    text-shadow: 0 0 3px #000;
+}

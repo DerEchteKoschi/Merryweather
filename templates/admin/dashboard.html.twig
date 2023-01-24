@@ -1,0 +1,14 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block page_title %}
+    MerryWeather Dashboard
+{% endblock %}
+{% block main %}
+    {% for month in months %}
+        <div class="row">
+            <div class="col-12">
+                {{ include('admin/calendar.html.twig', {month: month}, with_context = false) }}
+            </div>
+        </div>
+    {% endfor %}
+{% endblock %}

@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Distribution;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Validator\Constraints\Date;
 
 /**
  * @extends ServiceEntityRepository<Distribution>
@@ -30,6 +31,23 @@ class DistributionRepository extends ServiceEntityRepository
         ->where('dist.active_from <= :now')
         ->andWhere('dist.active_till >= :now')
         ->setParameter('now', new \DateTimeImmutable('now'));
+
+        return $qb->getQuery()->execute();
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function findDistributionsOfMonth(int $month, int $year): array
+    {
+        $date = new \DateTimeImmutable(sprintf('1.%d.%d', $month, $year));
+
+        $qb = $this->createQueryBuilder('dist')
+                   ->where('dist.active_till < :nextmonth')
+                   ->andWhere('dist.active_till > :prevmonth')
+                   ->setParameter('nextmonth', $date->add(new \DateInterval('P1M')))
+                   ->setParameter('prevmonth', $date->sub(new \DateInterval('P1D')))
+        ;
 
         return $qb->getQuery()->execute();
     }

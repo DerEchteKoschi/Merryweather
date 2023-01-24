@@ -1,0 +1,9 @@
+{# @var ea \EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext #}
+{# @var action \EasyCorp\Bundle\EasyAdminBundle\Dto\ActionDto #}
+{# @var entity \EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto #}
+<form action="{{ action.linkUrl }}" method="POST">
+    <label for="starttime">StartTime</label><input type="text" name="starttime" id="starttime"/><br>
+    <label for="endtime">EndTime</label><input type="text" name="endtime" id="endtime"/><br>
+    <label for="slotsize">Slot size</label><input type="text" name="slotsize" id="slotsize"/><br>
+    {{ include('@EasyAdmin/crud/action.html.twig') }}
+</form><br>

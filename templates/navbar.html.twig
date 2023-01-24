@@ -19,7 +19,11 @@
                     <a class="nav-link" href="/logout">Ausloggen</a>
                 </li>
                 {% if is_granted('ROLE_ADMIN') %}
-                    {% include('admin.html.twig') %}
+                    <li class="nav-item">
+                        <a class="nav-link"  href="/admin">
+                            Admin Dashboard
+                        </a>
+                    </li>
                 {% endif %}
             </ul>
         </div>
