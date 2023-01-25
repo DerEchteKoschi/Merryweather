@@ -32,14 +32,6 @@ class UserCrudController extends AbstractCrudController
         return User::class;
     }
 
-    public function createEntity(string $entityFqcn)
-    {
-        $user = parent::createEntity($entityFqcn);
-        $user->setActive(true);
-
-        return $user;
-    }
-
     public function configureFields(string $pageName): iterable
     {
         return [
@@ -70,16 +62,24 @@ class UserCrudController extends AbstractCrudController
         ];
     }
 
-    public function createNewFormBuilder(EntityDto $entityDto, KeyValueStore $formOptions, AdminContext $context): FormBuilderInterface
+    public function createEditFormBuilder(EntityDto $entityDto, KeyValueStore $formOptions, AdminContext $context): FormBuilderInterface
     {
-        $formBuilder = parent::createNewFormBuilder($entityDto, $formOptions, $context);
+        $formBuilder = parent::createEditFormBuilder($entityDto, $formOptions, $context);
 
         return $this->addPasswordEventListener($formBuilder);
     }
 
-    public function createEditFormBuilder(EntityDto $entityDto, KeyValueStore $formOptions, AdminContext $context): FormBuilderInterface
+    public function createEntity(string $entityFqcn)
     {
-        $formBuilder = parent::createEditFormBuilder($entityDto, $formOptions, $context);
+        $user = parent::createEntity($entityFqcn);
+        $user->setActive(true);
+
+        return $user;
+    }
+
+    public function createNewFormBuilder(EntityDto $entityDto, KeyValueStore $formOptions, AdminContext $context): FormBuilderInterface
+    {
+        $formBuilder = parent::createNewFormBuilder($entityDto, $formOptions, $context);
 
         return $this->addPasswordEventListener($formBuilder);
     }

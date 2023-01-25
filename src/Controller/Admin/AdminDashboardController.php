@@ -34,52 +34,20 @@ class AdminDashboardController extends AbstractDashboardController
         $this->distCount = $distributionRepository->count([]);
     }
 
+    public function configureActions(): Actions
+    {
+        return parent::configureActions()->add(Crud::PAGE_INDEX, Action::DETAIL);
+    }
+
     public function configureAssets(): Assets
     {
         return parent::configureAssets()->addCssFile('css/app.css');
-    }
-
-    /**
-     * @throws \Exception
-     */
-    #[Route('/admin', name: 'admin')]
-    public function index(): Response
-    {
-
-        $months = [];
-        $date = new \DateTimeImmutable('now');
-        $currentMonth = $this->distributionRepository->findDistributionsOfMonth($date->format('n'), $date->format('Y'));
-        $date = $date->add(new \DateInterval('P1M'));
-        $nextMonth = $this->distributionRepository->findDistributionsOfMonth($date->format('n'), $date->format('Y'));
-
-        for ($i = 0; $i<3; $i++) {
-            $months[] = new Month($i, $currentMonth);
-            $date = $date->add(new \DateInterval('P1M'));
-            $currentMonth = $this->distributionRepository->findDistributionsOfMonth($date->format('n'), $date->format('Y'));
-
-        }
-
-        return $this->render('admin/dashboard.html.twig', [
-            'months' => $months
-        ]);
     }
 
     public function configureDashboard(): Dashboard
     {
         return Dashboard::new()
                         ->setTitle('MerryWeather')->setFaviconPath('/favicon.ico')->setLocales(['de']);
-    }
-
-    public function configureUserMenu(UserInterface $user): UserMenu
-    {
-        return parent::configureUserMenu($user)->addMenuItems([
-            MenuItem::linkToUrl('My Profile', 'fas fa-user', $this->generateUrl('app_profile'))
-        ]);
-    }
-
-    public function configureActions(): Actions
-    {
-        return parent::configureActions()->add(Crud::PAGE_INDEX, Action::DETAIL);
     }
 
     public function configureMenuItems(): iterable
@@ -93,5 +61,35 @@ class AdminDashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('neue Verteilung', 'fa fa-cart-plus', Distribution::class)->setAction('new');
         yield MenuItem::linkToCrud('Verteilungen', 'fa fa-cart-shopping', Distribution::class)->setBadge($this->distCount);
         yield MenuItem::linkToCrud('Slots', 'fa fa-table-list', Slot::class)->setBadge($this->slotCount);
+    }
+
+    public function configureUserMenu(UserInterface $user): UserMenu
+    {
+        return parent::configureUserMenu($user)->addMenuItems([
+            MenuItem::linkToUrl('My Profile', 'fas fa-user', $this->generateUrl('app_profile'))
+        ]);
+    }
+
+    /**
+     * @throws \Exception
+     */
+    #[Route('/admin', name: 'admin')]
+    public function index(): Response
+    {
+        $months = [];
+        $date = new \DateTimeImmutable('now');
+        $currentMonth = $this->distributionRepository->findDistributionsOfMonth($date->format('n'), $date->format('Y'));
+        $date = $date->add(new \DateInterval('P1M'));
+        $nextMonth = $this->distributionRepository->findDistributionsOfMonth($date->format('n'), $date->format('Y'));
+
+        for ($i = 0; $i < 3; $i++) {
+            $months[] = new Month($i, $currentMonth);
+            $date = $date->add(new \DateInterval('P1M'));
+            $currentMonth = $this->distributionRepository->findDistributionsOfMonth($date->format('n'), $date->format('Y'));
+        }
+
+        return $this->render('admin/dashboard.html.twig', [
+            'months' => $months
+        ]);
     }
 }

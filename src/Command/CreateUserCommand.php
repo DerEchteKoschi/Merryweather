@@ -724,9 +724,10 @@ class CreateUserCommand extends Command
             $this->userRepository->save($user, true);
         } /** @noinspection PhpRedundantCatchClauseInspection */ catch (UniqueConstraintViolationException) {
             $io->error('Unique constraint violation: phonenumber or display name already registered');
+
             return Command::FAILURE;
         } catch (Throwable $t) {
-            $io->error('Unexpected failure '. $t->getMessage());
+            $io->error('Unexpected failure ' . $t->getMessage());
 
             return Command::FAILURE;
         }

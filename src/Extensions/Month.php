@@ -6,14 +6,13 @@ use App\Entity\Distribution;
 
 class Month
 {
-
-    private array $weeks = [];
     public string $start = '';
+    private array $weeks = [];
     private string $month;
     private string $year;
 
     /**
-     * @param int             $monthOffset
+     * @param int $monthOffset
      * @param Distribution[] $distributions
      * @throws \Exception
      */
@@ -28,7 +27,7 @@ class Month
             }
             $distributionByDay[$key][] = $distribution;
         }
-        
+
         $firstDayOfMonth = \DateTimeImmutable::createFromFormat('U', strtotime('first day of this month'));
         if ($monthOffset < 0) {
             $firstDayOfMonth = $firstDayOfMonth->sub(new \DateInterval(sprintf('P%dM', $monthOffset * -1)));
@@ -50,7 +49,13 @@ class Month
             for ($i = 0; $i < 7; $i++) {
                 $distributionsForDay = $distributionByDay[$currentDay->format('ymd')] ?? null;
                 $currentMonth = $currentDay->format('Ym');
-                $week[] = ['date' => $currentDay, 'active' => $currentMonth === $targetMonth, 'distributions' => $distributionsForDay, 'current' => $currentDay->format('ymd') === $today->format('ymd'), 'past' => $currentDay->format('ymd') < $today->format('ymd')];
+                $week[] = [
+                    'date' => $currentDay,
+                    'active' => $currentMonth === $targetMonth,
+                    'distributions' => $distributionsForDay,
+                    'current' => $currentDay->format('ymd') === $today->format('ymd'),
+                    'past' => $currentDay->format('ymd') < $today->format('ymd')
+                ];
                 $currentDay = $currentDay->add($oneDay);
             }
             $this->weeks[] = $week;
@@ -62,14 +67,13 @@ class Month
         return $this->month;
     }
 
-    public function getYear(): string
-    {
-        return $this->year;
-
-    }
-
     public function getWeeks(): array
     {
         return $this->weeks;
+    }
+
+    public function getYear(): string
+    {
+        return $this->year;
     }
 }

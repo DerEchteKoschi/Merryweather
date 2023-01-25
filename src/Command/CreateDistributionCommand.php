@@ -22,12 +22,10 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 )]
 class CreateDistributionCommand extends Command
 {
-
     public function __construct(
         private readonly DistributionRepository $distributionRepository,
         private readonly SlotRepository $slotRepository
-    )
-    {
+    ) {
         parent::__construct();
     }
 
@@ -54,7 +52,7 @@ class CreateDistributionCommand extends Command
         $dist->setActiveTill($activeTill);
         $this->distributionRepository->save($dist, true);
 
-        $from =$io->ask('Verteilung ab:', '17:00');
+        $from = $io->ask('Verteilung ab:', '17:00');
         $startTime = new DateTimeImmutable($from);
         $till = $io->ask('Verteilung bis:', '19:30');
         $size = $io->ask('Slotgröße in Minuten:', '10');
@@ -74,5 +72,4 @@ class CreateDistributionCommand extends Command
 
         return Command::SUCCESS;
     }
-
 }

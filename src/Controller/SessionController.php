@@ -22,7 +22,7 @@ class SessionController extends AbstractController
         $lastUsername = $authenticationUtils->getLastUsername();
 
         if ($error !== null) {
-            $this->addFlash('danger','Login fehlgeschlagen. Haben sie alles korrekt eingegeben?');
+            $this->addFlash('danger', 'Login fehlgeschlagen. Haben sie alles korrekt eingegeben?');
         }
 
         return $this->render('login/index.html.twig', [

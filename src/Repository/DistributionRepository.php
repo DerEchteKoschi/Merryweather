@@ -5,7 +5,6 @@ namespace App\Repository;
 use App\Entity\Distribution;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-use Symfony\Component\Validator\Constraints\Date;
 
 /**
  * @extends ServiceEntityRepository<Distribution>
@@ -28,9 +27,9 @@ class DistributionRepository extends ServiceEntityRepository
     public function findCurrentDistributions(): array
     {
         $qb = $this->createQueryBuilder('dist')
-        ->where('dist.active_from <= :now')
-        ->andWhere('dist.active_till >= :now')
-        ->setParameter('now', new \DateTimeImmutable('now'));
+                   ->where('dist.active_from <= :now')
+                   ->andWhere('dist.active_till >= :now')
+                   ->setParameter('now', new \DateTimeImmutable('now'));
 
         return $qb->getQuery()->execute();
     }
@@ -46,24 +45,23 @@ class DistributionRepository extends ServiceEntityRepository
                    ->where('dist.active_till < :nextmonth')
                    ->andWhere('dist.active_till > :prevmonth')
                    ->setParameter('nextmonth', $date->add(new \DateInterval('P1M')))
-                   ->setParameter('prevmonth', $date->sub(new \DateInterval('P1D')))
-        ;
+                   ->setParameter('prevmonth', $date->sub(new \DateInterval('P1D')));
 
         return $qb->getQuery()->execute();
     }
 
-    public function save(Distribution $entity, bool $flush = false): void
+    public function remove(Distribution $entity, bool $flush = false): void
     {
-        $this->getEntityManager()->persist($entity);
+        $this->getEntityManager()->remove($entity);
 
         if ($flush) {
             $this->getEntityManager()->flush();
         }
     }
 
-    public function remove(Distribution $entity, bool $flush = false): void
+    public function save(Distribution $entity, bool $flush = false): void
     {
-        $this->getEntityManager()->remove($entity);
+        $this->getEntityManager()->persist($entity);
 
         if ($flush) {
             $this->getEntityManager()->flush();

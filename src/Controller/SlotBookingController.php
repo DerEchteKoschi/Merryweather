@@ -9,18 +9,21 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class SlotBookingController extends AbstractController
 {
+    #[Route('/book', name: 'app_slot_book')]
+    public function book(): Response
+    {
+        $this->addFlash('success', 'jippie');
+
+        return $this->redirectToRoute('app_slots');
+    }
+
     #[Route('/', name: 'app_slots')]
     public function index(DistributionRepository $distributionRepository): Response
     {
         $dists = $distributionRepository->findCurrentDistributions();
+
         return $this->render('slot_booking/index.html.twig', [
             'dists' => $dists
         ]);
-    }
-
-    #[Route('/book', name: 'app_slot_book')]
-    public function book(): Response {
-        $this->addFlash('success', 'jippie');
-        return $this->redirectToRoute('app_slots');
     }
 }

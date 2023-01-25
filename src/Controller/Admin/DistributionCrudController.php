@@ -25,6 +25,21 @@ class DistributionCrudController extends AbstractCrudController
         return Distribution::class;
     }
 
+    public function configureActions(Actions $actions): Actions
+    {
+        $createSlotsAction = Action::new('create_slots')
+                                   ->addCssClass('btn btn-success')
+                                   ->setIcon('fa fa-check-circle')
+                                   ->displayIf(static function (Distribution $distribution): bool {
+                                       return $distribution->getSlots()->isEmpty();
+                                   })
+                                   ->displayAsButton()->linkToCrudAction('createSlots')->setTemplatePath('admin/create_slots.html.twig');
+
+        return parent::configureActions($actions)
+                     ->add(Crud::PAGE_DETAIL, $createSlotsAction)//         ->add(Crud::PAGE_INDEX, $createSlotsAction)
+        ;
+    }
+
     public function configureCrud(Crud $crud): Crud
     {
         return parent::configureCrud($crud)->overrideTemplate('crud/new', 'admin/distnew.html.twig');
@@ -81,22 +96,6 @@ class DistributionCrudController extends AbstractCrudController
             ->generateUrl();
 
         return $this->redirect($targetUrl);
-    }
-
-    public function configureActions(Actions $actions): Actions
-    {
-        $createSlotsAction = Action::new('create_slots')
-                                   ->addCssClass('btn btn-success')
-                                   ->setIcon('fa fa-check-circle')
-            ->displayIf(static function (Distribution $distribution): bool {
-                return $distribution->getSlots()->isEmpty();
-            })
-                                   ->displayAsButton()->linkToCrudAction('createSlots')->setTemplatePath('admin/create_slots.html.twig');
-
-        return parent::configureActions($actions)
-                     ->add(Crud::PAGE_DETAIL, $createSlotsAction)//         ->add(Crud::PAGE_INDEX, $createSlotsAction)
-            ;
-
     }
 
     /*

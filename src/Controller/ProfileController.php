@@ -16,14 +16,6 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 #[Route('/profile')]
 class ProfileController extends AbstractController
 {
-    #[Route('/', name: 'app_profile')]
-    public function index(): Response
-    {
-        return $this->render('profile/index.html.twig', [
-            'controller_name' => 'ProfileController'
-        ]);
-    }
-
     #[Route('/changePassword', name: 'app_profile_change_password')]
     public function changePassword(ValidatorInterface $validator, UserRepository $userRepository, UserPasswordHasherInterface $userPasswordHasher, Request $request): Response
     {
@@ -67,5 +59,13 @@ class ProfileController extends AbstractController
         }
 
         return $this->redirectToRoute('app_profile');
+    }
+
+    #[Route('/', name: 'app_profile')]
+    public function index(): Response
+    {
+        return $this->render('profile/index.html.twig', [
+            'controller_name' => 'ProfileController'
+        ]);
     }
 }

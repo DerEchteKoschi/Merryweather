@@ -34,53 +34,9 @@ class Distribution implements \Stringable
         $this->slots = new ArrayCollection();
     }
 
-    public function getId(): ?int
+    public function __toString(): string
     {
-        return $this->id;
-    }
-
-    public function getActiveFrom(): ?DateTimeInterface
-    {
-        return $this->active_from;
-    }
-
-    public function setActiveFrom(DateTimeInterface $active_from): self
-    {
-        $this->active_from = $active_from;
-
-        return $this;
-    }
-
-    public function getActiveTill(): ?DateTimeInterface
-    {
-        return $this->active_till;
-    }
-
-    public function setActiveTill(DateTimeInterface $active_till): self
-    {
-        $this->active_till = $active_till;
-
-        return $this;
-    }
-
-    public function getText(): ?string
-    {
-        return $this->text;
-    }
-
-    public function setText(string $text): self
-    {
-        $this->text = $text;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Slot>
-     */
-    public function getSlots(): Collection
-    {
-        return $this->slots;
+        return sprintf('%s [%s]', $this->text, $this->active_till->format('d.m.Y'));
     }
 
     public function addSlot(Slot $slot): self
@@ -93,6 +49,34 @@ class Distribution implements \Stringable
         return $this;
     }
 
+    public function getActiveFrom(): ?DateTimeInterface
+    {
+        return $this->active_from;
+    }
+
+    public function getActiveTill(): ?DateTimeInterface
+    {
+        return $this->active_till;
+    }
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return Collection<int, Slot>
+     */
+    public function getSlots(): Collection
+    {
+        return $this->slots;
+    }
+
+    public function getText(): ?string
+    {
+        return $this->text;
+    }
+
     public function removeSlot(Slot $slot): self
     {
         // set the owning side to null (unless already changed)
@@ -103,8 +87,24 @@ class Distribution implements \Stringable
         return $this;
     }
 
-    public function __toString(): string
+    public function setActiveFrom(DateTimeInterface $active_from): self
     {
-        return sprintf('%s [%s]',$this->text, $this->active_till->format('d.m.Y'));
+        $this->active_from = $active_from;
+
+        return $this;
+    }
+
+    public function setActiveTill(DateTimeInterface $active_till): self
+    {
+        $this->active_till = $active_till;
+
+        return $this;
+    }
+
+    public function setText(string $text): self
+    {
+        $this->text = $text;
+
+        return $this;
     }
 }

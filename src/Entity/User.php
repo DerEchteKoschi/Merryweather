@@ -9,7 +9,6 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
-
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface, \Stringable
 {
@@ -61,9 +60,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \String
     {
     }
 
-    public function getId(): ?int
+    public function __toString(): string
     {
-        return $this->id;
+        return sprintf('%s (%s)', $this->display_name, $this->phone);
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function eraseCredentials()
+    {
+        // If you store any temporary, sensitive data on the user, clear it here
+        // $this->plainPassword = null;
     }
 
     public function getDisplayName(): ?string
@@ -71,21 +79,47 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \String
         return $this->display_name;
     }
 
-    public function setDisplayName(string $display_name): self
+    public function getEmail(): ?string
     {
-        $this->display_name = $display_name;
+        return $this->email;
+    }
 
-        return $this;
+    public function getFirstname(): ?string
+    {
+        return $this->firstname;
+    }
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getLastLogin(): ?\DateTimeImmutable
+    {
+        return $this->lastLogin;
+    }
+
+    public function getLastVisit(): ?\DateTimeImmutable
+    {
+        return $this->lastVisit;
+    }
+
+    public function getLastname(): ?string
+    {
+        return $this->lastname;
     }
 
     /**
-     * A visual identifier that represents this user.
-     *
-     * @see UserInterface
+     * @see PasswordAuthenticatedUserInterface
      */
-    public function getUserIdentifier(): string
+    public function getPassword(): string
     {
-        return (string)$this->phone;
+        return $this->password;
+    }
+
+    public function getPhone(): ?string
+    {
+        return $this->phone;
     }
 
     /**
@@ -100,83 +134,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \String
         return array_unique($roles);
     }
 
-    public function setRoles(array $roles): self
+    public function getScore(): ?int
     {
-        $this->roles = $roles;
-
-        return $this;
+        return $this->score;
     }
 
     /**
-     * @see PasswordAuthenticatedUserInterface
-     */
-    public function getPassword(): string
-    {
-        return $this->password;
-    }
-
-    public function setPassword(string $password): self
-    {
-        $this->password = $password;
-
-        return $this;
-    }
-
-    /**
+     * A visual identifier that represents this user.
+     *
      * @see UserInterface
      */
-    public function eraseCredentials()
+    public function getUserIdentifier(): string
     {
-        // If you store any temporary, sensitive data on the user, clear it here
-        // $this->plainPassword = null;
-    }
-
-    public function getFirstname(): ?string
-    {
-        return $this->firstname;
-    }
-
-    public function setFirstname(?string $firstname): self
-    {
-        $this->firstname = $firstname;
-
-        return $this;
-    }
-
-    public function getLastname(): ?string
-    {
-        return $this->lastname;
-    }
-
-    public function setLastname(?string $lastname): self
-    {
-        $this->lastname = $lastname;
-
-        return $this;
-    }
-
-    public function getEmail(): ?string
-    {
-        return $this->email;
-    }
-
-    public function setEmail(?string $email): self
-    {
-        $this->email = $email;
-
-        return $this;
-    }
-
-    public function getPhone(): ?string
-    {
-        return $this->phone;
-    }
-
-    public function setPhone(string $phone): self
-    {
-        $this->phone = $phone;
-
-        return $this;
+        return (string)$this->phone;
     }
 
     public function isActive(): ?bool
@@ -191,21 +161,25 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \String
         return $this;
     }
 
-    public function getScore(): ?int
+    public function setDisplayName(string $display_name): self
     {
-        return $this->score;
-    }
-
-    public function setScore(int $score): self
-    {
-        $this->score = $score;
+        $this->display_name = $display_name;
 
         return $this;
     }
 
-    public function getLastLogin(): ?\DateTimeImmutable
+    public function setEmail(?string $email): self
     {
-        return $this->lastLogin;
+        $this->email = $email;
+
+        return $this;
+    }
+
+    public function setFirstname(?string $firstname): self
+    {
+        $this->firstname = $firstname;
+
+        return $this;
     }
 
     public function setLastLogin(?\DateTimeImmutable $lastLogin): self
@@ -215,11 +189,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \String
         return $this;
     }
 
-    public function getLastVisit(): ?\DateTimeImmutable
-    {
-        return $this->lastVisit;
-    }
-
     public function setLastVisit(?\DateTimeImmutable $lastVisit): self
     {
         $this->lastVisit = $lastVisit;
@@ -227,8 +196,38 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \String
         return $this;
     }
 
-    public function __toString(): string
+    public function setLastname(?string $lastname): self
     {
-        return sprintf('%s (%s)', $this->display_name, $this->phone);
+        $this->lastname = $lastname;
+
+        return $this;
+    }
+
+    public function setPassword(string $password): self
+    {
+        $this->password = $password;
+
+        return $this;
+    }
+
+    public function setPhone(string $phone): self
+    {
+        $this->phone = $phone;
+
+        return $this;
+    }
+
+    public function setRoles(array $roles): self
+    {
+        $this->roles = $roles;
+
+        return $this;
+    }
+
+    public function setScore(int $score): self
+    {
+        $this->score = $score;
+
+        return $this;
     }
 }

@@ -14,8 +14,7 @@ class DistributionType extends AbstractType
         $builder
             ->add('active_from')
             ->add('active_till')
-            ->add('text')
-        ;
+            ->add('text');
     }
 
     public function configureOptions(OptionsResolver $resolver): void

@@ -21,22 +21,23 @@ class SlotRepository extends ServiceEntityRepository
         parent::__construct($registry, Slot::class);
     }
 
-    public function save(Slot $entity, bool $flush = false): void
+    public function flush(): void
     {
-        $this->getEntityManager()->persist($entity);
+        $this->getEntityManager()->flush();
+    }
+
+    public function remove(Slot $entity, bool $flush = false): void
+    {
+        $this->getEntityManager()->remove($entity);
 
         if ($flush) {
             $this->getEntityManager()->flush();
         }
     }
 
-    public function flush(): void
+    public function save(Slot $entity, bool $flush = false): void
     {
-        $this->getEntityManager()->flush();
-    }
-    public function remove(Slot $entity, bool $flush = false): void
-    {
-        $this->getEntityManager()->remove($entity);
+        $this->getEntityManager()->persist($entity);
 
         if ($flush) {
             $this->getEntityManager()->flush();

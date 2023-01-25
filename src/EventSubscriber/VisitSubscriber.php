@@ -15,6 +15,13 @@ class VisitSubscriber implements EventSubscriberInterface
     {
     }
 
+    public static function getSubscribedEvents(): array
+    {
+        return [
+            KernelEvents::FINISH_REQUEST => 'onKernelFinishRequest',
+        ];
+    }
+
     public function onKernelFinishRequest(FinishRequestEvent $event): void
     {
         if ($this->userRepository->isEntityManagerOpen()) {
@@ -27,12 +34,5 @@ class VisitSubscriber implements EventSubscriberInterface
                 }
             }
         }
-    }
-
-    public static function getSubscribedEvents(): array
-    {
-        return [
-            KernelEvents::FINISH_REQUEST => 'onKernelFinishRequest',
-        ];
     }
 }

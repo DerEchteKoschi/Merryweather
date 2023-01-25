@@ -13,20 +13,19 @@ class LoginSubscriber implements EventSubscriberInterface
     {
     }
 
-    public function onLoginSuccessEvent(LoginSuccessEvent $event): void
-    {
-        $user = $event->getUser();
-        if ($user instanceof User)
-        {
-            $user->setLastLogin(new \DateTimeImmutable('now'));
-            $this->userRepository->save($user, true);
-        }
-    }
-
     public static function getSubscribedEvents(): array
     {
         return [
             LoginSuccessEvent::class => 'onLoginSuccessEvent',
         ];
+    }
+
+    public function onLoginSuccessEvent(LoginSuccessEvent $event): void
+    {
+        $user = $event->getUser();
+        if ($user instanceof User) {
+            $user->setLastLogin(new \DateTimeImmutable('now'));
+            $this->userRepository->save($user, true);
+        }
     }
 }
