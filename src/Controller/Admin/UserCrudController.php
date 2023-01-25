@@ -10,7 +10,9 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\Field;
+use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
@@ -41,6 +43,7 @@ class UserCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
+            IdField::new('id')->hideOnForm(),
             Field::new('display_name'),
             Field::new('firstname'),
             Field::new('lastname'),
@@ -48,6 +51,8 @@ class UserCrudController extends AbstractCrudController
             Field::new('phone'),
             NumberField::new('score'),
             BooleanField::new('active'),
+            DateField::new('lastLogin')->hideOnForm(),
+            DateField::new('lastVisit')->hideOnForm(),
             Field::new('password')
                  ->setFormType(RepeatedType::class)
                  ->setFormTypeOptions([
@@ -59,9 +64,9 @@ class UserCrudController extends AbstractCrudController
                  ->setRequired($pageName === Crud::PAGE_NEW)
                  ->onlyOnForms(),
             ChoiceField::new('roles')
-                             ->setChoices(['User' => 'ROLE_USER', 'Admin' => 'ROLE_ADMIN'])
-                             ->allowMultipleChoices()
-                             ->renderExpanded()
+                       ->setChoices(['User' => 'ROLE_USER', 'Admin' => 'ROLE_ADMIN'])
+                       ->allowMultipleChoices()
+                       ->renderExpanded()
         ];
     }
 
