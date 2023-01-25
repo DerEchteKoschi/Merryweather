@@ -6,14 +6,13 @@ use App\Entity\Distribution;
 
 class Month
 {
-    public string $start = '';
     /** @var mixed[]  */
     private array $weeks = [];
     private string $month;
     private string $year;
 
     /**
-     * @param int $monthOffset
+     * @paramn it $monthOffset
      * @param Distribution[] $distributions
      * @throws \Exception
      */
@@ -29,7 +28,7 @@ class Month
             $distributionByDay[$key][] = $distribution;
         }
 
-        $firstDayOfMonth = \DateTimeImmutable::createFromFormat('U', ''.strtotime('first day of this month'));
+        $firstDayOfMonth = new \DateTimeImmutable('first day of this month');
         if ($monthOffset < 0) {
             $firstDayOfMonth = $firstDayOfMonth->sub(new \DateInterval(sprintf('P%dM', $monthOffset * -1)));
         } elseif ($monthOffset > 0) {
@@ -38,8 +37,6 @@ class Month
         $firstDay = $firstDayOfMonth->format('N');
         $this->month = $firstDayOfMonth->format('M');
         $this->year = $firstDayOfMonth->format('Y');
-
-        $this->start = $firstDayOfMonth->sub(new \DateInterval(sprintf('P%dD', $firstDay - 1)))->format('d.m.Y');
 
         $targetMonth = $firstDayOfMonth->format('Ym');
         $currentDay = $firstDayOfMonth->sub(new \DateInterval(sprintf('P%dD', $firstDay - 1)));

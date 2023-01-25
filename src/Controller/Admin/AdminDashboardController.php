@@ -77,10 +77,8 @@ class AdminDashboardController extends AbstractDashboardController
     public function index(): Response
     {
         $months = [];
-        $date = new \DateTimeImmutable('now');
+        $date = new \DateTimeImmutable('first day of this month');
         $currentMonth = $this->distributionRepository->findDistributionsOfMonth((int)$date->format('n'), (int)$date->format('Y'));
-        $date = $date->add(new \DateInterval('P1M'));
-        $nextMonth = $this->distributionRepository->findDistributionsOfMonth((int)$date->format('n'), (int)$date->format('Y'));
 
         for ($i = 0; $i < 3; $i++) {
             $months[] = new Month($i, $currentMonth);

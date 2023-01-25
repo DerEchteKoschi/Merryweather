@@ -11,7 +11,7 @@ framework:
     # Remove or comment this section to explicitly disable session support.
     session:
         handler_id: null
-        cookie_secure: true
+#TODO reactivate with ssl        cookie_secure: true
         cookie_samesite: strict
         #approx 3 months
         cookie_lifetime: 7890000
