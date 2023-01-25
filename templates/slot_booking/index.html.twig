@@ -4,81 +4,27 @@
 
 {% block body %}
 
-    <div class="list-group">
-        <a href="#" class="list-group-item list-group-item-action active">Home</a>
-        {% if dists|length < 1 %}
-            keine Verteilung(en) gefunden
-        {% else %}
-            {% for dist in dists %}
-                <div class="list-group-item">
-                    {{ dist.text }}
-                </div>
-                {% for slot in dist.slots %}
-
-
-                    <div class="list-group-item">
-                        <p class="list-group-item-text">
-                            {{ slot.text }}
-                        </p>
+    <div class="bd-example-snippet bd-code-snippet">
+        <div class="bd-example">
+            {% if dists|length < 1 %}
+                keine Verteilung(en) gefunden
+            {% else %}
+                {% for dist in dists %}
+                    <h5>
+                        {{ dist.text }}
+                    </h5>
+                    <div class="list-group">
+                        {% for slot in dist.slots %}
+                            {% if slot.user != null %}
+                                <span class="disabled list-group-item list-group-item-action list-group-item-primary">{{ slot.text }} (vergeben an {{ slot.user.displayName }})</span>
+                            {% else %}
+                                <a href="{{ path('app_slot_book' , {slotId: slot.id}) }}" class="list-group-item list-group-item-action list-group-item-primary">{{ slot.text }}</a>
+                            {% endif %}
+                        {% endfor %}
                     </div>
                 {% endfor %}
-            {% endfor %}
-        {% endif %}
-        <div class="list-group-item justify-content-between">
-            Help <span class="badge badge-secondary badge-pill">14</span>
+            {% endif %}
         </div>
-        <a href="#" class="list-group-item list-group-item-action active justify-content-between">Home <span class="badge badge-light badge-pill">14</span></a>
     </div>
-    <article class="my-3" id="list-group">
-        <div class="bd-heading sticky-xl-top align-self-start mt-5 mb-3 mt-xl-0 mb-xl-2">
-            <h3>List group</h3>
-            <a class="d-flex align-items-center" href="https://getbootstrap.com/docs/5.3/components/list-group/">Documentation</a>
-        </div>
 
-        <div>
-            <div class="bd-example-snippet bd-code-snippet">
-                <div class="bd-example">
-                    <ul class="list-group">
-                        <li class="list-group-item disabled" aria-disabled="true">A disabled item</li>
-                        <li class="list-group-item">A second item</li>
-                        <li class="list-group-item">A third item</li>
-                        <li class="list-group-item">A fourth item</li>
-                        <li class="list-group-item">And a fifth one</li>
-                    </ul>
-                </div>
-            </div>
-
-
-            <div class="bd-example-snippet bd-code-snippet">
-                <div class="bd-example">
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item">An item</li>
-                        <li class="list-group-item">A second item</li>
-                        <li class="list-group-item">A third item</li>
-                        <li class="list-group-item">A fourth item</li>
-                        <li class="list-group-item">And a fifth one</li>
-                    </ul>
-                </div>
-            </div>
-
-
-            <div class="bd-example-snippet bd-code-snippet">
-                <div class="bd-example">
-                    <div class="list-group">
-                        <a href="#" class="list-group-item list-group-item-action">A simple default list group item</a>
-
-                        <a href="#" class="list-group-item list-group-item-action list-group-item-primary">A simple primary list group item</a>
-                        <a href="#" class="list-group-item list-group-item-action list-group-item-secondary">A simple secondary list group item</a>
-                        <a href="#" class="list-group-item list-group-item-action list-group-item-success">A simple success list group item</a>
-                        <a href="#" class="list-group-item list-group-item-action list-group-item-danger">A simple danger list group item</a>
-                        <a href="#" class="list-group-item list-group-item-action list-group-item-warning">A simple warning list group item</a>
-                        <a href="#" class="list-group-item list-group-item-action list-group-item-info">A simple info list group item</a>
-                        <a href="#" class="list-group-item list-group-item-action list-group-item-light">A simple light list group item</a>
-                        <a href="#" class="list-group-item list-group-item-action list-group-item-dark">A simple dark list group item</a>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    </article>
 {% endblock %}

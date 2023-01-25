@@ -3,8 +3,10 @@
 namespace App\Repository;
 
 use App\Entity\Distribution;
+use App\Entity\Slot;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\Query\Expr\Join;
 
 /**
  * @extends ServiceEntityRepository<Distribution>
@@ -29,6 +31,7 @@ class DistributionRepository extends ServiceEntityRepository
         $qb = $this->createQueryBuilder('dist')
                    ->where('dist.active_from <= :now')
                    ->andWhere('dist.active_till >= :now')
+                   ->join(Slot::class, 'slots', Join::WITH, 'slots.distribution = dist')
                    ->setParameter('now', new \DateTimeImmutable('now'));
 
         return $qb->getQuery()->execute();
