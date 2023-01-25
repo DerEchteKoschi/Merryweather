@@ -26,6 +26,9 @@ class Distribution implements \Stringable
     #[ORM\Column(length: 255)]
     private ?string $text = null;
 
+    /**
+     * @var Collection<int, Slot>
+     */
     #[ORM\OneToMany(mappedBy: 'distribution', targetEntity: Slot::class, orphanRemoval: true)]
     private Collection $slots;
 

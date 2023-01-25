@@ -17,6 +17,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\Response;
 
 class DistributionCrudController extends AbstractCrudController
 {
@@ -65,7 +66,7 @@ class DistributionCrudController extends AbstractCrudController
         return parent::createNewForm($entityDto, $formOptions, $context);
     }
 
-    public function createSlots(AdminContext $adminContext, EntityManagerInterface $entityManager, AdminUrlGenerator $adminUrlGenerator, SlotRepository $slotRepository)
+    public function createSlots(AdminContext $adminContext, EntityManagerInterface $entityManager, AdminUrlGenerator $adminUrlGenerator, SlotRepository $slotRepository): Response
     {
         $distribution = $adminContext->getEntity()->getInstance();
         if (!$distribution instanceof Distribution) {

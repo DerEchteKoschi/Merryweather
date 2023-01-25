@@ -35,6 +35,7 @@ class DistributionRepository extends ServiceEntityRepository
     }
 
     /**
+     * @return Distribution[]
      * @throws \Exception
      */
     public function findDistributionsOfMonth(int $month, int $year): array

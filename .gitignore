@@ -13,3 +13,4 @@
 ###< IDE
 /php_errors.log
 /public/build/
+/.php-cs-fixer.cache

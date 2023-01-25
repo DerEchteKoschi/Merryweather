@@ -40,7 +40,7 @@ class ProfileController extends AbstractController
             foreach ($violations as $violation) {
                 $severity = 'danger';
                 if (($violation instanceof ConstraintViolation) && isset($violation->getConstraint()?->payload['severity'])) {
-                    $severity = $violation->getConstraint()?->payload['severity'];
+                    $severity = $violation->getConstraint()->payload['severity'];
                 }
                 $violationTypes[$severity]++;
                 $this->addFlash($severity, $violation->getMessage());

@@ -7,6 +7,7 @@ use App\Entity\Distribution;
 class Month
 {
     public string $start = '';
+    /** @var mixed[]  */
     private array $weeks = [];
     private string $month;
     private string $year;
@@ -28,7 +29,7 @@ class Month
             $distributionByDay[$key][] = $distribution;
         }
 
-        $firstDayOfMonth = \DateTimeImmutable::createFromFormat('U', strtotime('first day of this month'));
+        $firstDayOfMonth = \DateTimeImmutable::createFromFormat('U', ''.strtotime('first day of this month'));
         if ($monthOffset < 0) {
             $firstDayOfMonth = $firstDayOfMonth->sub(new \DateInterval(sprintf('P%dM', $monthOffset * -1)));
         } elseif ($monthOffset > 0) {
@@ -67,6 +68,9 @@ class Month
         return $this->month;
     }
 
+    /**
+     * @return mixed[]
+     */
     public function getWeeks(): array
     {
         return $this->weeks;

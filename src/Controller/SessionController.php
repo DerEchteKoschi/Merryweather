@@ -31,7 +31,7 @@ class SessionController extends AbstractController
     }
 
     #[Route('/logout', name: 'app_logout')]
-    public function logout()
+    public function logout(): void
     {
         // empty on purpose logout is configured in security.yaml but needs this route config
     }

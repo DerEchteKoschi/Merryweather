@@ -40,7 +40,7 @@ class CreateDistributionCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
         $date = $io->ask('Datum', date('d.m.Y'));
-        $duration = $io->ask('Tage vorher buchbar', 6);
+        $duration = $io->ask('Tage vorher buchbar', '6');
         $activeTill = new DateTimeImmutable($date, new DateTimeZone('Europe/Berlin'));
         $activeFrom = $activeTill->sub(new DateInterval('P' . $duration . 'D'));
 

@@ -78,14 +78,14 @@ class AdminDashboardController extends AbstractDashboardController
     {
         $months = [];
         $date = new \DateTimeImmutable('now');
-        $currentMonth = $this->distributionRepository->findDistributionsOfMonth($date->format('n'), $date->format('Y'));
+        $currentMonth = $this->distributionRepository->findDistributionsOfMonth((int)$date->format('n'), (int)$date->format('Y'));
         $date = $date->add(new \DateInterval('P1M'));
-        $nextMonth = $this->distributionRepository->findDistributionsOfMonth($date->format('n'), $date->format('Y'));
+        $nextMonth = $this->distributionRepository->findDistributionsOfMonth((int)$date->format('n'), (int)$date->format('Y'));
 
         for ($i = 0; $i < 3; $i++) {
             $months[] = new Month($i, $currentMonth);
             $date = $date->add(new \DateInterval('P1M'));
-            $currentMonth = $this->distributionRepository->findDistributionsOfMonth($date->format('n'), $date->format('Y'));
+            $currentMonth = $this->distributionRepository->findDistributionsOfMonth((int)$date->format('n'), (int)$date->format('Y'));
         }
 
         return $this->render('admin/dashboard.html.twig', [

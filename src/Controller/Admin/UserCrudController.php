@@ -69,7 +69,7 @@ class UserCrudController extends AbstractCrudController
         return $this->addPasswordEventListener($formBuilder);
     }
 
-    public function createEntity(string $entityFqcn)
+    public function createEntity(string $entityFqcn): User
     {
         $user = parent::createEntity($entityFqcn);
         $user->setActive(true);

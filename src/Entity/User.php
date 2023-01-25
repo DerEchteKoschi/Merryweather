@@ -21,6 +21,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \String
     #[Assert\NotBlank]
     private ?string $display_name = null;
 
+    /** @var string[]  */
     #[ORM\Column]
     private array $roles = [];
 
@@ -68,7 +69,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \String
     /**
      * @see UserInterface
      */
-    public function eraseCredentials()
+    public function eraseCredentials(): void
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
@@ -217,6 +218,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \String
         return $this;
     }
 
+    /**
+     * @param string[] $roles
+     * @return $this
+     */
     public function setRoles(array $roles): self
     {
         $this->roles = $roles;
