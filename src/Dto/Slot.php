@@ -7,13 +7,12 @@ use Doctrine\Common\Collections\Collection;
 
 class Slot
 {
-
     public function __construct(public int $id, public string $text, public DateTimeInterface $startAt, public ?int $userId)
     {
     }
 
     /**
-     * @param Collection<\App\Entity\Slot> $slotEntities
+     * @param Collection<int, \App\Entity\Slot> $slotEntities
      * @return Slot[]
      */
     public static function fromList(Collection $slotEntities): array
