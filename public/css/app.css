@@ -1,14 +1,25 @@
 .navbar {
     box-shadow: 0 0 10px -5px #000000;
 }
+
 .form-group {
     margin-bottom: 1rem;
 }
+
 @media (min-width: 576px) {
     .day {
         height: 7.2857vw;
     }
 }
+
 .dist-add {
     text-shadow: 0 0 3px #000;
+}
+
+.navbar i.fa {
+    margin-right: 4px;
+}
+
+.navbar i.fa-user-gear {
+    color: #8B0000FF;
 }

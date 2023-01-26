@@ -28,8 +28,8 @@
                     {% for distribution in day.distributions %}
                         <a href="{{ ea_url()
                             .setController('App\\Controller\\Admin\\DistributionCrudController')
-                            .setAction('edit')
-                            .setEntityId(distribution.id) }}" class="event d-block p-1 pl-2 pr-2 mb-1 rounded text-truncate small bg-info text-white" title="{{ distribution }}">{{ distribution }}</a>
+                            .setAction('detail')
+                            .setEntityId(distribution.id) }}" class="event d-block p-1 pl-2 pr-2 mb-1 rounded text-truncate small {{ distribution.slots|length == 0 ? 'bg-warning' : 'bg-info' }} text-white" title="{{ distribution.slots|length == 0 ? 'Slots fehlen' : distribution }}">{{ distribution }}</a>
                     {% else %}
                         <p class="d-sm-none">-</p>
                     {% endfor %}

@@ -4,8 +4,7 @@
 
 {% block body %}
 
-    <div class="bd-example-snippet bd-code-snippet">
-        <div class="bd-example">
+        <div>
             {% if dists|length < 1 %}
                 keine Verteilung(en) gefunden
             {% else %}
@@ -15,16 +14,22 @@
                     </h5>
                     <div class="list-group">
                         {% for slot in dist.slots %}
-                            {% if slot.user != null %}
-                                <span class="disabled list-group-item list-group-item-action list-group-item-primary">{{ slot.text }} (vergeben an {{ slot.user.displayName }})</span>
+                            {% if slot.userId != null %}
+                                {% if slot.userId is same as(app.user.id) %}
+                                    {{ include('slot_booking/cancel.html.twig',{link:path('app_slot_cancel' , {slotId: slot.id})}) }}
+                                {% else %}
+                                    {{ include('slot_booking/slot.html.twig', {type:'secondary disabled', text: slot.text, link:'#', button: 'outline-secondary', action: 'vergeben'}) }}
+                                {% endif %}
                             {% else %}
-                                <a href="{{ path('app_slot_book' , {slotId: slot.id}) }}" class="list-group-item list-group-item-action list-group-item-primary">{{ slot.text }}</a>
+                                {{ include('slot_booking/slot.html.twig', {type:'success', text: slot.text, link:path('app_slot_book' , {slotId: slot.id}), button: 'success', action:'buchen'}) }}
                             {% endif %}
+                            {#% if app.environment != 'prod' %}
+                                <pre class="list-group-item">{{ dump(slot) }}   </pre>
+                            {% endif %#}
                         {% endfor %}
                     </div>
                 {% endfor %}
             {% endif %}
         </div>
-    </div>
 
 {% endblock %}

@@ -10,23 +10,31 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link {% if currentPath == '/' %}active{% endif %}" href="/">Verteilung</a>
+                    <a class="nav-link {% if currentPath == '/' %}active{% endif %}" href="/"><i class="fa fa-square-share-nodes"></i>Verteilung</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link {% if currentPath == '/profile' %}active{% endif %}" href="/profile">Profil</a>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle {% if currentPath starts with '/profile' %}active{% endif %}"  href="#" role="button" data-bs-toggle="dropdown">
+                        <i class=" fa fa-user{{ is_granted('ROLE_ADMIN') ? '-gear' : '' }}"></i>
+                        {{ app.user }}
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="/profile"><i class=" fa fa-address-card"></i>Mein Profil</a></li>
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <li>
+                                <a class="dropdown-item"  href="/admin">
+                                    <i class=" fa fa-wrench"></i>
+                                    Admin Dashboard
+                                </a>
+                            </li>
+                        {% endif %}
+                        <div class="dropdown-divider"></div>
+                        <li><a class="dropdown-item" href="/logout"><i class=" fa fa-power-off"></i>Ausloggen</a></li>
+
+                    </ul>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/logout">Ausloggen</a>
-                </li>
-                {% if is_granted('ROLE_ADMIN') %}
-                    <li class="nav-item">
-                        <a class="nav-link"  href="/admin">
-                            Admin Dashboard
-                        </a>
-                    </li>
-                {% endif %}
+
             </ul>
         </div>
+
     </div>
 </nav>
-

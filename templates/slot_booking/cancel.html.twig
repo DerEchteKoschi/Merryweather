@@ -1,0 +1,27 @@
+<div class="container list-group-item list-group-item-action list-group-item-warning">
+    <div class="row">
+        <button type="button" class="col-3 btn btn-danger" data-bs-toggle="modal" data-bs-target="#cancel_slot_{{ slot.id }}">
+            stornieren
+        </button>
+        <span class="col-6">{{ slot.text }}</span>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="cancel_slot_{{ slot.id }}" tabindex="-1" aria-labelledby="cancel_slot_{{ slot.id }}_label" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="cancel_slot_{{ slot.id }}_label">Wirklich stornieren?</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Wollen Sie Ihre Buchung für Slot [{{ slot.text }}] wirklich stornieren?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Nein</button>
+                <a role="button" class="btn btn-primary" href="{{ link }}">Ja</a>
+            </div>
+        </div>
+    </div>
+</div>
