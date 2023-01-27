@@ -20,8 +20,10 @@
                                 {% else %}
                                     {{ include('slot_booking/slot.html.twig', {type:'secondary disabled', text: slot.text, link:'#', button: 'outline-secondary', action: 'vergeben'}) }}
                                 {% endif %}
-                            {% else %}
+                            {% elseif canBook(app.user, slot) %}
                                 {{ include('slot_booking/slot.html.twig', {type:'success', text: slot.text, link:path('app_slot_book' , {slotId: slot.id}), button: 'success', action:'buchen'}) }}
+                            {% else %}
+                                {{ include('slot_booking/slot.html.twig', {type:'secondary disabled', text: slot.text, link:'#', button: 'outline-secondary', action: 'nicht buchbar'}) }}
                             {% endif %}
                             {#% if app.environment != 'prod' %}
                                 <pre class="list-group-item">{{ dump(slot) }}   </pre>

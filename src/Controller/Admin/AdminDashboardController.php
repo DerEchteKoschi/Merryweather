@@ -2,10 +2,11 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\Crontab;
 use App\Entity\Distribution;
 use App\Entity\Slot;
 use App\Entity\User;
-use App\Extensions\Month;
+use App\MerryWeather\Admin\Month;
 use App\Repository\DistributionRepository;
 use App\Repository\SlotRepository;
 use App\Repository\UserRepository;
@@ -54,13 +55,14 @@ class AdminDashboardController extends AbstractDashboardController
     {
         yield MenuItem::linkToUrl('Zurück zur Anwendung', 'fa fa-home', $this->generateUrl('app_slots'));
         yield MenuItem::linkToDashboard('Dashboard', 'fa fa-table-columns');
-        yield MenuItem::section('Benutzer');
-        yield MenuItem::linkToCrud('Benutzer hinzufügen', 'fa fa-user-plus', User::class)->setAction('new');
-        yield MenuItem::linkToCrud('Liste', 'fa fa-users', User::class)->setBadge($this->userCount);
         yield MenuItem::section('Verteilungen');
         yield MenuItem::linkToCrud('neue Verteilung', 'fa fa-cart-plus', Distribution::class)->setAction('new');
         yield MenuItem::linkToCrud('Verteilungen', 'fa fa-cart-shopping', Distribution::class)->setBadge($this->distCount);
         yield MenuItem::linkToCrud('Slots', 'fa fa-table-list', Slot::class)->setBadge($this->slotCount);
+        yield MenuItem::section('System');
+        yield MenuItem::linkToCrud('Benutzer hinzufügen', 'fa fa-user-plus', User::class)->setAction('new');
+        yield MenuItem::linkToCrud('Benutzer Liste', 'fa fa-users', User::class)->setBadge($this->userCount);
+        yield MenuItem::linkToCrud('Cron jobs', 'fa fa-clock', Crontab::class);
     }
 
     public function configureUserMenu(UserInterface $user): UserMenu

@@ -4,8 +4,10 @@ namespace App\Controller;
 
 use App\Dto\Distribution;
 use App\Entity\User;
+use App\MerryWeather\ScoreChecker;
 use App\Repository\DistributionRepository;
 use App\Repository\SlotRepository;
+use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -13,9 +15,8 @@ use Symfony\Component\Routing\Annotation\Route;
 class SlotBookingController extends AbstractController
 {
     #[Route('/book/{slotId}', name: 'app_slot_book')]
-    public function book(int $slotId, SlotRepository $slotRepository): Response
+    public function book(int $slotId, SlotRepository $slotRepository, UserRepository $userRepository, ScoreChecker $scoreChecker): Response
     {
-        //TODO introduce ScoreSystem
         $slot = $slotRepository->find($slotId);
         /** @var User $user */
         $user = $this->getUser();
@@ -23,10 +24,11 @@ class SlotBookingController extends AbstractController
             $this->addFlash('danger', 'Slot nicht gefunden');
         } elseif ($slot->getUser() === null) {
             $slot->setUser($user);
-            $slotRepository->save($slot);
-            $slotRepository->flush();
+            $user->setScore($user->getScore() + $scoreChecker->pointsNeededForSlot($slot));
+            $userRepository->save($user, true);
+            $slotRepository->save($slot, true);
             $this->addFlash('success', 'Buchung erfolgreich');
-        } else {
+        } elseif ($slot->getUser() !== $user) {
             $this->addFlash('warning', 'Es tut mir leid aber der Slot ist bereits vergeben');
         }
 
@@ -34,9 +36,8 @@ class SlotBookingController extends AbstractController
     }
 
     #[Route('/cancel/{slotId}', name: 'app_slot_cancel')]
-    public function cancel(int $slotId, SlotRepository $slotRepository): Response
+    public function cancel(int $slotId, SlotRepository $slotRepository, UserRepository $userRepository, ScoreChecker $scoreChecker): Response
     {
-        //TODO introduce ScoreSystem
         $slot = $slotRepository->find($slotId);
         /** @var User $user */
         $user = $this->getUser();
@@ -44,10 +45,11 @@ class SlotBookingController extends AbstractController
             $this->addFlash('danger', 'Slot nicht gefunden');
         } elseif ($slot->getUser() === $user) {
             $slot->setUser(null);
-            $slotRepository->save($slot);
-            $slotRepository->flush();
+            $user->setScore($user->getScore() + $scoreChecker->pointsNeededForSlot($slot));
+            $userRepository->save($user, true);
+            $slotRepository->save($slot, true);
             $this->addFlash('success', 'Stornierung erfolgreich');
-        } else {
+        } elseif ($slot->getUser() !== null) {
             $this->addFlash('warning', 'Es tut mir leid aber der Slot gehört jemand anderem');
         }
 
