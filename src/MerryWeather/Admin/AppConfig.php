@@ -19,7 +19,7 @@ class AppConfig
 
     public const CONFIG_KEYS = [
         self::CONFIG_MONTH_COUNT => 'Number of months on Dashboard',
-        self::CONFIG_CRON_ACTIVE => 'Webcron Active (crons called via externl service on) ',
+        self::CONFIG_CRON_ACTIVE => 'Webcron Active (crons called via external service) ',
     ];
     public const CONFIG_DEFINITION = [
         self::CONFIG_MONTH_COUNT => [self::TYPE_INT, 3],
@@ -53,7 +53,7 @@ class AppConfig
             $value = match (self::CONFIG_DEFINITION[$key][self::TYPE]) {
                 self::TYPE_INT => (int)$result[0]->getValue(),
                 self::TYPE_BOOL => $this->toBool($result[0]->getValue()),
-                //deactivated as long as there ar no cfg values o that type
+                //deactivated as long as there ar no cfg values of that type
                 //self::TYPE_FLOAT => (float)$result[0]->getValue(),
                 //self::TYPE_STRING => (string)$result[0]->getValue(),
             };
