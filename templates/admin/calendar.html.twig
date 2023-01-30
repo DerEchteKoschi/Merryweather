@@ -1,35 +1,37 @@
 <div class="container-fluid">
     <header>
-        <h4 class="display-4 mb-4 text-center">{{ month.month }} {{ month.year }}</h4>
-        <div class="row d-none d-sm-flex p-1 bg-dark text-white">
-            <h5 class="col-sm p-1 text-center">{{ 'monday'|trans }}</h5>
-            <h5 class="col-sm p-1 text-center">{{ 'tuesday'|trans }}</h5>
-            <h5 class="col-sm p-1 text-center">{{ 'wednesday'|trans }}</h5>
-            <h5 class="col-sm p-1 text-center">{{ 'thursday'|trans }}</h5>
-            <h5 class="col-sm p-1 text-center">{{ 'friday'|trans }}</h5>
-            <h5 class="col-sm p-1 text-center">{{ 'saturday'|trans }}</h5>
-            <h5 class="col-sm p-1 text-center">{{ 'sunday'|trans }}</h5>
+        <div class="row d-none d-sm-flex p-1">
+            <h5 class="col-sm p-1 text-center">{{ 'Mon'|trans }}</h5>
+            <h5 class="col-sm p-1 text-center">{{ 'Tue'|trans }}</h5>
+            <h5 class="col-sm p-1 text-center">{{ 'Wed'|trans }}</h5>
+            <h5 class="col-sm p-1 text-center">{{ 'Thu'|trans }}</h5>
+            <h5 class="col-sm p-1 text-center">{{ 'Fri'|trans }}</h5>
+            <h5 class="col-sm p-1 text-center">{{ 'Sat'|trans }}</h5>
+            <h5 class="col-sm p-1 text-center">{{ 'Sun'|trans }}</h5>
         </div>
     </header>
     <div class="row border border-right-0 border-bottom-0 bg-primary">
         {% for week in month.weeks %}
             {% for day in week %}
-                <div class="day col-sm p-2 border border-left-0 border-top-0 text-truncate {{ day.active ? 'text-light':'d-none d-sm-inline-block bg-dark text-muted' }} {{ day.current ? 'bg-success':'' }}">
-                    <h5 class="row align-items-center">
+                <div class="day col-sm p-2 border border-left-0 border-top-0 text-truncate {{ day.active ? 'text-light':'d-none d-sm-inline-block bg-secondary text-muted' }} {{ day.current ? 'bg-success':'' }}">
+                    <h5 class="row align-items-center {{ day.active ? 'text-light':'text-muted' }}">
                         <span class="date col-1">{{ day.date|date("d") }}</span>
-                        <small class="col d-sm-none text-center text-muted">{{ day.date|date("D") }}</small>
-                        <span class="col-7"></span>
+                        <small class="col d-sm-none text-center text-muted">{{ day.date|date("D")|trans }}</small>
                         {% if not day.past and day.active %}
-                            <a href="{{ ea_url()
-                                .setController('App\\Controller\\Admin\\DistributionCrudController')
-                                .setAction('new') }}&active_till={{ day.date|date("Y-m-d") }}" class="col-1 fa fa-circle-plus text-success dist-add"></a>
+                            <span class="col-1">
+                                <a href="{{ ea_url()
+                                    .setController('App\\Controller\\Admin\\DistributionCrudController')
+                                    .setAction('new') }}&active_till={{ day.date|date("Y-m-d") }}" class="fa fa-circle-plus text-success dist-add"></a>
+                            </span>
                         {% endif %}
                     </h5>
                     {% for distribution in day.distributions %}
                         <a href="{{ ea_url()
                             .setController('App\\Controller\\Admin\\DistributionCrudController')
                             .setAction('detail')
-                            .setEntityId(distribution.id) }}" class="event d-block p-1 pl-2 pr-2 mb-1 rounded text-truncate small {{ distribution.slots|length == 0 ? 'bg-warning' : 'bg-info' }} text-white" title="{{ distribution.slots|length == 0 ? 'Slots fehlen' : distribution }}">{{ distribution }}</a>
+                            .setEntityId(distribution.id) }}"
+                           class="event d-block p-1 pl-2 pr-2 mb-1 rounded text-truncate small {{ distribution.slots|length == 0 ? 'bg-warning' : 'bg-info' }} text-white"
+                           title="{{ distribution.slots|length == 0 ? 'Slots fehlen' : distribution }}">{{ distribution }}</a>
                     {% else %}
                         <p class="d-sm-none">-</p>
                     {% endfor %}

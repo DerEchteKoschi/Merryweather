@@ -3,9 +3,11 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Crontab;
+use App\Entity\AppConfig;
 use App\Entity\Distribution;
 use App\Entity\Slot;
 use App\Entity\User;
+use App\MerryWeather\Admin\AppConfig as DashboardCfg;
 use App\MerryWeather\Admin\Month;
 use App\Repository\DistributionRepository;
 use App\Repository\SlotRepository;
@@ -22,13 +24,14 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\User\UserInterface;
 
+#[Route('/admin')]
 class AdminDashboardController extends AbstractDashboardController
 {
     private int $slotCount;
     private int $userCount;
     private int $distCount;
 
-    public function __construct(UserRepository $userRepository, SlotRepository $slotRepository, private DistributionRepository $distributionRepository)
+    public function __construct(UserRepository $userRepository, SlotRepository $slotRepository, private readonly DistributionRepository $distributionRepository, private DashboardCfg $dashboardConfig)
     {
         $this->slotCount = $slotRepository->count([]);
         $this->userCount = $userRepository->count([]);
@@ -48,7 +51,7 @@ class AdminDashboardController extends AbstractDashboardController
     public function configureDashboard(): Dashboard
     {
         return Dashboard::new()
-                        ->setTitle('MerryWeather')->setFaviconPath('/favicon.ico')->setLocales(['de']);
+                        ->setTitle('MerryWeather')->setFaviconPath('/favicon.ico')->setLocales(['de'])->disableDarkMode();
     }
 
     public function configureMenuItems(): iterable
@@ -62,7 +65,11 @@ class AdminDashboardController extends AbstractDashboardController
         yield MenuItem::section('System');
         yield MenuItem::linkToCrud('Benutzer hinzufügen', 'fa fa-user-plus', User::class)->setAction('new');
         yield MenuItem::linkToCrud('Benutzer Liste', 'fa fa-users', User::class)->setBadge($this->userCount);
-        yield MenuItem::linkToCrud('Cron jobs', 'fa fa-clock', Crontab::class);
+        if ($this->dashboardConfig->isCronActive()) {
+            yield MenuItem::linkToCrud('Cron jobs', 'fa fa-clock', Crontab::class);
+        }
+        yield MenuItem::linkToCrud('Einstellungen', 'fa fa-wrench', AppConfig::class);
+        yield MenuItem::linkToRoute('Logs', 'fa fa-list-ul', 'admin_logs');
     }
 
     public function configureUserMenu(UserInterface $user): UserMenu
@@ -75,14 +82,14 @@ class AdminDashboardController extends AbstractDashboardController
     /**
      * @throws \Exception
      */
-    #[Route('/admin', name: 'admin')]
+    #[Route('/', name: 'admin')]
     public function index(): Response
     {
         $months = [];
         $date = new \DateTimeImmutable('first day of this month');
         $currentMonth = $this->distributionRepository->findDistributionsOfMonth((int)$date->format('n'), (int)$date->format('Y'));
 
-        for ($i = 0; $i < 3; $i++) {
+        for ($i = 0; $i < $this->dashboardConfig->getMonthCount(); $i++) {
             $months[] = new Month($i, $currentMonth);
             $date = $date->add(new \DateInterval('P1M'));
             $currentMonth = $this->distributionRepository->findDistributionsOfMonth((int)$date->format('n'), (int)$date->format('Y'));
@@ -90,6 +97,19 @@ class AdminDashboardController extends AbstractDashboardController
 
         return $this->render('admin/dashboard.html.twig', [
             'months' => $months
+        ]);
+    }
+
+    /**
+     * @throws \Exception
+     */
+    #[Route('/logs', name: 'admin_logs')]
+    public function logs(): Response
+    {
+        $logs = [];
+
+        return $this->render('admin/logs.html.twig', [
+            'logs' => $logs
         ]);
     }
 }

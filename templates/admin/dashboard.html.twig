@@ -4,11 +4,26 @@
     MerryWeather Dashboard
 {% endblock %}
 {% block main %}
-    {% for month in months %}
-        <div class="row">
-            <div class="col-12">
-                {{ include('admin/calendar.html.twig', {month: month}, with_context = false) }}
-            </div>
+    <div class="m-4">
+        <ul class="nav nav-pills nav-fill" id="myTab">
+            {% set first = true %}
+            {% for month in months %}
+                <li class="nav-item">
+                    <a href="#{{ month.month }}_{{ month.year }}" class="nav-link fs-4{{ first ? ' active':'' }}" data-bs-toggle="tab">{{ month.month|trans }} {{ month.year }}</a>
+                </li>
+                {% set first = false %}
+            {% endfor %}
+        </ul>
+        <hr>
+        <div class="tab-content">
+            {% set first = true %}
+            {% for month in months %}
+                <div class="tab-pane fade show {{ first ? 'active':'' }}" id="{{ month.month }}_{{ month.year }}">
+                    {{ include('admin/calendar.html.twig', {month: month}, with_context = false) }}
+                </div>
+                {% set first = false %}
+            {% endfor %}
         </div>
-    {% endfor %}
+    </div>
+
 {% endblock %}

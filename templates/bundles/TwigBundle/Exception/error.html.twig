@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Es ist ein Fehler aufgetreten. ({{ status_code }}){% endblock %}
+{% block body %}
+    <h1><i class="fa fa-bomb"></i> Uups da ist was schiefgelaufen!</h1>
+
+    <p>
+        <strong>{{ status_text }}</strong><br/>
+        <a href="{{ path('app_slots') }}">Zurück zur Hauptseite (automatisch in: <span id="countdown">10</span>)</a>.
+    </p>
+    <script>
+        let countdown=10;
+        let cdEl = window.document.querySelector('#countdown');
+        let handle = window.setInterval(function(){
+            cdEl.setHTML(--countdown);
+            if (countdown <= 0) {
+                window.clearInterval(handle);
+                window.location = '{{ path('app_slots') }}'
+            }
+        },1000);
+    </script>
+
+{% endblock %}

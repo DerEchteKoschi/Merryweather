@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file source-language="de" target-language="de" datatype="plaintext" original="file.ext">
+    <header>
+      <tool tool-id="symfony" tool-name="Symfony"/>
+    </header>
+    <body>
+      <trans-unit id="9A1.Ufa" resname="Mon">
+        <source>Mon</source>
+        <target>Montag</target>
+      </trans-unit>
+      <trans-unit id="0es5sJv" resname="Tue">
+        <source>Tue</source>
+        <target>Dienstag</target>
+      </trans-unit>
+      <trans-unit id="WDOfRd_" resname="Wed">
+        <source>Wed</source>
+        <target>Mittwoch</target>
+      </trans-unit>
+      <trans-unit id="faESEu0" resname="Thu">
+        <source>Thu</source>
+        <target>Donnerstag</target>
+      </trans-unit>
+      <trans-unit id="Ztq0DOo" resname="Fri">
+        <source>Fri</source>
+        <target>Freitag</target>
+      </trans-unit>
+      <trans-unit id=".etxtWn" resname="Sat">
+        <source>Sat</source>
+        <target>Samstag</target>
+      </trans-unit>
+      <trans-unit id="2xjxf_U" resname="Sun">
+        <source>Sun</source>
+        <target>Sonntag</target>
+      </trans-unit>
+      <trans-unit id="XF2xIMs" resname="Jan">
+        <source>Jan</source>
+        <target>Januar</target>
+      </trans-unit>
+      <trans-unit id="yvcbP1g" resname="Feb">
+        <source>Feb</source>
+        <target>Februar</target>
+      </trans-unit>
+      <trans-unit id="tLfTgY2" resname="Mar">
+        <source>Mar</source>
+        <target>März</target>
+      </trans-unit>
+      <trans-unit id="YXUxtP7" resname="Apr">
+        <source>Apr</source>
+        <target>April</target>
+      </trans-unit>
+      <trans-unit id="jHj_W5k" resname="May">
+        <source>May</source>
+        <target>Mai</target>
+      </trans-unit>
+      <trans-unit id="sn.UbtG" resname="Jun">
+        <source>Jun</source>
+        <target>Juni</target>
+      </trans-unit>
+      <trans-unit id="xD9WuYB" resname="Jul">
+        <source>Jul</source>
+        <target>Juli</target>
+      </trans-unit>
+      <trans-unit id="QeHYKqm" resname="Aug">
+        <source>Aug</source>
+        <target>August</target>
+      </trans-unit>
+      <trans-unit id="RR4rcZB" resname="Sep">
+        <source>Sep</source>
+        <target>September</target>
+      </trans-unit>
+      <trans-unit id="aHfoSUw" resname="Oct">
+        <source>Oct</source>
+        <target>Oktober</target>
+      </trans-unit>
+      <trans-unit id="PmMNKWS" resname="Nov">
+        <source>Nov</source>
+        <target>November</target>
+      </trans-unit>
+      <trans-unit id="8qDPvPG" resname="Dec">
+        <source>Dec</source>
+        <target>Dezember</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
