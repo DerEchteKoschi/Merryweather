@@ -9,14 +9,16 @@
                 keine Verteilung(en) gefunden
             {% else %}
                 {% for dist in dists %}
-                    <h5>
-                        {{ dist.text }}
+                    <h5 class="container">
+                        {{ dist }}
                     </h5>
                     <div class="list-group">
                         {% for slot in dist.slots %}
                             {% if slot.userId != null %}
-                                {% if slot.userId is same as(app.user.id) %}
+                                {% if canCancel(app.user, slot) %}
                                     {{ include('slot_booking/cancel.html.twig',{link:path('app_slot_cancel' , {slotId: slot.id})}) }}
+                                {% elseif slot.userId is same as(app.user.id) %}
+                                    {{ include('slot_booking/slot.html.twig', {type:'secondary disabled', text: slot.text, link:'#', button: 'outline-secondary', action: 'stornieren nicht mehr möglich'}) }}
                                 {% else %}
                                     {{ include('slot_booking/slot.html.twig', {type:'secondary disabled', text: slot.text, link:'#', button: 'outline-secondary', action: 'vergeben'}) }}
                                 {% endif %}

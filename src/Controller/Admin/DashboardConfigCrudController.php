@@ -17,11 +17,6 @@ class DashboardConfigCrudController extends AbstractCrudController
         return AppConfig::class;
     }
 
-    public function configureCrud(Crud $crud): Crud
-    {
-        return parent::configureCrud($crud)->setPageTitle('index', 'WIP Config');
-    }
-
     public function configureFields(string $pageName): iterable
     {
         return [

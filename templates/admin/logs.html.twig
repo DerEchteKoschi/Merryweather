@@ -4,5 +4,31 @@
     Logs
 {% endblock %}
 {% block main %}
-    Logs ;-)
+    <ul class="nav nav-pills nav-fill" id="myTab">
+        {% for logfile in logfiles %}
+            <li class="nav-item">
+                <a href="{{ logfile.url }}" class="nav-link fs-4{{ logfile.active?' active':'' }}">{{ logfile.name }}</a>
+            </li>
+        {% endfor %}
+    </ul>
+    <table class="table table-striped log-table">
+        <thead>
+        <tr>
+            <th scope="col" class="col1">Level</th>
+            <th scope="col" class="col2">Time</th>
+            <th scope="col" class="col3">Message</th>
+            <!-- <th scope="col">Context</th> -->
+        </tr>
+        </thead>
+        <tbody>
+        {% for log in logs %}
+            <tr class="table-{{ bootstrapClassForLog(log) }} ">
+                <th scope="row" class="{{ log.levelName }}">{{ log.levelName }}</th>
+                <td>{{ log.datetime|date('d.m.y H:i:s.v') }}</td>
+                <td>{{ log.message }}</td>
+                <!-- <td></td> -->
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
 {% endblock %}

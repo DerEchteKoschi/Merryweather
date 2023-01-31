@@ -3,8 +3,9 @@
 namespace App\Dto;
 
 use DateTimeInterface;
+use Stringable;
 
-class Distribution
+class Distribution implements Stringable
 {
     /**
      * @param int                    $id
@@ -40,5 +41,10 @@ class Distribution
             $distributionEntity->getActiveTill(),
             Slot::fromList($distributionEntity->getSlots())
         );
+    }
+
+    public function __toString(): string
+    {
+        return sprintf('%s [%s]', $this->text, $this->activeTill->format('d.m.Y'));
     }
 }

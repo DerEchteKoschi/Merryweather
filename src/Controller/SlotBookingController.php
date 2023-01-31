@@ -4,7 +4,7 @@ namespace App\Controller;
 
 use App\Dto\Distribution;
 use App\Entity\User;
-use App\MerryWeather\ScoreChecker;
+use App\MerryWeather\BookingRuleChecker;
 use App\Repository\DistributionRepository;
 use App\Repository\SlotRepository;
 use App\Repository\UserRepository;
@@ -15,7 +15,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class SlotBookingController extends AbstractController
 {
     #[Route('/book/{slotId}', name: 'app_slot_book')]
-    public function book(int $slotId, SlotRepository $slotRepository, UserRepository $userRepository, ScoreChecker $scoreChecker): Response
+    public function book(int $slotId, SlotRepository $slotRepository, UserRepository $userRepository, BookingRuleChecker $bookRuleChecker): Response
     {
         $slot = $slotRepository->find($slotId);
         /** @var User $user */
@@ -23,11 +23,15 @@ class SlotBookingController extends AbstractController
         if ($slot === null) {
             $this->addFlash('danger', 'Slot nicht gefunden');
         } elseif ($slot->getUser() === null) {
-            $slot->setUser($user);
-            $user->setScore($user->getScore() + $scoreChecker->pointsNeededForSlot($slot));
-            $userRepository->save($user, true);
-            $slotRepository->save($slot, true);
-            $this->addFlash('success', 'Buchung erfolgreich');
+            if ($bookRuleChecker->userCanBook($user, $slot)) {
+                $slot->setUser($user);
+                $slotRepository->save($slot, true);
+                $bookRuleChecker->lowerUserScoreBySlot($user, $slot);
+                $userRepository->save($user, true);
+                $this->addFlash('success', 'Buchung erfolgreich');
+            } else {
+                $this->addFlash('warning', 'Dieser Slot ist für Sie leider nicht buchbar');
+            }
         } elseif ($slot->getUser() !== $user) {
             $this->addFlash('warning', 'Es tut mir leid aber der Slot ist bereits vergeben');
         }
@@ -36,7 +40,7 @@ class SlotBookingController extends AbstractController
     }
 
     #[Route('/cancel/{slotId}', name: 'app_slot_cancel')]
-    public function cancel(int $slotId, SlotRepository $slotRepository, UserRepository $userRepository, ScoreChecker $scoreChecker): Response
+    public function cancel(int $slotId, SlotRepository $slotRepository, UserRepository $userRepository, BookingRuleChecker $bookRuleChecker): Response
     {
         $slot = $slotRepository->find($slotId);
         /** @var User $user */
@@ -45,7 +49,7 @@ class SlotBookingController extends AbstractController
             $this->addFlash('danger', 'Slot nicht gefunden');
         } elseif ($slot->getUser() === $user) {
             $slot->setUser(null);
-            $user->setScore($user->getScore() + $scoreChecker->pointsNeededForSlot($slot));
+            $bookRuleChecker->raiseUserScore($user, $bookRuleChecker->pointsNeededForSlot($slot));
             $userRepository->save($user, true);
             $slotRepository->save($slot, true);
             $this->addFlash('success', 'Stornierung erfolgreich');

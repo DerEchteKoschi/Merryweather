@@ -29,10 +29,10 @@ class DistributionRepository extends ServiceEntityRepository
     public function findCurrentDistributions(): array
     {
         $qb = $this->createQueryBuilder('dist')
-                   ->where('dist.active_from <= :now')
-                   ->andWhere('dist.active_till >= :now')
+                   ->where('dist.active_from <= :today')
+                   ->andWhere('dist.active_till >= :today')
                    ->join(Slot::class, 'slots', Join::WITH, 'slots.distribution = dist')
-                   ->setParameter('now', new \DateTimeImmutable('now'));
+                   ->setParameter('today', new \DateTimeImmutable('today'));
 
         return $qb->getQuery()->execute();
     }

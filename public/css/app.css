@@ -17,3 +17,12 @@
 .navbar i.fa-user-gear {
     color: #8B0000FF;
 }
+
+.log-table .col1 {
+    width: 8em;
+}
+
+.log-table .col2 {
+    width: 11em;
+    white-space: nowrap;
+}

@@ -42,8 +42,7 @@ class DistributionCrudController extends AbstractCrudController
                                    ->displayAsButton()->linkToCrudAction('createSlots')->setTemplatePath('admin/create_slots.html.twig');
 
         return parent::configureActions($actions)
-                     ->add(Crud::PAGE_DETAIL, $createSlotsAction)
-        ;
+                     ->add(Crud::PAGE_DETAIL, $createSlotsAction);
     }
 
     public function configureCrud(Crud $crud): Crud
@@ -127,6 +126,7 @@ class DistributionCrudController extends AbstractCrudController
 
             return $this->redirect($url);
         }
+
         return parent::getRedirectResponseAfterSave($context, $action);
     }
 }

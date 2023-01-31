@@ -38,7 +38,7 @@ class Slot
         return $this->id;
     }
 
-    public function getStartAt(): ?DateTimeImmutable
+    public function getStartAt(): DateTimeImmutable
     {
         return $this->startAt;
     }
