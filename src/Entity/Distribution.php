@@ -30,6 +30,7 @@ class Distribution implements \Stringable
      * @var Collection<int, Slot>
      */
     #[ORM\OneToMany(mappedBy: 'distribution', targetEntity: Slot::class, orphanRemoval: true)]
+    #[ORM\OrderBy(["startAt" => "ASC"])]
     private Collection $slots;
 
     public function __construct()

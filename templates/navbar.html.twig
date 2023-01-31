@@ -20,7 +20,7 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle {% if currentPath starts with '/profile' %}active{% endif %}" href="#" role="button" data-bs-toggle="dropdown">
                         <i class=" fa fa-user{{ is_granted('ROLE_ADMIN') ? '-gear' : '' }}"></i>
-                        {{ app.user }}
+                        {{ app.user }}{{ is_granted('ROLE_ADMIN') ? ' (My Score: ' ~ app.user.score ~ ')' : '' }}
                     </a>
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="/profile"><i class=" fa fa-address-card"></i>Mein Profil</a></li>

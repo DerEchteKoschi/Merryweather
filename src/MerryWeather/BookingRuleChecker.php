@@ -27,7 +27,25 @@ class BookingRuleChecker implements LoggerAwareInterface
 
     public function pointsNeededForSlot(Slot $slot): int
     {
-        return 0;//TODO @DerEchteKoschi
+        // temporary rule: first quarter 2 points, second quarter 1 point, remaining half 0 points
+        $totalNoOfSlots = $slot->getDistribution()->getSlots()->count();
+        $slotPosition = 0;
+        $cost = 0;
+        foreach ($slot->getDistribution()->getSlots() as $slotFromList) {
+            if ($slot === $slotFromList) {
+                break;
+            }
+            $slotPosition++;
+        }
+
+        if ($slotPosition < $totalNoOfSlots/2) {
+            $cost++;
+            if ($slotPosition < $totalNoOfSlots/4) {
+                $cost++;
+            }
+        }
+
+        return $cost;
     }
 
     public function userCanBook(User $user, Slot $slot): bool

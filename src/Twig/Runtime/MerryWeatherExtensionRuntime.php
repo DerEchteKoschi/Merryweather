@@ -25,6 +25,15 @@ class MerryWeatherExtensionRuntime implements RuntimeExtensionInterface
         return $this->bookingRuleChecker->userCanBook($user, $slot);
     }
 
+    public function slotCost(Slot|SlotDto $slot): int
+    {
+        if ($slot instanceof SlotDto) {
+            $slot = $this->slotRepository->find($slot->id);
+        }
+
+        return $this->bookingRuleChecker->pointsNeededForSlot($slot);
+    }
+
     public function canCancel(User $user, Slot|SlotDto $slot): bool
     {
         if ($slot instanceof SlotDto) {

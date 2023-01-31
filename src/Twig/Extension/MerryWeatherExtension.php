@@ -19,6 +19,7 @@ class MerryWeatherExtension extends AbstractExtension
         return [
             new TwigFunction('canBook', [MerryWeatherExtensionRuntime::class, 'canBook']),
             new TwigFunction('canCancel', [MerryWeatherExtensionRuntime::class, 'canCancel']),
+            new TwigFunction('slotCost', [MerryWeatherExtensionRuntime::class, 'slotCost']),
             new TwigFunction('bootstrapClassForLog', [MerryWeatherExtensionRuntime::class, 'bootstrapClassForLog']),
         ];
     }

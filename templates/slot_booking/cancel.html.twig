@@ -1,7 +1,7 @@
 <div class="container list-group-item list-group-item-action list-group-item-warning">
     <div class="row">
         <button type="button" class="col-3 btn btn-danger" data-bs-toggle="modal" data-bs-target="#cancel_slot_{{ slot.id }}">
-            stornieren
+            stornieren{% if is_granted('ROLE_ADMIN') %} (cost: {{ slotCost(slot) }}){% endif %}
         </button>
         <span class="col-6">{{ slot.text }}</span>
     </div>
