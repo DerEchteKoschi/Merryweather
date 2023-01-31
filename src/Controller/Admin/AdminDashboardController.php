@@ -64,7 +64,7 @@ class AdminDashboardController extends AbstractDashboardController
     public function configureDashboard(): Dashboard
     {
         return Dashboard::new()
-                        ->setTitle('MerryWeather')->setFaviconPath('/favicon.ico')->setLocales(['de'])->disableDarkMode();
+                        ->setTitle('MerryWeather')->setFaviconPath('/favicon.ico')->setLocales(['de'])->disableDarkMode()->generateRelativeUrls();
     }
 
     public function configureMenuItems(): iterable
