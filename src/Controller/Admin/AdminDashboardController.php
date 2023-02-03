@@ -10,6 +10,7 @@ use App\Entity\User;
 use App\MerryWeather\Admin\AppConfig as DashboardCfg;
 use App\MerryWeather\Admin\LogMessage;
 use App\MerryWeather\Admin\Month;
+use App\Repository\AppConfigRepository;
 use App\Repository\DistributionRepository;
 use App\Repository\SlotRepository;
 use App\Repository\UserRepository;
@@ -81,7 +82,7 @@ class AdminDashboardController extends AbstractDashboardController
         if ($this->dashboardConfig->isCronActive()) {
             yield MenuItem::linkToCrud('Cron jobs', 'fa fa-clock', Crontab::class);
         }
-        yield MenuItem::linkToCrud('Einstellungen', 'fa fa-wrench', AppConfig::class);
+        yield MenuItem::linkToRoute('Einstellungen', 'fa fa-wrench', 'admin_config');
         yield MenuItem::linkToRoute('Logs', 'fa fa-list-ul', 'admin_logs');
     }
 
@@ -119,6 +120,48 @@ class AdminDashboardController extends AbstractDashboardController
     #[Route('/logs', name: 'admin_logs')]
     public function logs(Request $request, AdminUrlGenerator $adminUrlGenerator): Response
     {
+        [$logfiles, $logs] = $this->loadLog($request, $adminUrlGenerator);
+
+        return $this->render('admin/logs.html.twig', [
+            'logs' => $logs,
+            'logfiles' => $logfiles,
+        ]);
+    }
+
+    /**
+     * @throws \Exception
+     */
+    #[Route('/config', name: 'admin_config')]
+    public function config(Request $request, DashboardCfg $appConfig, AppConfigRepository $configRepository): Response
+    {
+        if ($request->getMethod() === Request::METHOD_POST) {
+            $requestCfg = $request->request->all('cfg');
+            foreach (DashboardCfg::CONFIG_KEYS as $key => $value) {
+                if (isset($requestCfg[$key])) {
+                    $this->dashboardConfig->setConfigValue($key, $requestCfg[$key]);
+                } else {
+                    $this->dashboardConfig->setConfigValue($key, 'off');
+                }
+            }
+        }
+        $data = [];
+        foreach (DashboardCfg::CONFIG_KEYS as $key => $value) {
+            $data[$key] = ['name' => $value, 'type' => DashboardCfg::CONFIG_DEFINITION[$key][DashboardCfg::TYPE], 'value' => $this->dashboardConfig->getConfigValue($key)];
+        }
+
+        return $this->render('admin/config.html.twig', [
+            'config' => $data
+        ]);
+    }
+
+
+    /**
+     * @param Request           $request
+     * @param AdminUrlGenerator $adminUrlGenerator
+     * @return mixed[]
+     */
+    protected function loadLog(Request $request, AdminUrlGenerator $adminUrlGenerator): array
+    {
         $encoders = [new JsonEncoder()];
         $normalizers = [new DateTimeNormalizer(), new ObjectNormalizer(null, null, null, new ReflectionExtractor())];
 
@@ -136,7 +179,11 @@ class AdminDashboardController extends AbstractDashboardController
         }
         foreach ($glob as $file) {
             $pi = pathinfo($file);
-            $logfiles[] = ['name' => $pi['basename'], 'url' => $adminUrlGenerator->setRoute('admin_logs')->set('log', $pi['basename'])->generateUrl(), 'active' => $active === $pi['basename'] || $first];
+            $logfiles[] = [
+                'name' => $pi['basename'],
+                'url' => $adminUrlGenerator->setRoute('admin_logs')->set('log', $pi['basename'])->generateUrl(),
+                'active' => $active === $pi['basename'] || $first
+            ];
             if ($active === $pi['basename'] || $first) {
                 foreach (file($file) as $line) {
                     $logs[] = $serializer->deserialize($line, LogMessage::class, 'json');
@@ -146,9 +193,6 @@ class AdminDashboardController extends AbstractDashboardController
             $first = false;
         }
 
-        return $this->render('admin/logs.html.twig', [
-            'logs' => $logs,
-            'logfiles' => $logfiles,
-        ]);
+        return [$logfiles, $logs];
     }
 }

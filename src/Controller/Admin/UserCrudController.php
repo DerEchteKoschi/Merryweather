@@ -2,6 +2,7 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\Distribution;
 use App\Entity\User;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\KeyValueStore;
@@ -11,9 +12,12 @@ use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\Field;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TelephoneField;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -32,25 +36,29 @@ class UserCrudController extends AbstractCrudController
         return User::class;
     }
 
+    /**
+     * @throws \Exception
+     */
     public function configureFields(string $pageName): iterable
     {
         return [
             IdField::new('id')->hideOnForm(),
-            Field::new('display_name'),
-            Field::new('firstname'),
-            Field::new('lastname'),
-            Field::new('email'),
-            Field::new('phone'),
-            NumberField::new('score'),
             BooleanField::new('active'),
-            DateField::new('lastLogin')->hideOnForm(),
-            DateField::new('lastVisit')->hideOnForm(),
-            Field::new('password')
+            Field::new('display_name')->setColumns(5),
+            IntegerField::new('score')->formatValue(static function ($value, User $user) {
+                return '<span class="badge badge-primary">' . $user->getScore() . '</span>';
+            })->hideOnForm(),
+            IntegerField::new('score')->setColumns(5)->onlyOnForms(),
+            Field::new('firstname')->setColumns(5),
+            Field::new('lastname')->setColumns(5),
+            EmailField::new('email')->setColumns(5),
+            TelephoneField::new('phone')->setColumns(5),
+            Field::new('password')->setColumns(5)
                  ->setFormType(RepeatedType::class)
                  ->setFormTypeOptions([
                      'type' => PasswordType::class,
-                     'first_options' => ['label' => 'Password'],
-                     'second_options' => ['label' => 'Password (Repeat)'],
+                     'first_options' => ['label' => 'Password', 'row_attr' => ['class' => 'col-md-5']],
+                     'second_options' => ['label' => 'Password (Repeat)', 'row_attr' => ['class' => 'col-md-5']],
                      'mapped' => false,
                  ])
                  ->setRequired($pageName === Crud::PAGE_NEW)
@@ -58,7 +66,9 @@ class UserCrudController extends AbstractCrudController
             ChoiceField::new('roles')
                        ->setChoices(['User' => 'ROLE_USER', 'Admin' => 'ROLE_ADMIN'])
                        ->allowMultipleChoices()
-                       ->renderExpanded()
+                       ->renderExpanded()->renderAsBadges(),
+            DateField::new('lastLogin')->hideOnForm(),
+            DateField::new('lastVisit')->hideOnForm(),
         ];
     }
 

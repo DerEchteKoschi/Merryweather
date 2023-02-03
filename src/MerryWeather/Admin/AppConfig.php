@@ -8,22 +8,20 @@ class AppConfig
 {
     public const TYPE = 0;
     public const DEFAULT = 1;
-    public const TYPE_INT = 0;
-    public const TYPE_STRING = 1;
-    public const TYPE_BOOL = 2;
-    public const TYPE_FLOAT = 3;
 
-    public const CONFIG_APP_TITLE = 'appTitle';
     public const CONFIG_CRON_ACTIVE = 'cronActive';
     public const CONFIG_MONTH_COUNT = 'monthCount';
+    public const CONFIG_SCORE_LIMIT = 'scoreLimit';
 
     public const CONFIG_KEYS = [
         self::CONFIG_MONTH_COUNT => 'Number of months on Dashboard',
-        self::CONFIG_CRON_ACTIVE => 'Webcron Active (crons called via external service) ',
+        self::CONFIG_CRON_ACTIVE => 'Webcron Active (crons called via external service)',
+        self::CONFIG_SCORE_LIMIT => 'Maximale Punkte die ein User haben kann',
     ];
     public const CONFIG_DEFINITION = [
-        self::CONFIG_MONTH_COUNT => [self::TYPE_INT, 3],
-        self::CONFIG_CRON_ACTIVE => [self::TYPE_BOOL, false],
+        self::CONFIG_MONTH_COUNT => [DataType::Integer, 3],
+        self::CONFIG_CRON_ACTIVE => [DataType::Boolean, false],
+        self::CONFIG_SCORE_LIMIT => [DataType::Integer, 5],
     ];
 
     /**
@@ -50,16 +48,14 @@ class AppConfig
         if (empty($result)) {
             $value = self::CONFIG_DEFINITION[$key][self::DEFAULT];
         } else {
-            $value = match (self::CONFIG_DEFINITION[$key][self::TYPE]) {
-                self::TYPE_INT => (int)$result[0]->getValue(),
-                self::TYPE_BOOL => $this->toBool($result[0]->getValue()),
-                //deactivated as long as there ar no cfg values of that type
-                //self::TYPE_FLOAT => (float)$result[0]->getValue(),
-                //self::TYPE_STRING => (string)$result[0]->getValue(),
+            /** @var DataType $type */
+            $type = self::CONFIG_DEFINITION[$key][self::TYPE];
+            $value = match ($type) {
+                DataType::Integer => (int)$result[0]->getValue(),
+                DataType::Boolean => $result[0]->getValue() === 'on',
+                DataType::String => (string)$result[0]->getValue(),
+                DataType::Float => (float)$result[0]->getValue()
             };
-            if (null === $value) {
-                $value = self::CONFIG_DEFINITION[$key][self::DEFAULT];
-            }
         }
         $this->cache[$key] = $value;
 
@@ -74,17 +70,24 @@ class AppConfig
         return $this->getConfigValue(self::CONFIG_MONTH_COUNT);
     }
 
+    public function getScoreLimit(): int
+    {
+        return $this->getConfigValue(self::CONFIG_SCORE_LIMIT);
+    }
+
     public function isCronActive(): bool
     {
         return $this->getConfigValue(self::CONFIG_CRON_ACTIVE);
     }
 
-    private function toBool(?string $value): ?bool
+    public function setConfigValue(int|string $key, string $value): void
     {
-        if (null === $value) {
-            return null;
+        $cfg = $this->configRepository->findOneBy(['configKey' => $key]);
+        if ($cfg === null) {
+            $cfg = new \App\Entity\AppConfig();
+            $cfg->setConfigKey($key);
         }
-
-        return in_array(strtolower($value), ['yes', 'true', 'wahr', 'ja', 'j', 'y', '1']);
+        $cfg->setValue($value);
+        $this->configRepository->save($cfg, true);
     }
 }

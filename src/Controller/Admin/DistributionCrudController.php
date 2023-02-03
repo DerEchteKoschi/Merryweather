@@ -45,11 +45,6 @@ class DistributionCrudController extends AbstractCrudController
                      ->add(Crud::PAGE_DETAIL, $createSlotsAction);
     }
 
-    public function configureCrud(Crud $crud): Crud
-    {
-        return parent::configureCrud($crud)->overrideTemplate('crud/new', 'admin/distnew.html.twig');
-    }
-
     public function configureFields(string $pageName): iterable
     {
         return [
