@@ -14,8 +14,8 @@ class AppConfig
     public const CONFIG_SCORE_LIMIT = 'scoreLimit';
 
     public const CONFIG_KEYS = [
-        self::CONFIG_MONTH_COUNT => 'Number of months on Dashboard',
-        self::CONFIG_CRON_ACTIVE => 'Webcron Active (crons called via external service)',
+        self::CONFIG_MONTH_COUNT => 'Anzahl an monaten im Dashboard',
+        self::CONFIG_CRON_ACTIVE => 'Cron funktionalität aktivieren (webcron)',
         self::CONFIG_SCORE_LIMIT => 'Maximale Punkte die ein User haben kann',
     ];
     public const CONFIG_DEFINITION = [

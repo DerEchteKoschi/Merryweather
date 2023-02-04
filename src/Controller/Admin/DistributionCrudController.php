@@ -73,6 +73,7 @@ class DistributionCrudController extends AbstractCrudController
                 $from = $today;
             }
             $dist->setActiveFrom($from);
+            $dist->setText($till->format('d.m.Y'));
         }
 
         return parent::createNewForm($entityDto, $formOptions, $context);
