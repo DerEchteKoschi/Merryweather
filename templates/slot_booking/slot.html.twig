@@ -1,6 +1,6 @@
 <div class="container list-group-item list-group-item-action list-group-item-{{ type }}">
     <div class="row">
-        <a role="button" class="col-3 btn btn-{{ button }}" href="{{ link }}">{{ action }}{% if is_granted('ROLE_ADMIN') %} (cost: {{ slotCost(slot) }}){% endif %}</a>
-        <span class="col-6">{{ text }}</span>
+        <a role="button" class="col-4 btn btn-{{ button }}" href="{{ link }}">{{ action }}{% if is_granted('ROLE_ADMIN') %} (cost: {{ slotCost(slot) }}){% endif %}</a>
+        <span class="col-8 ">{{ text }}</span>
     </div>
 </div>

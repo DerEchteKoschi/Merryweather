@@ -1,9 +1,9 @@
 <div class="container list-group-item list-group-item-action list-group-item-warning">
     <div class="row">
-        <button type="button" class="col-3 btn btn-danger" data-bs-toggle="modal" data-bs-target="#cancel_slot_{{ slot.id }}">
-            stornieren{% if is_granted('ROLE_ADMIN') %} (cost: {{ slotCost(slot) }}){% endif %}
+        <button type="button" class="col-4 btn btn-danger" data-bs-toggle="modal" data-bs-target="#cancel_slot_{{ slot.id }}">
+            Stornieren{% if is_granted('ROLE_ADMIN') %} (cost: {{ slotCost(slot) }}){% endif %}
         </button>
-        <span class="col-6">{{ slot.text }}</span>
+        <span class="col-8">{{ slot.text }}</span>
     </div>
 </div>
 
@@ -16,7 +16,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                Wollen Sie Ihre Buchung für Slot [{{ slot.text }}] wirklich stornieren?
+                Möchtest du Deine Buchung für Slot [{{ slot.text }}] wirklich stornieren?
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Nein</button>

@@ -23,6 +23,8 @@ class SlotBookingController extends AbstractController
         if ($slot === null) {
             $this->addFlash('danger', 'Slot nicht gefunden');
         } elseif ($slot->getUser() === null) {
+            // TODO: Make sure that there are no race conditions while saving the user in this slot!
+            //       Possible solution: Lock dataset, then check if userCanBook, then set and save everything, then unlock.
             if ($bookRuleChecker->userCanBook($user, $slot)) {
                 $slot->setUser($user);
                 $slotRepository->save($slot, true);
@@ -30,10 +32,10 @@ class SlotBookingController extends AbstractController
                 $userRepository->save($user, true);
                 $this->addFlash('success', 'Buchung erfolgreich');
             } else {
-                $this->addFlash('warning', 'Dieser Slot ist für Sie leider nicht buchbar');
+                $this->addFlash('warning', 'Dieser Slot ist für Dich nicht buchbar');
             }
         } elseif ($slot->getUser() !== $user) {
-            $this->addFlash('warning', 'Es tut mir leid aber der Slot ist bereits vergeben');
+            $this->addFlash('warning', 'Es tut mir leid, aber der Slot ist bereits vergeben');
         }
 
         return $this->redirectToRoute('app_slots');
@@ -54,7 +56,7 @@ class SlotBookingController extends AbstractController
             $slotRepository->save($slot, true);
             $this->addFlash('success', 'Stornierung erfolgreich');
         } elseif ($slot->getUser() !== null) {
-            $this->addFlash('warning', 'Es tut mir leid aber der Slot gehört jemand anderem');
+            $this->addFlash('warning', 'Es tut mir leid, aber der Slot gehört jemand anderem');
         }
 
         return $this->redirectToRoute('app_slots');

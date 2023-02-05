@@ -6,7 +6,7 @@
 
         <div>
             {% if dists|length < 1 %}
-                keine Verteilung(en) gefunden
+                Im Moment is keine Verteilung geplant
             {% else %}
                 {% for dist in dists %}
                     <h5 class="container">
@@ -18,14 +18,14 @@
                                 {% if canCancel(app.user, slot) %}
                                     {{ include('slot_booking/cancel.html.twig',{link:path('app_slot_cancel' , {slotId: slot.id})}) }}
                                 {% elseif slot.user.id is same as(app.user.id) %}
-                                    {{ include('slot_booking/slot.html.twig', {type:'secondary disabled', text: slot.text, link:'#', button: 'outline-secondary', action: 'stornieren nicht mehr möglich'}) }}
+                                    {{ include('slot_booking/slot.html.twig', {type:'secondary disabled', text: slot.text, link:'#', button: 'outline-secondary', action: 'Du'}) }}
                                 {% else %}
-                                    {{ include('slot_booking/slot.html.twig', {type:'secondary disabled', text: slot.text, link:'#', button: 'outline-secondary', action: slot.user.displayName }) }}
+                                    {{ include('slot_booking/slot.html.twig', {type:'secondary disabled', text: slot.text, link:'#', button: 'outline-dark', action: slot.user.displayName }) }}
                                 {% endif %}
                             {% elseif canBook(app.user, slot) %}
-                                {{ include('slot_booking/slot.html.twig', {type:'success', text: slot.text, link:path('app_slot_book' , {slotId: slot.id}), button: 'success', action:'buchen'}) }}
+                                {{ include('slot_booking/slot.html.twig', {type:'success', text: slot.text, link:path('app_slot_book' , {slotId: slot.id}), button: 'success', action:'Buchen'}) }}
                             {% else %}
-                                {{ include('slot_booking/slot.html.twig', {type:'secondary disabled', text: slot.text, link:'#', button: 'outline-secondary', action: 'nicht buchbar'}) }}
+                                {{ include('slot_booking/slot.html.twig', {type:'secondary disabled', text: slot.text, link:'#', button: 'outline-secondary', action: 'N.V.'}) }}
                             {% endif %}
                             {#% if app.environment != 'prod' %}
                                 <pre class="list-group-item">{{ dump(slot) }}   </pre>
