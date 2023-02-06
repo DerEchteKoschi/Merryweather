@@ -32,13 +32,12 @@ class ConfigController extends AbstractDashboardController
                     $this->dashboardConfig->setConfigValue($key, 'off');
                 }
             }
+            $this->addFlash('success', 'Einstellungen gespeichert');
         }
         $data = [];
         foreach (DashboardCfg::CONFIG_KEYS as $key => $value) {
             $data[$key] = ['name' => $value, 'type' => DashboardCfg::CONFIG_DEFINITION[$key][DashboardCfg::TYPE], 'value' => $this->dashboardConfig->getConfigValue($key)];
         }
-
-        $this->addFlash('success', 'Einstellungen gespeichert');
 
         return $this->render('admin/config.html.twig', [
             'config' => $data
