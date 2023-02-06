@@ -8,6 +8,7 @@ use App\MerryWeather\BookingRuleChecker;
 use App\Repository\DistributionRepository;
 use App\Repository\SlotRepository;
 use App\Repository\UserRepository;
+use Doctrine\ORM\OptimisticLockException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -23,16 +24,19 @@ class SlotBookingController extends AbstractController
         if ($slot === null) {
             $this->addFlash('danger', 'Slot nicht gefunden');
         } elseif ($slot->getUser() === null) {
-            // TODO: Make sure that there are no race conditions while saving the user in this slot!
-            //       Possible solution: Lock dataset, then check if userCanBook, then set and save everything, then unlock.
-            if ($bookRuleChecker->userCanBook($user, $slot)) {
-                $slot->setUser($user);
-                $slotRepository->save($slot, true);
-                $bookRuleChecker->lowerUserScoreBySlot($user, $slot);
-                $userRepository->save($user, true);
-                $this->addFlash('success', 'Buchung erfolgreich');
-            } else {
-                $this->addFlash('warning', 'Dieser Slot ist für Dich nicht buchbar');
+            try {
+                $slotRepository->lock($slot);
+                if ($bookRuleChecker->userCanBook($user, $slot)) {
+                    $slot->setUser($user);
+                    $slotRepository->save($slot, true);
+                    $bookRuleChecker->lowerUserScoreBySlot($user, $slot);
+                    $userRepository->save($user, true);
+                    $this->addFlash('success', 'Buchung erfolgreich');
+                } else {
+                    $this->addFlash('warning', 'Dieser Slot ist für Dich nicht buchbar');
+                }
+            } catch (OptimisticLockException $ole) {
+                $this->addFlash('warning', 'Buchung fehlgeschlagen');
             }
         } elseif ($slot->getUser() !== $user) {
             $this->addFlash('warning', 'Es tut mir leid, aber der Slot ist bereits vergeben');

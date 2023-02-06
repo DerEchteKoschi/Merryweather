@@ -25,7 +25,7 @@ class Slot
         return $result;
     }
 
-    private static function fromEntity(\App\Entity\Slot $slotEntity): self
+    public static function fromEntity(\App\Entity\Slot $slotEntity): self
     {
         return new self(
             $slotEntity->getId(),

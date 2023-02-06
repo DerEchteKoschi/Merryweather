@@ -14,17 +14,15 @@ class Slot
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
-
+    #[ORM\Version, ORM\Column(type: 'integer')]
+    private int $version;
     #[ORM\ManyToOne(inversedBy: 'slots')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Distribution $distribution = null;
-
     #[ORM\ManyToOne]
     private ?User $user = null;
-
     #[ORM\Column(length: 255)]
     private ?string $text = null;
-
     #[ORM\Column(type: Types::TIME_IMMUTABLE)]
     private ?DateTimeImmutable $startAt = null;
 
@@ -51,6 +49,14 @@ class Slot
     public function getUser(): ?User
     {
         return $this->user;
+    }
+
+    /**
+     * @return int
+     */
+    public function getVersion(): int
+    {
+        return $this->version;
     }
 
     public function setDistribution(?Distribution $distribution): self

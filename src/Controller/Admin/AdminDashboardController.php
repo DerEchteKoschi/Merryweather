@@ -2,15 +2,12 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\AppConfig;
 use App\Entity\Crontab;
 use App\Entity\Distribution;
 use App\Entity\Slot;
 use App\Entity\User;
 use App\MerryWeather\Admin\AppConfig as DashboardCfg;
-use App\MerryWeather\Admin\LogMessage;
 use App\MerryWeather\Admin\Month;
-use App\Repository\AppConfigRepository;
 use App\Repository\DistributionRepository;
 use App\Repository\SlotRepository;
 use App\Repository\UserRepository;
@@ -22,16 +19,9 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Config\UserMenu;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
-use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
-use Symfony\Component\Serializer\Serializer;
 
 #[Route('/admin')]
 class AdminDashboardController extends AbstractDashboardController
@@ -44,8 +34,7 @@ class AdminDashboardController extends AbstractDashboardController
         UserRepository $userRepository,
         SlotRepository $slotRepository,
         private readonly DistributionRepository $distributionRepository,
-        private DashboardCfg $dashboardConfig,
-        private string $logpath
+        private DashboardCfg $dashboardConfig
     ) {
         $this->slotCount = $slotRepository->count([]);
         $this->userCount = $userRepository->count([]);
@@ -71,7 +60,7 @@ class AdminDashboardController extends AbstractDashboardController
     public function configureMenuItems(): iterable
     {
         yield MenuItem::linkToUrl('Zurück zur Anwendung', 'fa fa-home', $this->generateUrl('app_slots'));
-        yield MenuItem::linkToDashboard('Dashboard', 'fa fa-table-columns');
+        yield MenuItem::linkToDashboard('Kalender', 'fa fa-table-columns');
         yield MenuItem::section('Verteilungen');
         yield MenuItem::linkToCrud('neue Verteilung', 'fa fa-cart-plus', Distribution::class)->setAction('new');
         yield MenuItem::linkToCrud('Verteilungen', 'fa fa-cart-shopping', Distribution::class)->setBadge($this->distCount);
@@ -112,87 +101,5 @@ class AdminDashboardController extends AbstractDashboardController
         return $this->render('admin/dashboard.html.twig', [
             'months' => $months
         ]);
-    }
-
-    /**
-     * @throws \Exception
-     */
-    #[Route('/logs', name: 'admin_logs')]
-    public function logs(Request $request, AdminUrlGenerator $adminUrlGenerator): Response
-    {
-        [$logfiles, $logs] = $this->loadLog($request, $adminUrlGenerator);
-
-        return $this->render('admin/logs.html.twig', [
-            'logs' => $logs,
-            'logfiles' => $logfiles,
-        ]);
-    }
-
-    /**
-     * @throws \Exception
-     */
-    #[Route('/config', name: 'admin_config')]
-    public function config(Request $request, DashboardCfg $appConfig, AppConfigRepository $configRepository): Response
-    {
-        if ($request->getMethod() === Request::METHOD_POST) {
-            $requestCfg = $request->request->all('cfg');
-            foreach (DashboardCfg::CONFIG_KEYS as $key => $value) {
-                if (isset($requestCfg[$key])) {
-                    $this->dashboardConfig->setConfigValue($key, $requestCfg[$key]);
-                } else {
-                    $this->dashboardConfig->setConfigValue($key, 'off');
-                }
-            }
-        }
-        $data = [];
-        foreach (DashboardCfg::CONFIG_KEYS as $key => $value) {
-            $data[$key] = ['name' => $value, 'type' => DashboardCfg::CONFIG_DEFINITION[$key][DashboardCfg::TYPE], 'value' => $this->dashboardConfig->getConfigValue($key)];
-        }
-
-        return $this->render('admin/config.html.twig', [
-            'config' => $data
-        ]);
-    }
-
-
-    /**
-     * @param Request           $request
-     * @param AdminUrlGenerator $adminUrlGenerator
-     * @return mixed[]
-     */
-    protected function loadLog(Request $request, AdminUrlGenerator $adminUrlGenerator): array
-    {
-        $encoders = [new JsonEncoder()];
-        $normalizers = [new DateTimeNormalizer(), new ObjectNormalizer(null, null, null, new ReflectionExtractor())];
-
-        $serializer = new Serializer($normalizers, $encoders);
-
-        $logfiles = [];
-        $glob = glob($this->logpath . '/*.log');
-        $glob = array_reverse($glob);
-        $logs = [];
-        $active = '#';
-        $first = true;
-        if ($request->query->has('log')) {
-            $first = false;
-            $active = $request->query->get('log');
-        }
-        foreach ($glob as $file) {
-            $pi = pathinfo($file);
-            $logfiles[] = [
-                'name' => $pi['basename'],
-                'url' => $adminUrlGenerator->setRoute('admin_logs')->set('log', $pi['basename'])->generateUrl(),
-                'active' => $active === $pi['basename'] || $first
-            ];
-            if ($active === $pi['basename'] || $first) {
-                foreach (file($file) as $line) {
-                    $logs[] = $serializer->deserialize($line, LogMessage::class, 'json');
-                }
-                $active = '#';
-            }
-            $first = false;
-        }
-
-        return [$logfiles, $logs];
     }
 }

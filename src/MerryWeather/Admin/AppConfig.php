@@ -13,18 +13,21 @@ class AppConfig
     public const CONFIG_MONTH_COUNT = 'monthCount';
     public const CONFIG_SCORE_LIMIT = 'scoreLimit';
     public const CONFIG_SCORE_RAISE_STEP = 'scoreRaiseStep';
+    public const CONFIG_ADMIN_CANCEL_ALLOWED = 'adminCancel';
 
     public const CONFIG_KEYS = [
         self::CONFIG_MONTH_COUNT => 'Anzahl an Monaten im Dashboard',
         self::CONFIG_CRON_ACTIVE => 'Cron funktionalität aktivieren (webcron)',
         self::CONFIG_SCORE_LIMIT => 'Maximale Punkte die ein User haben kann',
         self::CONFIG_SCORE_RAISE_STEP => 'Wert um die der CronJob die Punkte erhöht',
+        self::CONFIG_ADMIN_CANCEL_ALLOWED => 'Admins dürfen Slotbuchungen stornieren',
     ];
     public const CONFIG_DEFINITION = [
         self::CONFIG_MONTH_COUNT => [DataType::Integer, 3],
         self::CONFIG_CRON_ACTIVE => [DataType::Boolean, false],
         self::CONFIG_SCORE_LIMIT => [DataType::Integer, 5],
         self::CONFIG_SCORE_RAISE_STEP => [DataType::Integer, 1],
+        self::CONFIG_ADMIN_CANCEL_ALLOWED => [DataType::Boolean, false],
     ];
 
     /**
@@ -78,14 +81,19 @@ class AppConfig
         return $this->getConfigValue(self::CONFIG_SCORE_LIMIT);
     }
 
-    public function isCronActive(): bool
-    {
-        return $this->getConfigValue(self::CONFIG_CRON_ACTIVE);
-    }
-
     public function getScoreRaiseStep(): int
     {
         return $this->getConfigValue(self::CONFIG_SCORE_RAISE_STEP);
+    }
+
+    public function isAdminCancelAllowed(): bool
+    {
+        return $this->getConfigValue(self::CONFIG_ADMIN_CANCEL_ALLOWED);
+    }
+
+    public function isCronActive(): bool
+    {
+        return $this->getConfigValue(self::CONFIG_CRON_ACTIVE);
     }
 
     public function setConfigValue(int|string $key, string $value): void

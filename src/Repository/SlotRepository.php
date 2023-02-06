@@ -4,6 +4,9 @@ namespace App\Repository;
 
 use App\Entity\Slot;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\DBAL\LockMode;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\PessimisticLockException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -26,6 +29,15 @@ class SlotRepository extends ServiceEntityRepository
         $this->getEntityManager()->flush();
     }
 
+    /**
+     * @throws OptimisticLockException
+     * @throws PessimisticLockException
+     */
+    public function lock(Slot $slot): void
+    {
+        $this->getEntityManager()->lock($slot, LockMode::OPTIMISTIC, $slot->getVersion());
+    }
+
     public function remove(Slot $entity, bool $flush = false): void
     {
         $this->getEntityManager()->remove($entity);
@@ -35,6 +47,9 @@ class SlotRepository extends ServiceEntityRepository
         }
     }
 
+    /**
+     * @throws OptimisticLockException
+     */
     public function save(Slot $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
@@ -43,29 +58,4 @@ class SlotRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
-
-//    /**
-//     * @return Slot[] Returns an array of Slot objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('s')
-//            ->andWhere('s.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('s.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
-
-//    public function findOneBySomeField($value): ?Slot
-//    {
-//        return $this->createQueryBuilder('s')
-//            ->andWhere('s.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
 }
