@@ -167,17 +167,21 @@ class DistributionCrudController extends AbstractCrudController
         BookingRuleChecker $bookRuleChecker,
         AdminUrlGenerator $adminUrlGenerator
     ): Response {
-        $slot = $slotRepository->find($slotId);
-        if ($slot === null) {
-            $this->addFlash('danger', 'Slot nicht gefunden');
+        if ($this->config->isAdminCancelAllowed()) {
+            $slot = $slotRepository->find($slotId);
+            if ($slot === null) {
+                $this->addFlash('danger', 'Slot nicht gefunden');
+            } else {
+                /** @var User $user */
+                $user = $slot->getUser();
+                $slot->setUser(null);
+                $bookRuleChecker->raiseUserScore($user, $bookRuleChecker->pointsNeededForSlot($slot));
+                $userRepository->save($user, true);
+                $slotRepository->save($slot, true);
+                $this->addFlash('success', sprintf('Stornierung erfolgreich %s wurden die benutzten Punkte wieder gutgeschrieben', $user->getDisplayName()));
+            }
         } else {
-            /** @var User $user */
-            $user = $slot->getUser();
-            $slot->setUser(null);
-            $bookRuleChecker->raiseUserScore($user, $bookRuleChecker->pointsNeededForSlot($slot));
-            $userRepository->save($user, true);
-            $slotRepository->save($slot, true);
-            $this->addFlash('success', sprintf('Stornierung erfolgreich %s wurden die benutzten Punkte wieder gutgeschrieben', $user->getDisplayName()));
+            $this->addFlash('warning', 'Diese Funktion ist deaktiviert');
         }
 
         return $this->redirect($adminUrlGenerator->setDashboard(AdminDashboardController::class)->setController(DistributionCrudController::class)->setEntityId($distributionId)->setAction('detail')->generateUrl());
