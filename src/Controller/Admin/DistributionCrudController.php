@@ -48,12 +48,22 @@ class DistributionCrudController extends AbstractCrudController
         return [
             IdField::new('id')->hideOnForm(),
             TextField::new('text'),
-            CollectionField::new('slots')->setLabel('Anzahl Slots')->hideOnForm()->formatValue(static function ($value, Distribution $distribution) use ($controller) {
+            CollectionField::new('slots')->setLabel('Anzahl Slots')->hideOnIndex()->hideOnForm()->formatValue(static function ($value, Distribution $distribution) use ($controller) {
                 if ($distribution->getSlots()->count() === 0) {
                     return $controller->renderView('admin/create_slots.html.twig', ['linkUrl' => $controller->generateUrl('app_admin_slots_create', ['distributionId' => $distribution->getId()])]);
                 }
 
                 return $distribution->getSlots()->count();
+            }),
+            CollectionField::new('slots')->setLabel('gebuchte Slots')->onlyOnIndex()->formatValue(static function ($value, Distribution $distribution) {
+                $count = $distribution->getSlots()->count();
+                $booked = 0;
+                foreach ($distribution->getSlots()->getIterator() as $slot) {
+                    if ($slot->getUser() !== null) {
+                        $booked++;
+                    }
+                }
+                return sprintf('%d/%d', $booked, $count);
             }),
             DateField::new('activeFrom'),
             DateField::new('activeTill'),
