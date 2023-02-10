@@ -4,7 +4,6 @@ namespace App\MerryWeather;
 
 use App\Entity\Slot;
 use App\Entity\User;
-use App\MerryWeather\Admin\AppConfig;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 
@@ -28,7 +27,11 @@ class BookingRuleChecker implements LoggerAwareInterface
 
     public function pointsNeededForSlot(Slot $slot): int
     {
-        // temporary rule: first quarter 2 points, second quarter 1 point, remaining half 0 points
+        $scoreConfig = $this->config->getScoreConfig();
+        $scoreConfigCount = count($scoreConfig);
+        if ($scoreConfigCount === 0) {
+            return 0;
+        }
         $totalNoOfSlots = $slot->getDistribution()->getSlots()->count();
         $slotPosition = 0;
         $cost = 0;
@@ -39,14 +42,12 @@ class BookingRuleChecker implements LoggerAwareInterface
             $slotPosition++;
         }
 
-        if ($slotPosition < $totalNoOfSlots/2) {
-            $cost++;
-            if ($slotPosition < $totalNoOfSlots/4) {
-                $cost++;
-            }
+        if ($scoreConfigCount >= $totalNoOfSlots) {
+            return $scoreConfig[$slotPosition];
         }
 
-        return $cost;
+        $factor = $scoreConfigCount / $totalNoOfSlots;
+        return $scoreConfig[(int)($factor * $slotPosition)];
     }
 
     public function userCanBook(User $user, Slot $slot): bool

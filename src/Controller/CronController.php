@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\MerryWeather\Admin\AppConfig;
+use App\MerryWeather\AppConfig;
 use App\Repository\CrontabRepository;
 use Cron\CronExpression;
 use DateTimeImmutable;

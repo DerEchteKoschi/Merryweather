@@ -1,7 +1,9 @@
 <?php
 
-namespace App\MerryWeather\Admin;
+namespace App\MerryWeather;
 
+use App\MerryWeather\Config\DataType;
+use App\MerryWeather\Config\UnknownKeyException;
 use App\Repository\AppConfigRepository;
 
 class AppConfig
@@ -13,14 +15,16 @@ class AppConfig
     public const CONFIG_MONTH_COUNT = 'monthCount';
     public const CONFIG_SCORE_LIMIT = 'scoreLimit';
     public const CONFIG_SCORE_RAISE_STEP = 'scoreRaiseStep';
+    public const CONFIG_SCORE_DISTRIBUTION = 'scoreDistribution';
     public const CONFIG_ADMIN_CANCEL_ALLOWED = 'adminCancel';
 
     public const CONFIG_KEYS = [
         self::CONFIG_MONTH_COUNT => 'Anzahl an Monaten im Dashboard',
-        self::CONFIG_CRON_ACTIVE => 'Cron funktionalität aktivieren (webcron)',
         self::CONFIG_SCORE_LIMIT => 'Maximale Punkte die ein User haben kann',
         self::CONFIG_SCORE_RAISE_STEP => 'Wert um die der CronJob die Punkte erhöht',
+        self::CONFIG_SCORE_DISTRIBUTION => 'Punkteverteilung auf Slots',
         self::CONFIG_ADMIN_CANCEL_ALLOWED => 'Admins dürfen Slotbuchungen stornieren',
+        self::CONFIG_CRON_ACTIVE => 'Cron Funktionalität aktivieren (webcron)',
     ];
     public const CONFIG_DEFINITION = [
         self::CONFIG_MONTH_COUNT => [DataType::Integer, 3],
@@ -28,6 +32,7 @@ class AppConfig
         self::CONFIG_SCORE_LIMIT => [DataType::Integer, 5],
         self::CONFIG_SCORE_RAISE_STEP => [DataType::Integer, 1],
         self::CONFIG_ADMIN_CANCEL_ALLOWED => [DataType::Boolean, false],
+        self::CONFIG_SCORE_DISTRIBUTION => [DataType::IntArray, [2,1,0,0]],
     ];
 
     /**
@@ -40,9 +45,12 @@ class AppConfig
     }
 
     /**
+     * @param string $key
+     * @param bool   $forceFresh
+     * @return string|bool|int|float|mixed[]|null
      * @throws UnknownKeyException
      */
-    public function getConfigValue(string $key, bool $forceFresh = false): null|string|bool|int|float
+    public function getConfigValue(string $key, bool $forceFresh = false): null|string|bool|int|float|array
     {
         if (!isset(self::CONFIG_KEYS[$key])) {
             throw new UnknownKeyException($key);
@@ -51,7 +59,7 @@ class AppConfig
             return $this->cache[$key];
         }
         $result = $this->configRepository->findBy(['configKey' => $key]);
-        if (empty($result)) {
+        if (empty($result) || $result[0]->getValue() === null) {
             $value = self::CONFIG_DEFINITION[$key][self::DEFAULT];
         } else {
             /** @var DataType $type */
@@ -60,7 +68,8 @@ class AppConfig
                 DataType::Integer => (int)$result[0]->getValue(),
                 DataType::Boolean => $result[0]->getValue() === 'on',
                 DataType::String => (string)$result[0]->getValue(),
-                DataType::Float => (float)$result[0]->getValue()
+                DataType::Float => (float)$result[0]->getValue(),
+                DataType::IntArray => $this->toIntArray($result[0]->getValue())
             };
         }
         $this->cache[$key] = $value;
@@ -74,6 +83,14 @@ class AppConfig
     public function getMonthCount(): int
     {
         return $this->getConfigValue(self::CONFIG_MONTH_COUNT);
+    }
+
+    /**
+     * @return int[]
+     */
+    public function getScoreConfig(): array
+    {
+        return $this->getConfigValue(self::CONFIG_SCORE_DISTRIBUTION);
     }
 
     public function getScoreLimit(): int
@@ -105,5 +122,19 @@ class AppConfig
         }
         $cfg->setValue($value);
         $this->configRepository->save($cfg, true);
+    }
+
+    /**
+     * @param string $value
+     * @return int[]
+     */
+    private function toIntArray(string $value): array
+    {
+        $result = explode(',', $value);
+        foreach ($result as $k => $v) {
+            $result[$k] = (int)$v;
+        }
+
+        return $result;
     }
 }

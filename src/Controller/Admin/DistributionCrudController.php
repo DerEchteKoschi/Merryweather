@@ -5,7 +5,7 @@ namespace App\Controller\Admin;
 use App\Entity\Distribution;
 use App\Entity\Slot;
 use App\Entity\User;
-use App\MerryWeather\Admin\AppConfig;
+use App\MerryWeather\AppConfig;
 use App\MerryWeather\BookingRuleChecker;
 use App\Repository\DistributionRepository;
 use App\Repository\SlotRepository;

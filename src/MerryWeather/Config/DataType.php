@@ -1,6 +1,6 @@
 <?php
 
-namespace App\MerryWeather\Admin;
+namespace App\MerryWeather\Config;
 
 enum DataType
 {
@@ -8,4 +8,5 @@ enum DataType
     case Integer;
     case String;
     case Float;
+    case IntArray;
 }
