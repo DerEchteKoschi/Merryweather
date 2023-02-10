@@ -2,7 +2,7 @@
 
 namespace App\Command;
 
-use App\MerryWeather\Admin\AppConfig;
+use App\MerryWeather\AppConfig;
 use App\MerryWeather\BookingRuleChecker;
 use App\Repository\UserRepository;
 use Psr\Log\LoggerAwareInterface;

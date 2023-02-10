@@ -1,6 +1,6 @@
 <?php
 
-namespace App\MerryWeather\Admin;
+namespace App\MerryWeather\Config;
 
 use Exception;
 

@@ -2,7 +2,7 @@
 
 namespace App\Controller\Admin;
 
-use App\MerryWeather\Admin\AppConfig as DashboardCfg;
+use App\MerryWeather\AppConfig as DashboardCfg;
 use App\Repository\AppConfigRepository;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
 use Symfony\Component\HttpFoundation\Request;
