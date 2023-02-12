@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json.schemastore.org/web-manifest-combined.json",
+  "background_color": "#fff",
+  "description": "Slot Reservierung für Lebensmittel-Verteilungen",
+  "display": "standalone",
+  "icons": [
+    {
+      "src": "images/logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "name": "Merryweather",
+  "short_name": "Merryweather",
+  "start_url": "."
+}
