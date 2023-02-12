@@ -14,7 +14,7 @@ framework:
         cookie_secure: true
         cookie_samesite: strict
         #approx 3 months
-        cookie_lifetime: 7890000
+        cookie_lifetime: '%env(int:SESSION_LIFETIME)%'
         storage_factory_id: session.storage.factory.native
 
     #esi: true
