@@ -73,6 +73,7 @@ class AdminDashboardController extends AbstractDashboardController
         }
         yield MenuItem::linkToRoute('Einstellungen', 'fa fa-wrench', 'admin_config');
         yield MenuItem::linkToRoute('Logs', 'fa fa-list-ul', 'admin_logs');
+        yield MenuItem::linkToRoute('2fa für Deployment', 'fa fa-qrcode', 'admin_2fa');
     }
 
     public function configureUserMenu(UserInterface $user): UserMenu
