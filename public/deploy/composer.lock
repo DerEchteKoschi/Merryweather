@@ -1,0 +1,59 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "3a82069e6e85974eb6ccb3e6867bfe6c",
+    "packages": [
+        {
+            "name": "lfkeitel/phptotp",
+            "version": "v1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/lfkeitel/php-totp.git",
+                "reference": "5b1673e895f857856b3e75ccb442855771c9b9be"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/lfkeitel/php-totp/zipball/5b1673e895f857856b3e75ccb442855771c9b9be",
+                "reference": "5b1673e895f857856b3e75ccb442855771c9b9be",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^5.6 || ^7.0 || ^8.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "lfkeitel\\phptotp\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "TOTP/HOTP library for PHP",
+            "keywords": [
+                "Authentication",
+                "hotp",
+                "totp",
+                "two-factor"
+            ],
+            "support": {
+                "issues": "https://github.com/lfkeitel/php-totp/issues",
+                "source": "https://github.com/lfkeitel/php-totp/tree/v1.1.0"
+            },
+            "time": "2022-04-07T20:52:00+00:00"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": [],
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": [],
+    "platform-dev": [],
+    "plugin-api-version": "2.3.0"
+}

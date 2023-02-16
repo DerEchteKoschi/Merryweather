@@ -34,7 +34,8 @@ class AdminDashboardController extends AbstractDashboardController
         UserRepository $userRepository,
         SlotRepository $slotRepository,
         private readonly DistributionRepository $distributionRepository,
-        private DashboardCfg $dashboardConfig
+        private DashboardCfg $dashboardConfig,
+        private bool $poorMansDeploymentActive = false
     ) {
         $this->slotCount = $slotRepository->count([]);
         $this->userCount = $userRepository->count([]);
@@ -73,7 +74,9 @@ class AdminDashboardController extends AbstractDashboardController
         }
         yield MenuItem::linkToRoute('Einstellungen', 'fa fa-wrench', 'admin_config');
         yield MenuItem::linkToRoute('Logs', 'fa fa-list-ul', 'admin_logs');
-        yield MenuItem::linkToRoute('2fa für Deployment', 'fa fa-qrcode', 'admin_2fa');
+        if ($this->poorMansDeploymentActive) {
+            yield MenuItem::linkToRoute('2fa für Deployment', 'fa fa-qrcode', 'admin_2fa');
+        }
     }
 
     public function configureUserMenu(UserInterface $user): UserMenu

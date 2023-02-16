@@ -12,7 +12,7 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/admin')]
 class Deploy2FAController extends AbstractDashboardController
 {
-    public function __construct(private string $kernelSecret)
+    public function __construct(private string $kernelSecret, private bool $poorMansDeploymentActive = false)
     {
     }
 
@@ -22,12 +22,15 @@ class Deploy2FAController extends AbstractDashboardController
     #[Route('/2fa', name: 'admin_2fa')]
     public function twofa(Request $request): Response
     {
-        $result = (new QRCode(new QROptions([
-            'outputType' => QRCode::OUTPUT_MARKUP_SVG
-        ])))->render(sprintf('otpauth://totp/Deployment?secret=%s&issuer=MerryWeather', preg_replace('/[^2-7A-Z]/', "", strtoupper($this->kernelSecret))));
+        if ($this->poorMansDeploymentActive) {
+            $result = (new QRCode(new QROptions([
+                'outputType' => QRCode::OUTPUT_MARKUP_SVG
+            ])))->render(sprintf('otpauth://totp/Deployment?secret=%s&issuer=MerryWeather', preg_replace('/[^2-7A-Z]/', "", strtoupper($this->kernelSecret))));
 
-        return $this->render('admin/2fa.html.twig', [
-            'qrcode' => $result
-        ]);
+            return $this->render('admin/2fa.html.twig', [
+                'qrcode' => $result
+            ]);
+        }
+        return new Response('feature unavailable');
     }
 }
