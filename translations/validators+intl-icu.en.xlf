@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file source-language="de" target-language="en" datatype="plaintext" original="file.ext">
+    <header>
+      <tool tool-id="symfony" tool-name="Symfony"/>
+    </header>
+    <body>
+      <trans-unit id="VKDowX6" resname="Error">
+        <source>Error</source>
+        <target>Error</target>
+      </trans-unit>
+      <trans-unit id="pkoyD3R" resname="current_pw_not_empty">
+        <source>current_pw_not_empty</source>
+        <target>The current password is not allowed to be empty</target>
+      </trans-unit>
+      <trans-unit id="Fsog5B2" resname="pw_not_empty">
+        <source>pw_not_empty</source>
+        <target>The password is not allowed to be empty</target>
+      </trans-unit>
+      <trans-unit id="fguw8nP" resname="pw_not_long_enough">
+        <source>pw_not_long_enough</source>
+        <target>The password is not long enough (min 10 characters)</target>
+      </trans-unit>
+      <trans-unit id="7jmmemI" resname="pw_repeat_not_equal">
+        <source>pw_repeat_not_equal</source>
+        <target>The password repetition is not equal to the password</target>
+      </trans-unit>
+      <trans-unit id="GiC_AHt" resname="pw_not_equal_current">
+        <source>pw_not_equal_current</source>
+        <target>The new password is not allowed to be the curent password</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
