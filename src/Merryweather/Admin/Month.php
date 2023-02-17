@@ -1,6 +1,6 @@
 <?php
 
-namespace App\MerryWeather\Admin;
+namespace App\Merryweather\Admin;
 
 use App\Entity\Distribution;
 

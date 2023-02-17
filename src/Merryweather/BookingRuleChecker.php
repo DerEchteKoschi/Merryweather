@@ -1,6 +1,6 @@
 <?php
 
-namespace App\MerryWeather;
+namespace App\Merryweather;
 
 use App\Entity\Slot;
 use App\Entity\User;

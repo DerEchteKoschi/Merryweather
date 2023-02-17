@@ -1,7 +1,7 @@
 {% extends '@EasyAdmin/page/content.html.twig' %}
 
 {% block page_title %}
-    2fa Code for deployment
+    {{ 'deployment_2fa'|trans }}
 {% endblock %}
 {% block main %}
     <img src="{{ qrcode }}" width="200" alt="QR Code" />

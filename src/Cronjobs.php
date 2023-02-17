@@ -2,7 +2,7 @@
 
 namespace App;
 
-use App\Command\CronCommand;
+use App\Merryweather\CronCommand;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Command\LazyCommand;
 use Symfony\Component\HttpKernel\KernelInterface;

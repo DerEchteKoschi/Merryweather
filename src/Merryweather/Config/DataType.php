@@ -1,6 +1,6 @@
 <?php
 
-namespace App\MerryWeather\Config;
+namespace App\Merryweather\Config;
 
 enum DataType
 {

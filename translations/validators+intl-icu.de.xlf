@@ -9,6 +9,26 @@
         <source>Error</source>
         <target>Fehler</target>
       </trans-unit>
+      <trans-unit id="pkoyD3R" resname="current_pw_not_empty">
+        <source>current_pw_not_empty</source>
+        <target>Das aktuelle Kennwort darf nicht leer sein</target>
+      </trans-unit>
+      <trans-unit id="Fsog5B2" resname="pw_not_empty">
+        <source>pw_not_empty</source>
+        <target>Das Kennwort darf nicht leer sein</target>
+      </trans-unit>
+      <trans-unit id="fguw8nP" resname="pw_not_long_enough">
+        <source>pw_not_long_enough</source>
+        <target>Das Kennwort ist nicht lang genug (mindestens 10 Zeichen)</target>
+      </trans-unit>
+      <trans-unit id="7jmmemI" resname="pw_repeat_not_equal">
+        <source>pw_repeat_not_equal</source>
+        <target>Das Wiederholung des Kennworts stimmt nicht überein</target>
+      </trans-unit>
+      <trans-unit id="GiC_AHt" resname="pw_not_equal_current">
+        <source>pw_not_equal_current</source>
+        <target>Das neue Kennwort darf nicht mit dem alten Kennwort übereinstimmen</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

@@ -81,6 +81,366 @@
         <source>Dec</source>
         <target>Dezember</target>
       </trans-unit>
+      <trans-unit id="M12p2c4" resname="back_to_app">
+        <source>back_to_app</source>
+        <target>Zurück zur Anwendung</target>
+      </trans-unit>
+      <trans-unit id="UVJ5Die" resname="calendar">
+        <source>calendar</source>
+        <target>Kalender</target>
+      </trans-unit>
+      <trans-unit id="E2qU3h7" resname="distributions">
+        <source>distributions</source>
+        <target>Verteilungen</target>
+      </trans-unit>
+      <trans-unit id=".cRH.q6" resname="new_distribution">
+        <source>new_distribution</source>
+        <target>Neue Verteilung</target>
+      </trans-unit>
+      <trans-unit id="O0eKCj." resname="slots">
+        <source>slots</source>
+        <target>Slots</target>
+      </trans-unit>
+      <trans-unit id="u8XmYeE" resname="system">
+        <source>system</source>
+        <target>System</target>
+      </trans-unit>
+      <trans-unit id="m4Y9cPG" resname="add_user">
+        <source>add_user</source>
+        <target>Benutzer hinzufügen</target>
+      </trans-unit>
+      <trans-unit id="fftM9nd" resname="users">
+        <source>users</source>
+        <target>Benutzer</target>
+      </trans-unit>
+      <trans-unit id="8CKJCvs" resname="cron_jobs">
+        <source>cron_jobs</source>
+        <target>CronJobs</target>
+      </trans-unit>
+      <trans-unit id="6F7FO9p" resname="configurations">
+        <source>configurations</source>
+        <target>Einstellungen</target>
+      </trans-unit>
+      <trans-unit id="mPOPEts" resname="logs">
+        <source>logs</source>
+        <target>Logs</target>
+      </trans-unit>
+      <trans-unit id="L_278zr" resname="deployment_2fa">
+        <source>deployment_2fa</source>
+        <target>2FA Code für deployment</target>
+      </trans-unit>
+      <trans-unit id="2DrMGmf" resname="my_profile">
+        <source>my_profile</source>
+        <target>Mein Profil</target>
+      </trans-unit>
+      <trans-unit id="FmGRZ0X" resname="config_saved">
+        <source>config_saved</source>
+        <target>Einstellungen gespeichert</target>
+      </trans-unit>
+      <trans-unit id="c_tYN9o" resname="feature_deactivated">
+        <source>feature_deactivated</source>
+        <target>Funktion nicht verfügbar</target>
+      </trans-unit>
+      <trans-unit id="XohImNo" resname="password">
+        <source>password</source>
+        <target>Kennwort</target>
+      </trans-unit>
+      <trans-unit id="hLEZkoC" resname="password_repeat">
+        <source>password_repeat</source>
+        <target>Kennwort (Wiederholung)</target>
+      </trans-unit>
+      <trans-unit id="jGl25bV" resname="admin">
+        <source>admin</source>
+        <target>Administrator</target>
+      </trans-unit>
+      <trans-unit id="BPiZbad" resname="user">
+        <source>user</source>
+        <target>Benutzer</target>
+      </trans-unit>
+      <trans-unit id="iSXHGKi" resname="slot_count">
+        <source>slot_count</source>
+        <target>Anzahl Slots</target>
+      </trans-unit>
+      <trans-unit id="dEN745s" resname="booked_slots">
+        <source>booked_slots</source>
+        <target>gebuchte Slots</target>
+      </trans-unit>
+      <trans-unit id="jB0DXN_" resname="no_bookings">
+        <source>no_bookings</source>
+        <target>keine Buchungen</target>
+      </trans-unit>
+      <trans-unit id="uFh7P7a" resname="number_slots_created">
+        <source>number_slots_created</source>
+        <target>%count% Slots erstellt</target>
+      </trans-unit>
+      <trans-unit id="ny7_SY1" resname="slot_not_found">
+        <source>slot_not_found</source>
+        <target>Slot nicht gefunden</target>
+      </trans-unit>
+      <trans-unit id="Ln3E_hg" resname="cancel_succesfull">
+        <source>cancel_succesfull</source>
+        <target>Stornierung erfolgreich %username% wurden die benutzten Punkte wieder gutgeschrieben</target>
+      </trans-unit>
+      <trans-unit id="OT3Hjv." resname="something_went_wrong">
+        <source>something_went_wrong</source>
+        <target>Etwas ist schiefgelaufen</target>
+      </trans-unit>
+      <trans-unit id="PjmJYgZ" resname="new_password_saved">
+        <source>new_password_saved</source>
+        <target>Das neue Kennwort wurde gespeichert</target>
+      </trans-unit>
+      <trans-unit id="3ZppSpi" resname="invalid_current_password">
+        <source>invalid_current_password</source>
+        <target>as aktuelle Kennwort ist ungültig</target>
+      </trans-unit>
+      <trans-unit id="uFMRIU_" resname="my_profil">
+        <source>my_profil</source>
+        <target>Mein Profil</target>
+      </trans-unit>
+      <trans-unit id="ORSErM1" resname="display_name">
+        <source>display_name</source>
+        <target>Anzeigename</target>
+      </trans-unit>
+      <trans-unit id="RVadpX9" resname="phone">
+        <source>phone</source>
+        <target>Telefonnummer</target>
+      </trans-unit>
+      <trans-unit id="giREF.l" resname="email">
+        <source>email</source>
+        <target>EMail</target>
+      </trans-unit>
+      <trans-unit id="sjpqhDn" resname="unknown">
+        <source>unknown</source>
+        <target>unbekannt</target>
+      </trans-unit>
+      <trans-unit id="WproAJI" resname="current_password">
+        <source>current_password</source>
+        <target>Aktuelles Kennwort</target>
+      </trans-unit>
+      <trans-unit id="ALnmYiM" resname="new_password">
+        <source>new_password</source>
+        <target>Neues Kennwort (mind. 10 Zeichen)</target>
+      </trans-unit>
+      <trans-unit id="il_vnIf" resname="new_password_repeat">
+        <source>new_password_repeat</source>
+        <target>Neues Kennwort wiederholen</target>
+      </trans-unit>
+      <trans-unit id="HtyJ.d5" resname="change_password">
+        <source>change_password</source>
+        <target>Kennwort ändern</target>
+      </trans-unit>
+      <trans-unit id="cqI_VJ0" resname="Distribution">
+        <source>Distribution</source>
+        <target>Verteilung</target>
+      </trans-unit>
+      <trans-unit id="ZsW6E44" resname="admin_dashboard">
+        <source>admin_dashboard</source>
+        <target>Admin Dashboard</target>
+      </trans-unit>
+      <trans-unit id="ACcM9j_" resname="logout">
+        <source>logout</source>
+        <target>Ausloggen</target>
+      </trans-unit>
+      <trans-unit id="CkUUSve" resname="mainmenu">
+        <source>mainmenu</source>
+        <target>Hauptmenü</target>
+      </trans-unit>
+      <trans-unit id="KA1Eqx6" resname="welcome">
+        <source>welcome</source>
+        <target>Wilkommen!</target>
+      </trans-unit>
+      <trans-unit id="Ou0Sb7Q" resname="manifest_description">
+        <source>manifest_description</source>
+        <target>Slot Reservierung für Lebensmittel-Verteilungen</target>
+      </trans-unit>
+      <trans-unit id="cZiMTY4" resname="Text">
+        <source>Text</source>
+        <target>Text</target>
+      </trans-unit>
+      <trans-unit id="FhwLtgl" resname="Active From">
+        <source>Active From</source>
+        <target>Aktiv ab</target>
+      </trans-unit>
+      <trans-unit id="DOezLWq" resname="Active Till">
+        <source>Active Till</source>
+        <target>Aktiv bis</target>
+      </trans-unit>
+      <trans-unit id="FX3KkuQ" resname="save">
+        <source>save</source>
+        <target>speichern</target>
+      </trans-unit>
+      <trans-unit id="zUJATVK" resname="value">
+        <source>value</source>
+        <target>Wert</target>
+      </trans-unit>
+      <trans-unit id="gqNTf.D" resname="name">
+        <source>name</source>
+        <target>Name</target>
+      </trans-unit>
+      <trans-unit id="JUVIPFQ" resname="monthCount">
+        <source>monthCount</source>
+        <target>Anzahl an Monaten im Dashboard</target>
+      </trans-unit>
+      <trans-unit id="1_jRQLJ" resname="scoreLimit">
+        <source>scoreLimit</source>
+        <target>Maximale Punkte die ein User haben kann</target>
+      </trans-unit>
+      <trans-unit id="Zs18eCW" resname="scoreRaiseStep">
+        <source>scoreRaiseStep</source>
+        <target>Wert um die der CronJob die Punkte erhöht</target>
+      </trans-unit>
+      <trans-unit id="_5PXcfl" resname="scoreDistribution">
+        <source>scoreDistribution</source>
+        <target>Punkteverteilung auf Slots</target>
+      </trans-unit>
+      <trans-unit id="z_B58IX" resname="adminCancel">
+        <source>adminCancel</source>
+        <target>Admins dürfen Slotbuchungen stornieren</target>
+      </trans-unit>
+      <trans-unit id="2isy4ep" resname="cronActive">
+        <source>cronActive</source>
+        <target>Cron Funktionalität aktivieren (webcron)</target>
+      </trans-unit>
+      <trans-unit id="8aJEzB2" resname="confirm_slot_cancel">
+        <source>confirm_slot_cancel</source>
+        <target>Möchtest du Deine Buchung für Slot [{text}] wirklich stornieren?</target>
+      </trans-unit>
+      <trans-unit id="MQ.yABS" resname="close">
+        <source>close</source>
+        <target>Close</target>
+      </trans-unit>
+      <trans-unit id="Qli9pvg" resname="confirm_slot_cancel_title">
+        <source>confirm_slot_cancel_title</source>
+        <target>Wirklich stornieren?</target>
+      </trans-unit>
+      <trans-unit id="k5Apjz_" resname="no">
+        <source>no</source>
+        <target>Nein</target>
+      </trans-unit>
+      <trans-unit id="inmIkP6" resname="yes">
+        <source>yes</source>
+        <target>Ja</target>
+      </trans-unit>
+      <trans-unit id="I3TZF5S" resname="cancel">
+        <source>cancel</source>
+        <target>Stornieren</target>
+      </trans-unit>
+      <trans-unit id="nWxLPtE" resname="admin_slot_cost">
+        <source>admin_slot_cost</source>
+        <target>(Kosten: %score% Punkte)</target>
+      </trans-unit>
+      <trans-unit id="oztN7fC" resname="adminShowPoints">
+        <source>adminShowPoints</source>
+        <target>Admins können die Kosten der Slots sehen</target>
+      </trans-unit>
+      <trans-unit id="kj.t9A7" resname="slotbooking">
+        <source>slotbooking</source>
+        <target>Slotbuchung</target>
+      </trans-unit>
+      <trans-unit id="dchXAX5" resname="no_distribution_planned">
+        <source>no_distribution_planned</source>
+        <target>Im Moment is keine Verteilung geplant</target>
+      </trans-unit>
+      <trans-unit id="VjEODsR" resname="n/v">
+        <source>n/v</source>
+        <target>N.V.</target>
+      </trans-unit>
+      <trans-unit id="knGf4M_" resname="book">
+        <source>book</source>
+        <target>Buchen</target>
+      </trans-unit>
+      <trans-unit id="uwNHpGj" resname="you">
+        <source>you</source>
+        <target>Du</target>
+      </trans-unit>
+      <trans-unit id="QoghNQ6" resname="login">
+        <source>login</source>
+        <target>Login</target>
+      </trans-unit>
+      <trans-unit id="CFJqkPt" resname="anmelden">
+        <source>anmelden</source>
+        <target>Anmelden</target>
+      </trans-unit>
+      <trans-unit id="KdSVbXE" resname="an_error_occured">
+        <source>an_error_occured</source>
+        <target>Es ist ein Fehler aufgetreten. ({status_code})</target>
+      </trans-unit>
+      <trans-unit id="0T8urdT" resname="oops">
+        <source>oops</source>
+        <target>Uups da ist was schiefgelaufen!</target>
+      </trans-unit>
+      <trans-unit id="5AzJnHf" resname="back_to_home">
+        <source>back_to_home</source>
+        <target>Zurück zur Hauptseite</target>
+      </trans-unit>
+      <trans-unit id="i.EXLfW" resname="not_found">
+        <source>not_found</source>
+        <target>Uups diese Seite gibt es nicht!</target>
+      </trans-unit>
+      <trans-unit id="uSp2rLW" resname="stornieren">
+        <source>stornieren</source>
+        <target>stornieren</target>
+      </trans-unit>
+      <trans-unit id="AIF3nCh" resname="level">
+        <source>level</source>
+        <target>Level</target>
+      </trans-unit>
+      <trans-unit id="M2B0gF." resname="time">
+        <source>time</source>
+        <target>Time</target>
+      </trans-unit>
+      <trans-unit id="q1MKE_R" resname="message">
+        <source>message</source>
+        <target>Message</target>
+      </trans-unit>
+      <trans-unit id="Zs2WiKK" resname="dashboard">
+        <source>dashboard</source>
+        <target>Dashboard</target>
+      </trans-unit>
+      <trans-unit id="zO0oxtw" resname="start">
+        <source>start</source>
+        <target>Anfang</target>
+      </trans-unit>
+      <trans-unit id="Nh5I0DC" resname="end">
+        <source>end</source>
+        <target>Ende</target>
+      </trans-unit>
+      <trans-unit id="C.w.nnT" resname="slot_size">
+        <source>slot_size</source>
+        <target>Slot größe (Minuten)</target>
+      </trans-unit>
+      <trans-unit id="_ohHsMM" resname="create">
+        <source>create</source>
+        <target>Erstellen</target>
+      </trans-unit>
+      <trans-unit id="MC6lng8" resname="my_score">
+        <source>my_score</source>
+        <target>(Meine Punkte: %score%)</target>
+      </trans-unit>
+      <trans-unit id="CMxiD2w" resname="booking_successful">
+        <source>booking_successful</source>
+        <target>Buchung erfolgreich</target>
+      </trans-unit>
+      <trans-unit id="as31Ejv" resname="slot_not_bookable">
+        <source>slot_not_bookable</source>
+        <target>Dieser Slot ist für Dich nicht buchbar</target>
+      </trans-unit>
+      <trans-unit id="HvgnyG9" resname="booking_failed">
+        <source>booking_failed</source>
+        <target>Buchung fehlgeschlagen</target>
+      </trans-unit>
+      <trans-unit id="auA7VLO" resname="slot_already_booked">
+        <source>slot_already_booked</source>
+        <target>Der Slot ist leider bereits an jemand anderen vergeben</target>
+      </trans-unit>
+      <trans-unit id="79qEWE1" resname="slot_not_yours">
+        <source>slot_not_yours</source>
+        <target>Dieser Slot gehört dir nicht</target>
+      </trans-unit>
+      <trans-unit id="sG_mwe9" resname="login_failed">
+        <source>login_failed</source>
+        <target>Login fehlgeschlagen. Haben sie alles korrekt eingegeben?</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

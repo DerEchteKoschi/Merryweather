@@ -2,7 +2,7 @@
 
 namespace App\Controller\Admin;
 
-use App\MerryWeather\Admin\LogMessage;
+use App\Merryweather\Admin\LogMessage;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use Symfony\Component\HttpFoundation\Request;

@@ -24,10 +24,11 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class UserCrudController extends AbstractCrudController
 {
-    public function __construct(private readonly UserPasswordHasherInterface $userPasswordHasher)
+    public function __construct(private readonly UserPasswordHasherInterface $userPasswordHasher, private readonly TranslatorInterface $translator)
     {
     }
 
@@ -57,14 +58,14 @@ class UserCrudController extends AbstractCrudController
                  ->setFormType(RepeatedType::class)
                  ->setFormTypeOptions([
                      'type' => PasswordType::class,
-                     'first_options' => ['label' => 'Password', 'row_attr' => ['class' => 'col-md-5']],
-                     'second_options' => ['label' => 'Password (Repeat)', 'row_attr' => ['class' => 'col-md-5']],
+                     'first_options' => ['label' => $this->translator->trans('password'), 'row_attr' => ['class' => 'col-md-5']],
+                     'second_options' => ['label' => $this->translator->trans('password_repeat'), 'row_attr' => ['class' => 'col-md-5']],
                      'mapped' => false,
                  ])
                  ->setRequired($pageName === Crud::PAGE_NEW)
                  ->onlyOnForms(),
             ChoiceField::new('roles')
-                       ->setChoices(['User' => 'ROLE_USER', 'Admin' => 'ROLE_ADMIN'])
+                       ->setChoices([$this->translator->trans('user') => 'ROLE_USER', $this->translator->trans('admin') => 'ROLE_ADMIN'])
                        ->allowMultipleChoices()
                        ->renderExpanded()->renderAsBadges(),
             DateField::new('lastLogin')->hideOnForm(),
