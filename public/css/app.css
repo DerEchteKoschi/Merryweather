@@ -26,3 +26,21 @@
     width: 11em;
     white-space: nowrap;
 }
+
+.dropdown-lang-item {
+    width: 100%;
+    clear: both;
+    font-weight: 400;
+    color: var(--bs-dropdown-link-color);
+    text-align: inherit;
+    text-decoration: none;
+    margin-right: 1em;
+    white-space: nowrap;
+    background-color: transparent;
+    border: 0;
+    border-radius: var(--bs-dropdown-item-border-radius, 0);
+}
+.dropdown-lang-item:hover, .dropdown-item:focus {
+    color: var(--bs-dropdown-link-active-bg);
+    background-color: var(--bs-dropdown-link-hover-bg);
+}

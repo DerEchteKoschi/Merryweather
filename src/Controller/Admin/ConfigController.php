@@ -11,7 +11,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Translation\TranslatableMessage;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-#[Route('/admin')]
+#[Route('/admin/{_locale}')]
 class ConfigController extends AbstractDashboardController
 {
     public function __construct(

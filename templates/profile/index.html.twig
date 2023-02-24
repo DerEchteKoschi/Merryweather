@@ -24,7 +24,7 @@
         </div>
     </form>
         <hr>
-    <form class="row" method="post" action="/profile/changePassword">
+    <form class="row" method="post" action="{{ path('app_profile_change_password') }}">
         <div class="form-floating mb-3">
             <input type="password" class="form-control" id="inputPasswordCurrent" name="_inputPasswordCurrent">
             <label for="inputPasswordCurrent">{{ 'current_password'|trans }}</label>

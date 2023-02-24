@@ -14,7 +14,7 @@ class SessionController extends AbstractController
     {
     }
 
-    #[Route('/login', name: 'app_login')]
+    #[Route('/login/{_locale}', name: 'app_login')]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
         if ($this->isGranted('IS_AUTHENTICATED')) {

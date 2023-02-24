@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
+#[Route('/{_locale}')]
 class SlotBookingController extends AbstractController
 {
     public function __construct(private readonly TranslatorInterface $translator)
@@ -71,7 +72,7 @@ class SlotBookingController extends AbstractController
         return $this->redirectToRoute('app_slots');
     }
 
-    #[Route('/', name: 'app_slots')]
+    #[Route('/slots', name: 'app_slots')]
     public function index(DistributionRepository $distributionRepository): Response
     {
         $dists = Distribution::fromList($distributionRepository->findCurrentDistributions());

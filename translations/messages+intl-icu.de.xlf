@@ -433,6 +433,10 @@
         <source>login_failed</source>
         <target>Login fehlgeschlagen. Haben sie alles korrekt eingegeben?</target>
       </trans-unit>
+      <trans-unit id="en">
+        <source>en</source>
+        <target>english</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

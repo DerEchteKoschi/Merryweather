@@ -14,27 +14,35 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link {% if currentPath == '/' %}active{% endif %}" href="/"><i class="fa fa-square-share-nodes"></i>
+                    <a class="nav-link {% if currentPath == path('app_slots') %}active{% endif %}" href="{{ path('app_slots') }}"><i class="fa fa-square-share-nodes"></i>
                         {{ 'Distribution'|trans }}
                     </a>
                 </li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle {% if currentPath starts with '/profile' %}active{% endif %}" href="#" role="button" data-bs-toggle="dropdown">
+                    <a class="nav-link dropdown-toggle {% if currentPath == path('app_profile') %}active{% endif %}" href="#" role="button" data-bs-toggle="dropdown">
                         <i class=" fa fa-user{{ is_granted('ROLE_ADMIN') ? '-gear' : '' }}"></i>
                         {{ app.user }} {{ userScore() }}
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="/profile"><i class=" fa fa-address-card"></i>{{ 'my_profile'|trans }}</a></li>
+                        <li><a class="dropdown-item" href="{{ path('app_profile') }}"><i class=" fa fa-address-card"></i>{{ 'my_profile'|trans }}</a></li>
                         {% if is_granted('ROLE_ADMIN') %}
                             <li>
-                                <a class="dropdown-item" href="/admin">
+                                <a class="dropdown-item" href="{{ path('admin') }}">
                                     <i class=" fa fa-wrench"></i>
                                     {{ 'admin_dashboard'|trans }}
                                 </a>
                             </li>
                         {% endif %}
                         <div class="dropdown-divider"></div>
-                        <li><a class="dropdown-item" href="/logout"><i class=" fa fa-power-off"></i>{{ 'logout'|trans }}</a></li>
+                        <li class="dropdown-item">
+                            {% for lang in locales %}
+                                {% if lang != app.request.locale %}
+                                    <a class="dropdown-lang-item" href="{{ path(app.request.attributes.get('_route'), {'_locale': lang} ) }}"><i class=" fa fa-globe"></i>{{ lang|trans }}</a>
+                                {% endif %}
+                            {% endfor %}
+                        </li>
+                        <div class="dropdown-divider"></div>
+                        <li><a class="dropdown-item" href="{{ path('app_logout') }}"><i class=" fa fa-power-off"></i>{{ 'logout'|trans }}</a></li>
                     </ul>
                 </li>
             </ul>

@@ -25,7 +25,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Translation\TranslatableMessage;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-#[Route('/admin')]
+#[Route('/admin/{_locale}')]
 class AdminDashboardController extends AbstractDashboardController
 {
     private int $slotCount;
@@ -58,7 +58,7 @@ class AdminDashboardController extends AbstractDashboardController
     public function configureDashboard(): Dashboard
     {
         return Dashboard::new()
-                        ->setTitle($this->appTitle)->setFaviconPath('/favicon.ico')->setLocales(['de'])->disableDarkMode()->generateRelativeUrls();
+                        ->setTitle($this->appTitle)->setFaviconPath('/favicon.ico')->setLocales(['de','en'])->disableDarkMode()->generateRelativeUrls();
     }
 
     public function configureMenuItems(): iterable

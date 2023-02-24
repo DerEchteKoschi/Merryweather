@@ -411,7 +411,7 @@
       </trans-unit>
       <trans-unit id="CMxiD2w" resname="booking_successful">
         <source>booking_successful</source>
-        <target>bokking successful</target>
+        <target>booking successful</target>
       </trans-unit>
       <trans-unit id="as31Ejv" resname="slot_not_bookable">
         <source>slot_not_bookable</source>
@@ -432,6 +432,10 @@
       <trans-unit id="sG_mwe9" resname="login_failed">
         <source>login_failed</source>
         <target>Login failed, did you enter everything correctly?</target>
+      </trans-unit>
+      <trans-unit id="de">
+        <source>de</source>
+        <target>deutsch</target>
       </trans-unit>
     </body>
   </file>
