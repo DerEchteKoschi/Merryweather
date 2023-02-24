@@ -6,6 +6,7 @@ use App\Dto\Slot as SlotDto;
 use App\Entity\Slot;
 use App\Entity\User;
 use App\Merryweather\Admin\LogMessage;
+use App\Merryweather\AppConfig;
 use App\Merryweather\BookingRuleChecker;
 use App\Repository\SlotRepository;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -14,7 +15,7 @@ use Twig\Extension\RuntimeExtensionInterface;
 
 class MerryweatherExtensionRuntime implements RuntimeExtensionInterface
 {
-    public function __construct(private readonly BookingRuleChecker $bookingRuleChecker, private readonly SlotRepository $slotRepository, private readonly Security $security, private readonly TranslatorInterface $translator)
+    public function __construct(private readonly BookingRuleChecker $bookingRuleChecker, private readonly SlotRepository $slotRepository, private readonly Security $security, private readonly TranslatorInterface $translator, private readonly AppConfig $appConfig)
     {
     }
 
@@ -29,9 +30,10 @@ class MerryweatherExtensionRuntime implements RuntimeExtensionInterface
 
     public function slotCost(Slot|SlotDto $slot): string
     {
-        if (!$this->security->isGranted('ROLE_ADMIN')) {
+        if (!$this->security->isGranted('ROLE_ADMIN') || !$this->appConfig->isAdminShowPoints()) {
             return '';
         }
+
         if ($slot instanceof SlotDto) {
             $slot = $this->slotRepository->find($slot->id);
         }
@@ -41,9 +43,10 @@ class MerryweatherExtensionRuntime implements RuntimeExtensionInterface
 
     public function userScore(): string
     {
-        if (!$this->security->isGranted('ROLE_ADMIN')) {
+        if (!$this->security->isGranted('ROLE_ADMIN') || !$this->appConfig->isAdminShowPoints()) {
             return '';
         }
+
         /** @var User $user */
         $user = $this->security->getUser();
 

@@ -102,6 +102,11 @@ class AppConfig
         return $this->getConfigValue(self::CONFIG_ADMIN_CANCEL_ALLOWED);
     }
 
+    public function isAdminShowPoints(): bool
+    {
+        return $this->getConfigValue(self::CONFIG_ADMIN_SHOW_POINTS);
+    }
+
     public function isCronActive(): bool
     {
         return $this->getConfigValue(self::CONFIG_CRON_ACTIVE);
