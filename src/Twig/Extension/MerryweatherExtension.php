@@ -7,7 +7,7 @@ use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
 
-class MerryWeatherExtension extends AbstractExtension
+class MerryweatherExtension extends AbstractExtension
 {
     public function getFilters(): array
     {
