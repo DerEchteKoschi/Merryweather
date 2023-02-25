@@ -71,5 +71,4 @@ class DistributionRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
-
 }

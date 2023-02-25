@@ -31,6 +31,15 @@ class AdminDashboardController extends AbstractDashboardController
     private int $userCount;
     private int $distCount;
 
+    /**
+     * @param UserRepository         $userRepository
+     * @param SlotRepository         $slotRepository
+     * @param DistributionRepository $distributionRepository
+     * @param AppConfig              $dashboardConfig
+     * @param string                 $appTitle
+     * @param string[]               $supportedLocales
+     * @param bool                   $poorMansDeploymentActive
+     */
     public function __construct(
         UserRepository $userRepository,
         SlotRepository $slotRepository,
