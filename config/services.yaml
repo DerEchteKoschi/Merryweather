@@ -19,6 +19,7 @@ services:
             $logpath: '%logpath%'
             $poorMansDeploymentActive: '%env(bool:default:false_fallback:POOR_MANS_DEPLOYMENT)%'
             $appTitle: '%app.title%'
+            $supportedLocales: '%app.supported_locales%'
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name

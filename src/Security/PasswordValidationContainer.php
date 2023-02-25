@@ -2,7 +2,6 @@
 
 namespace App\Security;
 
-use App\Merryweather\AppConfig;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class PasswordValidationContainer

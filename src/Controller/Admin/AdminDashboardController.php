@@ -23,7 +23,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Translation\TranslatableMessage;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[Route('/admin/{_locale}')]
 class AdminDashboardController extends AbstractDashboardController
@@ -38,6 +37,7 @@ class AdminDashboardController extends AbstractDashboardController
         private readonly DistributionRepository $distributionRepository,
         private readonly AppConfig $dashboardConfig,
         private readonly string $appTitle,
+        private readonly array $supportedLocales,
         private readonly bool $poorMansDeploymentActive = false
     ) {
         $this->slotCount = $slotRepository->count([]);
@@ -58,7 +58,7 @@ class AdminDashboardController extends AbstractDashboardController
     public function configureDashboard(): Dashboard
     {
         return Dashboard::new()
-                        ->setTitle($this->appTitle)->setFaviconPath('/favicon.ico')->setLocales(['de','en'])->disableDarkMode()->generateRelativeUrls();
+                        ->setTitle($this->appTitle)->setFaviconPath('/favicon.ico')->setLocales($this->supportedLocales)->disableDarkMode()->generateRelativeUrls();
     }
 
     public function configureMenuItems(): iterable

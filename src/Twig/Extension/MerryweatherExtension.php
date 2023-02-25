@@ -4,16 +4,10 @@ namespace App\Twig\Extension;
 
 use App\Twig\Runtime\MerryweatherExtensionRuntime;
 use Twig\Extension\AbstractExtension;
-use Twig\TwigFilter;
 use Twig\TwigFunction;
 
 class MerryweatherExtension extends AbstractExtension
 {
-    public function getFilters(): array
-    {
-        return [];
-    }
-
     public function getFunctions(): array
     {
         return [
