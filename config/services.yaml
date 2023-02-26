@@ -7,8 +7,9 @@ parameters:
     logpath: '%kernel.logs_dir%/MW'
     false_fallback: false
     mw: 'Merryweather'
+    loc: '["de", "en"]'
     app.title: '%env(string:default:mw:APP_TITLE)%'
-    app.supported_locales: ['de', 'en']
+    app.supported_locales: '%env(json:default:loc:ACTIVE_LOCALES)%'
 
 services:
     # default configuration for services in *this* file

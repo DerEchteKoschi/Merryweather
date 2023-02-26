@@ -5,11 +5,13 @@
         <div class="justify-content-center d-flex"><img src="{{ asset('/img/logo.png') }}" alt="MerryWeather" width="100"></div>
         <div class="bd-heading sticky-xl-top align-self-start mt-5 mb-3 mt-xl-0 mb-xl-2">
             <h3>{{ 'login'|trans }}</h3>
-            {% for lang in locales %}
-                {% if lang != app.request.locale %}
-                    <a href="{{ path(app.request.attributes.get('_route'), {'_locale': lang} ) }}"><i class=" fa fa-globe"></i> {{ lang|trans }}</a>
-                {% endif %}
-            {% endfor %}
+            {% if locales|length > 1 %}
+                {% for lang in locales %}
+                    {% if lang != app.request.locale %}
+                        <a href="{{ path(app.request.attributes.get('_route'), {'_locale': lang} ) }}"><i class=" fa fa-globe"></i> {{ lang|trans }}</a>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
         </div>
         <div>
             <div>

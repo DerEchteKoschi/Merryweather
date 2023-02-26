@@ -5,6 +5,7 @@ namespace App\Merryweather;
 use App\Merryweather\Config\DataType;
 use App\Merryweather\Config\UnknownKeyException;
 use App\Repository\AppConfigRepository;
+use Symfony\Component\Translation\TranslatableMessage;
 
 class AppConfig
 {
@@ -81,32 +82,48 @@ class AppConfig
 
     /**
      * @return int[]
+     * @throws UnknownKeyException
      */
     public function getScoreConfig(): array
     {
         return $this->getConfigValue(self::CONFIG_SCORE_DISTRIBUTION);
     }
 
+    /**
+     * @throws UnknownKeyException
+     */
     public function getScoreLimit(): int
     {
         return $this->getConfigValue(self::CONFIG_SCORE_LIMIT);
     }
 
+    /**
+     * @throws UnknownKeyException
+     */
     public function getScoreRaiseStep(): int
     {
         return $this->getConfigValue(self::CONFIG_SCORE_RAISE_STEP);
     }
 
+    /**
+     * @throws UnknownKeyException
+     */
     public function isAdminCancelAllowed(): bool
     {
         return $this->getConfigValue(self::CONFIG_ADMIN_CANCEL_ALLOWED);
     }
 
+    /**
+     * @throws UnknownKeyException
+     */
     public function isAdminShowPoints(): bool
     {
         return $this->getConfigValue(self::CONFIG_ADMIN_SHOW_POINTS);
     }
 
+    /**
+     * @throws UnknownKeyException
+     */
     public function isCronActive(): bool
     {
         return $this->getConfigValue(self::CONFIG_CRON_ACTIVE);

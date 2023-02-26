@@ -33,14 +33,16 @@
                                 </a>
                             </li>
                         {% endif %}
-                        <div class="dropdown-divider"></div>
-                        <li class="dropdown-item">
-                            {% for lang in locales %}
-                                {% if lang != app.request.locale %}
-                                    <a class="dropdown-lang-item" href="{{ path(app.request.attributes.get('_route'), {'_locale': lang} ) }}"><i class=" fa fa-globe"></i>{{ lang|trans }}</a>
-                                {% endif %}
-                            {% endfor %}
-                        </li>
+                        {% if locales|length > 1 %}
+                            <div class="dropdown-divider"></div>
+                            <li class="dropdown-item">
+                                {% for lang in locales %}
+                                    {% if lang != app.request.locale %}
+                                        <a class="dropdown-lang-item" href="{{ path(app.request.attributes.get('_route'), {'_locale': lang} ) }}"><i class=" fa fa-globe"></i>{{ lang|trans }}</a>
+                                    {% endif %}
+                                {% endfor %}
+                            </li>
+                        {% endif %}
                         <div class="dropdown-divider"></div>
                         <li><a class="dropdown-item" href="{{ path('app_logout') }}"><i class=" fa fa-power-off"></i>{{ 'logout'|trans }}</a></li>
                     </ul>

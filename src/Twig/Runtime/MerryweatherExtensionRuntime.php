@@ -15,15 +15,24 @@ use Twig\Extension\RuntimeExtensionInterface;
 
 class MerryweatherExtensionRuntime implements RuntimeExtensionInterface
 {
-    public function __construct(private readonly BookingRuleChecker $bookingRuleChecker, private readonly SlotRepository $slotRepository, private readonly Security $security, private readonly TranslatorInterface $translator, private readonly AppConfig $appConfig)
-    {
+    public function __construct(
+        private readonly BookingRuleChecker $bookingRuleChecker,
+        private readonly SlotRepository $slotRepository,
+        private readonly Security $security,
+        private readonly TranslatorInterface $translator,
+        private readonly AppConfig $appConfig,
+        private readonly array $supportedLocales
+    ) {
     }
 
-    public function canBook(User $user, Slot|SlotDto $slot): bool
+    public function canBook(Slot|SlotDto $slot): bool
     {
         if ($slot instanceof SlotDto) {
             $slot = $this->slotRepository->find($slot->id);
         }
+
+        /** @var User $user */
+        $user = $this->security->getUser();
 
         return $this->bookingRuleChecker->userCanBook($user, $slot);
     }
@@ -55,11 +64,14 @@ class MerryweatherExtensionRuntime implements RuntimeExtensionInterface
 
 
 
-    public function canCancel(User $user, Slot|SlotDto $slot): bool
+    public function canCancel(Slot|SlotDto $slot): bool
     {
         if ($slot instanceof SlotDto) {
             $slot = $this->slotRepository->find($slot->id);
         }
+
+        /** @var User $user */
+        $user = $this->security->getUser();
 
         return $this->bookingRuleChecker->userCanCancel($user, $slot);
     }
