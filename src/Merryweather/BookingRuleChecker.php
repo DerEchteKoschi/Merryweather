@@ -11,7 +11,7 @@ class BookingRuleChecker implements LoggerAwareInterface
 {
     use LoggerAwareTrait;
 
-    public function __construct(private readonly AppConfig $config)
+    public function __construct(private readonly AppConfig $appConfig)
     {
     }
 
@@ -27,7 +27,7 @@ class BookingRuleChecker implements LoggerAwareInterface
 
     public function pointsNeededForSlot(Slot $slot): int
     {
-        $scoreConfig = $this->config->getScoreConfig();
+        $scoreConfig = $this->appConfig->getScoreConfig();
         $scoreConfigCount = count($scoreConfig);
         if ($scoreConfigCount === 0) {
             return 0;
@@ -64,8 +64,8 @@ class BookingRuleChecker implements LoggerAwareInterface
         $hasChanged = false;
         $score = $user->getScore();
         $score += $toAdd;
-        if ($score > $this->config->getScoreLimit()) {
-            $score = $this->config->getScoreLimit();
+        if ($score > $this->appConfig->getScoreLimit()) {
+            $score = $this->appConfig->getScoreLimit();
         }
         if ($score !== $user->getScore()) {
             $user->setScore($score);

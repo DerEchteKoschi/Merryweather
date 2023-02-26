@@ -35,7 +35,7 @@ class AdminDashboardController extends AbstractDashboardController
      * @param UserRepository         $userRepository
      * @param SlotRepository         $slotRepository
      * @param DistributionRepository $distributionRepository
-     * @param AppConfig              $dashboardConfig
+     * @param AppConfig              $appConfig
      * @param string                 $appTitle
      * @param string[]               $supportedLocales
      * @param bool                   $poorMansDeploymentActive
@@ -44,7 +44,7 @@ class AdminDashboardController extends AbstractDashboardController
         UserRepository $userRepository,
         SlotRepository $slotRepository,
         private readonly DistributionRepository $distributionRepository,
-        private readonly AppConfig $dashboardConfig,
+        private readonly AppConfig $appConfig,
         private readonly string $appTitle,
         private readonly array $supportedLocales,
         private readonly bool $poorMansDeploymentActive = false
@@ -81,7 +81,7 @@ class AdminDashboardController extends AbstractDashboardController
         yield MenuItem::section(new TranslatableMessage('system'));
         yield MenuItem::linkToCrud(new TranslatableMessage('add_user'), 'fa fa-user-plus', User::class)->setAction('new');
         yield MenuItem::linkToCrud(new TranslatableMessage('users'), 'fa fa-users', User::class)->setBadge($this->userCount);
-        if ($this->dashboardConfig->isCronActive()) {
+        if ($this->appConfig->isCronActive()) {
             yield MenuItem::linkToCrud(new TranslatableMessage('cron_jobs'), 'fa fa-clock', Crontab::class);
         }
         yield MenuItem::linkToRoute(new TranslatableMessage('configurations'), 'fa fa-wrench', 'admin_config');
@@ -108,7 +108,7 @@ class AdminDashboardController extends AbstractDashboardController
         $date = new \DateTimeImmutable('first day of this month');
         $currentMonth = $this->distributionRepository->findDistributionsOfMonth((int)$date->format('n'), (int)$date->format('Y'));
 
-        for ($i = 0; $i < $this->dashboardConfig->getMonthCount(); $i++) {
+        for ($i = 0; $i < $this->appConfig->getMonthCount(); $i++) {
             $months[] = new Month($i, $currentMonth);
             $date = $date->add(new \DateInterval('P1M'));
             $currentMonth = $this->distributionRepository->findDistributionsOfMonth((int)$date->format('n'), (int)$date->format('Y'));

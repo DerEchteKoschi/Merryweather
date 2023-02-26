@@ -2,8 +2,7 @@
 
 namespace App\Controller\Admin;
 
-use App\Merryweather\AppConfig as DashboardCfg;
-use App\Repository\AppConfigRepository;
+use App\Merryweather\AppConfig;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,8 +13,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class ConfigController extends AbstractDashboardController
 {
     public function __construct(
-        private DashboardCfg $dashboardConfig,
-        private TranslatorInterface $translator
+        private readonly AppConfig $appConfig,
+        private readonly TranslatorInterface $translator
     ) {
     }
 
@@ -23,22 +22,22 @@ class ConfigController extends AbstractDashboardController
      * @throws \Exception
      */
     #[Route('/config', name: 'admin_config')]
-    public function config(Request $request, DashboardCfg $appConfig, AppConfigRepository $configRepository): Response
+    public function config(Request $request): Response
     {
         if ($request->getMethod() === Request::METHOD_POST) {
             $requestCfg = $request->request->all('cfg');
-            foreach (DashboardCfg::CONFIG_DEFINITION as $key => $value) {
+            foreach (AppConfig::CONFIG_DEFINITION as $key => $value) {
                 if (isset($requestCfg[$key])) {
-                    $this->dashboardConfig->setConfigValue($key, $requestCfg[$key]);
+                    $this->appConfig->setConfigValue($key, $requestCfg[$key]);
                 } else {
-                    $this->dashboardConfig->setConfigValue($key, 'off');
+                    $this->appConfig->setConfigValue($key, 'off');
                 }
             }
             $this->addFlash('success', $this->translator->trans('config_saved'));
         }
         $data = [];
-        foreach (DashboardCfg::CONFIG_DEFINITION as $key => $value) {
-            $data[$key] = ['type' => DashboardCfg::CONFIG_DEFINITION[$key][DashboardCfg::TYPE], 'value' => $this->dashboardConfig->getConfigValue($key)];
+        foreach (AppConfig::CONFIG_DEFINITION as $key => $value) {
+            $data[$key] = ['type' => AppConfig::CONFIG_DEFINITION[$key][AppConfig::TYPE], 'value' => $this->appConfig->getConfigValue($key)];
         }
 
         return $this->render('admin/config.html.twig', [
