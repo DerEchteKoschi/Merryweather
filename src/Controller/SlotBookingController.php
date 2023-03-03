@@ -55,7 +55,7 @@ class SlotBookingController extends AbstractController
             $this->addFlash('danger', 'Slot nicht gefunden');
         } elseif ($slot->getUser() === $user) {
             $slot->setUser(null);
-            $bookRuleChecker->raiseUserScore($user, $bookRuleChecker->pointsNeededForSlot($slot));
+            $bookRuleChecker->raiseUserScoreBySlot($user, $slot);
             $userRepository->save($user, true);
             $slotRepository->save($slot, true);
             $this->addFlash('success', 'Stornierung erfolgreich');

@@ -70,9 +70,11 @@ class Crontab
     /**
      * @param string|null $expression
      */
-    public function setExpression(?string $expression): void
+    public function setExpression(?string $expression): self
     {
         $this->expression = $expression;
+
+        return $this;
     }
 
     public function setLastExecution(?\DateTimeImmutable $last_execution): self

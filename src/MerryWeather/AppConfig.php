@@ -58,18 +58,18 @@ class AppConfig
         if (!$forceFresh && isset($this->cache[$key])) {
             return $this->cache[$key];
         }
-        $result = $this->configRepository->findBy(['configKey' => $key]);
-        if (empty($result) || $result[0]->getValue() === null) {
+        $result = $this->configRepository->findOneBy(['configKey' => $key]);
+        if ($result === null) {
             $value = self::CONFIG_DEFINITION[$key][self::DEFAULT];
         } else {
             /** @var DataType $type */
             $type = self::CONFIG_DEFINITION[$key][self::TYPE];
             $value = match ($type) {
-                DataType::Integer => (int)$result[0]->getValue(),
-                DataType::Boolean => $result[0]->getValue() === 'on',
-                DataType::String => (string)$result[0]->getValue(),
-                DataType::Float => (float)$result[0]->getValue(),
-                DataType::IntArray => $this->toIntArray($result[0]->getValue())
+                DataType::Integer => (int)$result->getValue(),
+                DataType::Boolean => $result->getValue() === 'on',
+                DataType::String => (string)$result->getValue(),
+                DataType::Float => (float)$result->getValue(),
+                DataType::IntArray => $this->toIntArray($result->getValue())
             };
         }
         $this->cache[$key] = $value;
