@@ -27,7 +27,8 @@ class ProfileController extends AbstractController
         $user = $this->getUser();
         if (!($user instanceof User) && $user !== null) {
             $user = $userRepository->findOneBy(['phone' => $user->getUserIdentifier()]);
-        } elseif ($user === null) {
+        }
+        if ($user === null) {
             $this->addFlash('error', $this->translator->trans('something_went_wrong'));
 
             return $this->redirectToRoute('app_profile');
@@ -69,6 +70,6 @@ class ProfileController extends AbstractController
     #[Route('/', name: 'app_profile')]
     public function index(): Response
     {
-        return $this->render('profile/index.html.twig', );
+        return $this->render('profile/index.html.twig');
     }
 }

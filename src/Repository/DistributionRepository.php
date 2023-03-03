@@ -3,9 +3,8 @@
 namespace App\Repository;
 
 use App\Entity\Distribution;
-use App\Entity\Slot;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\Query\Expr\Join;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -14,7 +13,7 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method Distribution|null find($id, $lockMode = null, $lockVersion = null)
  * @method Distribution|null findOneBy(array $criteria, array $orderBy = null)
  * @method Distribution[]    findAll()
- * @method Distribution[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Distribution[]    findBy(array|Criteria $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class DistributionRepository extends ServiceEntityRepository
 {
@@ -28,13 +27,10 @@ class DistributionRepository extends ServiceEntityRepository
      */
     public function findCurrentDistributions(): array
     {
-        $qb = $this->createQueryBuilder('dist')
-                   ->where('dist.active_from <= :today')
-                   ->andWhere('dist.active_till >= :today')
-                   ->join(Slot::class, 'slots', Join::WITH, 'slots.distribution = dist')
-                   ->setParameter('today', new \DateTimeImmutable('today'));
-
-        return $qb->getQuery()->execute();
+        $crit = Criteria::create();
+        $crit->where(Criteria::expr()->lte('active_from', new \DateTimeImmutable('today')));
+        $crit->andWhere(Criteria::expr()->gte('active_till', new \DateTimeImmutable('today')));
+        return $this->findByCriteria($crit);
     }
 
     /**
@@ -45,13 +41,10 @@ class DistributionRepository extends ServiceEntityRepository
     {
         $date = new \DateTimeImmutable(sprintf('1.%d.%d', $month, $year));
 
-        $qb = $this->createQueryBuilder('dist')
-                   ->where('dist.active_till < :nextmonth')
-                   ->andWhere('dist.active_till > :prevmonth')
-                   ->setParameter('nextmonth', $date->add(new \DateInterval('P1M')))
-                   ->setParameter('prevmonth', $date->sub(new \DateInterval('P1D')));
-
-        return $qb->getQuery()->execute();
+        $crit = Criteria::create();
+        $crit->where(Criteria::expr()->lt('active_till', $date->add(new \DateInterval('P1M'))));
+        $crit->andWhere(Criteria::expr()->gt('active_till', $date->sub(new \DateInterval('P1D'))));
+        return $this->findByCriteria($crit);
     }
 
     public function remove(Distribution $entity, bool $flush = false): void
@@ -61,6 +54,17 @@ class DistributionRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+
+    /**
+     * @param Criteria $criteria
+     * @return Distribution[]
+     */
+    private function findByCriteria(Criteria $criteria): array
+    {
+        $persister = $this->getEntityManager()->getUnitOfWork()->getEntityPersister($this->getEntityName());
+
+        return $persister->loadCriteria($criteria);
     }
 
     public function save(Distribution $entity, bool $flush = false): void

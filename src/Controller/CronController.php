@@ -3,17 +3,14 @@
 namespace App\Controller;
 
 use App\Merryweather\AppConfig;
+use App\Merryweather\SymfonyCli;
 use App\Repository\CrontabRepository;
 use Cron\CronExpression;
 use DateTimeImmutable;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
-use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Console\Input\ArgvInput;
-use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 class CronController extends AbstractController implements LoggerAwareInterface
@@ -23,43 +20,29 @@ class CronController extends AbstractController implements LoggerAwareInterface
      * @throws \Exception
      */
     #[Route('/cron', name: 'app_cron')]
-    public function index(AppConfig $config, CrontabRepository $crontabRepository, KernelInterface $kernel): Response
+    public function index(AppConfig $config, CrontabRepository $crontabRepository, SymfonyCli $cli): Response
     {
         if ($config->isCronActive()) {
-            $this->logger->info('cron started');
-            $app = new Application($kernel);
-            $app->setAutoExit(false);
+            $this->logger->notice('webcron started');
             $crontabs = $crontabRepository->findAll();
             $now = new DateTimeImmutable();
+            $execCount = 0;
             foreach ($crontabs as $crontab) {
-                $this->logger->info('cron started');
                 $cron = new CronExpression($crontab->getExpression());
                 if ($crontab->getNextExecution() === null) {
+                    $this->logger->info(sprintf('job [%s] not due, skipped', $crontab->getCommand()));
                     $crontab->setNextExecution(DateTimeImmutable::createFromMutable($cron->getNextRunDate()));
                 } elseif ($crontab->getNextExecution() <= $now) {
-                    $argv = [];
-                    if (!empty($crontab->getArguments())) {
-                        $argv = str_getcsv($crontab->getArguments(), ' ');
-                    }
-                    array_unshift($argv, '', $crontab->getCommand());
-                    $input = new ArgvInput($argv);
-                    $cmd = $app->find($crontab->getCommand());
-                    $cmd->mergeApplicationDefinition();
-                    $input->bind($cmd->getDefinition());
-
-                    $output = new BufferedOutput();
-                    $output->setDecorated(false);
-                    $app->run($input, $output);
-
-                    // return the output, don't use if you used NullOutput()
-                    $content = $output->fetch();
+                    $execCount++;
+                    $this->logger->notice(sprintf('job [%s] started', $crontab->getCommand()));
+                    $content = $cli->run($crontab->getCommand(), $crontab->getArguments());
                     $crontab->setResult($content);
                     $crontab->setLastExecution(new DateTimeImmutable());
                     $crontab->setNextExecution(DateTimeImmutable::createFromMutable($cron->getNextRunDate()));
                 }
                 $crontabRepository->save($crontab, true);
             }
-            $this->logger->info('cron finished');
+            $this->logger->notice(sprintf('webcron finished, executed %s job(s)', $execCount));
         }
 
         return new Response('done');

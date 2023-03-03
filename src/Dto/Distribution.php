@@ -14,7 +14,7 @@ class Distribution implements Stringable
      * @param DateTimeInterface|null $activeTill
      * @param Slot[]                 $slots
      */
-    public function __construct(public int $id, public string $text, public ?DateTimeInterface $activeFrom, public ?DateTimeInterface $activeTill, public array $slots)
+    private function __construct(public int $id, public string $text, public ?DateTimeInterface $activeFrom, public ?DateTimeInterface $activeTill, public array $slots)
     {
     }
 
