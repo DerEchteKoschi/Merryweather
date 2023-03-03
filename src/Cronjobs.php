@@ -3,13 +3,12 @@
 namespace App;
 
 use App\Command\CronCommand;
-use Symfony\Bundle\FrameworkBundle\Console\Application;
+use App\MerryWeather\SymfonyCli;
 use Symfony\Component\Console\Command\LazyCommand;
-use Symfony\Component\HttpKernel\KernelInterface;
 
 class Cronjobs
 {
-    public function __construct(private KernelInterface $kernel)
+    public function __construct(private readonly SymfonyCli $symfonyCli)
     {
     }
 
@@ -18,7 +17,7 @@ class Cronjobs
      */
     public function generate(): array
     {
-        $app = new Application($this->kernel);
+        $app = $this->symfonyCli->getApplication();
         $res = [];
 
         foreach ($app->all() as $cmd) {

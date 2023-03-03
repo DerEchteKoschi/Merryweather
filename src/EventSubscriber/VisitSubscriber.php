@@ -6,7 +6,7 @@ use App\Entity\User;
 use App\Repository\UserRepository;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpKernel\Event\FinishRequestEvent;
+use Symfony\Component\HttpKernel\Event\KernelEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 class VisitSubscriber implements EventSubscriberInterface
@@ -22,7 +22,7 @@ class VisitSubscriber implements EventSubscriberInterface
         ];
     }
 
-    public function onKernelFinishRequest(FinishRequestEvent $event): void
+    public function onKernelFinishRequest(KernelEvent $event): void
     {
         if ($this->userRepository->isEntityManagerOpen()) {
             $user = $this->security->getUser();

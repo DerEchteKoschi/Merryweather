@@ -15,7 +15,7 @@ class Slot
     #[ORM\Column]
     private ?int $id = null;
     #[ORM\Version, ORM\Column(type: 'integer')]
-    private int $version;
+    private int $version = 1;
     #[ORM\ManyToOne(inversedBy: 'slots')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Distribution $distribution = null;
@@ -52,9 +52,9 @@ class Slot
     }
 
     /**
-     * @return int
+     * @return ?int
      */
-    public function getVersion(): int
+    public function getVersion(): ?int
     {
         return $this->version;
     }
