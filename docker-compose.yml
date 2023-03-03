@@ -39,7 +39,10 @@ services:
       - .:/usr/src:rw,cached
       - var:/usr/src/var:rw,cached
     environment:
-      PHP_XDEBUG_MODE: 'debug'
+      XDEBUG_MODE: debug
+      XDEBUG_CLIENT_HOST: host.docker.internal
+      XDEBUG_TRIGGER: PHPSTORM
+      PHP_XDEBUG_MODE: debug
       PHP_XDEBUG_CLIENT_HOST: host.docker.internal
       PHP_XDEBUG_TRIGGER: PHPSTORM
       PHP_IDE_CONFIG: serverName=localhost
