@@ -6,6 +6,10 @@
 parameters:
     logpath: '%kernel.logs_dir%/MW'
     false_fallback: false
+    mw: 'Merryweather'
+    loc: '["de", "en"]'
+    app.title: '%env(string:default:mw:APP_TITLE)%'
+    app.supported_locales: '%env(json:default:loc:ACTIVE_LOCALES)%'
 
 services:
     # default configuration for services in *this* file
@@ -15,6 +19,8 @@ services:
         bind:
             $logpath: '%logpath%'
             $poorMansDeploymentActive: '%env(bool:default:false_fallback:POOR_MANS_DEPLOYMENT)%'
+            $appTitle: '%app.title%'
+            $supportedLocales: '%app.supported_locales%'
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name

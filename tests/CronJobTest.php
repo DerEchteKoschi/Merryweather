@@ -3,7 +3,7 @@
 use App\Command\CronCommand;
 use App\Command\ScoreCalcCommand;
 use App\Cronjobs;
-use App\MerryWeather\SymfonyCli;
+use App\Merryweather\SymfonyCli;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Command\Command;

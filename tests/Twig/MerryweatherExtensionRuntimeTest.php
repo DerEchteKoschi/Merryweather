@@ -4,37 +4,95 @@ namespace tests\Twig;
 
 use App\Entity\Slot;
 use App\Entity\User;
-use App\MerryWeather\Admin\LogMessage;
-use App\MerryWeather\BookingRuleChecker;
+use App\Merryweather\Admin\LogMessage;
+use App\Merryweather\AppConfig;
+use App\Merryweather\BookingRuleChecker;
 use App\Repository\SlotRepository;
-use App\Twig\Runtime\MerryWeatherExtensionRuntime;
+use App\Twig\Runtime\MerryweatherExtensionRuntime;
 use PHPUnit\Framework\TestCase;
+use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class MerryweatherExtensionRuntimeTest extends TestCase
 {
+    public function scoreMatrix()
+    {
+        yield [true, true, '815'];
+        yield [true, false, ''];
+        yield [false, false, ''];
+        yield [false, true, ''];
+    }
+
     public function testCanBook()
     {
-        [$slotE, $mer, $user] = $this->prepare('userCanBook');
-        $this->assertTrue($mer->canBook($user, \App\Dto\Slot::fromEntity($slotE)));
+        /** @var $mer MerryweatherExtensionRuntime */
+        [$slotE, $mer] = $this->prepare('userCanBook');
+        $this->assertTrue($mer->canBook(\App\Dto\Slot::fromEntity($slotE)));
     }
 
     public function testCanCncel()
     {
-        [$slotE, $mer, $user] = $this->prepare('userCanCancel');
-        $this->assertTrue($mer->canCancel($user, \App\Dto\Slot::fromEntity($slotE)));
+        /** @var $mer MerryweatherExtensionRuntime */
+        [$slotE, $mer] = $this->prepare('userCanCancel');
+        $this->assertTrue($mer->canCancel(\App\Dto\Slot::fromEntity($slotE)));
     }
 
-    public function testSlotCost()
+    /**
+     * @param $isAdmin
+     * @param $isActive
+     * @dataProvider scoreMatrix
+     *
+     */
+    public function testSlotCost($isAdmin, $isActive, $expected)
     {
         $slot = $this->getSlotMock();
 
         $bookingRuleChecker = $this->createMock(BookingRuleChecker::class);
         $bookingRuleChecker->method('pointsNeededForSlot')->with($this->equalTo($slot))->willReturn(815);
 
-        $slotRepository = $this->createMock(SlotRepository::class);
-        $slotRepository->method('find')->willReturn($slot);
-        $merryweatherExtensionRuntime = new MerryWeatherExtensionRuntime($bookingRuleChecker, $slotRepository);
-        $this->assertEquals(815, $merryweatherExtensionRuntime->slotCost(\App\Dto\Slot::fromEntity($slot)));
+        $securityMock = $this->createMock(Security::class);
+        $securityMock->method('isGranted')->willReturnCallback(function ($param) use ($isAdmin) {
+            $result = ($param === 'ROLE_ADMIN') && $isAdmin;
+
+            return $result;
+        });
+        $translatorMock = $this->createMock(TranslatorInterface::class);
+        $translatorMock->method('trans')->willReturn('815');
+        $appConfigMock = $this->createMock(AppConfig::class);
+        $appConfigMock->method('isAdminShowPoints')->willReturn($isActive);
+        $merryweatherExtensionRuntime = $this->newMerryweatherExtensionRuntime(slotMock: $slot, bookingRuleChecker: $bookingRuleChecker, securityMock: $securityMock, translatorMock: $translatorMock,
+            appConfigMock: $appConfigMock);
+        $this->assertEquals($expected, $merryweatherExtensionRuntime->slotCost(\App\Dto\Slot::fromEntity($slot)));
+    }
+
+    /**
+     * @param $isAdmin
+     * @param $isActive
+     * @param $expected
+     * @dataProvider scoreMatrix
+     */
+public function testUserScore($isAdmin, $isActive, $expected)
+
+    {
+        $slot = $this->getSlotMock();
+
+        $bookingRuleChecker = $this->createMock(BookingRuleChecker::class);
+        $bookingRuleChecker->method('pointsNeededForSlot')->with($this->equalTo($slot))->willReturn(815);
+
+        $securityMock = $this->createMock(Security::class);
+        $securityMock->method('getUser')->willReturn((new User())->setScore(1));
+        $securityMock->method('isGranted')->willReturnCallback(function ($param) use ($isAdmin) {
+            $result = ($param === 'ROLE_ADMIN') && $isAdmin;
+
+            return $result;
+        });
+        $translatorMock = $this->createMock(TranslatorInterface::class);
+        $translatorMock->method('trans')->willReturn('815');
+        $appConfigMock = $this->createMock(AppConfig::class);
+        $appConfigMock->method('isAdminShowPoints')->willReturn($isActive);
+        $merryweatherExtensionRuntime = $this->newMerryweatherExtensionRuntime(slotMock: $slot, bookingRuleChecker: $bookingRuleChecker, securityMock: $securityMock, translatorMock: $translatorMock,
+            appConfigMock: $appConfigMock);
+        $this->assertEquals($expected, $merryweatherExtensionRuntime->userScore(\App\Dto\Slot::fromEntity($slot)));
     }
 
     /**
@@ -42,7 +100,7 @@ class MerryweatherExtensionRuntimeTest extends TestCase
      */
     public function testBootstrapClassForLog(string $expected, LogMessage $log)
     {
-        $merryweatherExtensionRuntime = new MerryWeatherExtensionRuntime($this->createMock(BookingRuleChecker::class), $this->createMock(SlotRepository::class));
+        $merryweatherExtensionRuntime = $this->newMerryweatherExtensionRuntime();
         $class = $merryweatherExtensionRuntime->bootstrapClassForLog($log);
         $this->assertEquals($expected, $class);
     }
@@ -85,14 +143,48 @@ class MerryweatherExtensionRuntimeTest extends TestCase
     {
         $bookingRuleChecker = $this->createMock(BookingRuleChecker::class);
         $slot = $this->getSlotMock();
-        $slotRepository = $this->createMock(SlotRepository::class);
-        $slotRepository->method('find')->willReturn($slot);
-        $merryweatherExtensionRuntime = new MerryWeatherExtensionRuntime($bookingRuleChecker, $slotRepository);
-        $user = new User();
-        $user->setDisplayName('test');
-        $bookingRuleChecker->method($method)->with($this->equalTo($user), $this->equalTo($slot))->willReturn(true);
+        $bookingRuleChecker->method($method)->with($this->isInstanceOf(User::class), $this->equalTo($slot))->willReturn(true);
+        $merryweatherExtensionRuntime = $this->newMerryweatherExtensionRuntime(slotMock: $slot, bookingRuleChecker: $bookingRuleChecker);
 
-        return [$slot, $merryweatherExtensionRuntime, $user];
+        return [$slot, $merryweatherExtensionRuntime];
+    }
+
+    private function newMerryweatherExtensionRuntime(
+        $slotMock = null,
+        $bookingRuleChecker = null,
+        $slotRepository = null,
+        $securityMock = null,
+        $translatorMock = null,
+        $appConfigMock = null
+    ): MerryweatherExtensionRuntime {
+        if ($slotMock === null) {
+            $slotMock = $this->getSlotMock();
+        }
+
+        if ($bookingRuleChecker === null) {
+            $bookingRuleChecker = $this->createMock(BookingRuleChecker::class);
+            $bookingRuleChecker->method('pointsNeededForSlot')->with($this->equalTo($slotMock))->willReturn(815);
+        }
+
+        if ($slotRepository === null) {
+            $slotRepository = $this->createMock(SlotRepository::class);
+            $slotRepository->method('find')->willReturn($slotMock);
+        }
+
+        if ($securityMock === null) {
+            $securityMock = $this->createMock(Security::class);
+            $securityMock->method('getUser')->willReturn(new User());
+
+        }
+        if ($translatorMock === null) {
+            $translatorMock = $this->createMock(TranslatorInterface::class);
+        }
+        if ($appConfigMock === null) {
+            $appConfigMock = $this->createMock(AppConfig::class);
+        }
+
+        return new MerryweatherExtensionRuntime($bookingRuleChecker, $slotRepository, $securityMock, $translatorMock, $appConfigMock, []);
+
     }
 
 }

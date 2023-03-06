@@ -6,13 +6,18 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SessionController extends AbstractController
 {
-    #[Route('/login', name: 'app_login')]
+    public function __construct(private readonly TranslatorInterface $translator)
+    {
+    }
+
+    #[Route('/login/{_locale}', name: 'app_login')]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
-        if ($this->getUser() !== null) {
+        if ($this->isGranted('IS_AUTHENTICATED')) {
             return $this->redirect('/'); // send already logged-in users to root
         }
         // get the login error if there is one
@@ -22,7 +27,7 @@ class SessionController extends AbstractController
         $lastUsername = $authenticationUtils->getLastUsername();
 
         if ($error !== null) {
-            $this->addFlash('danger', 'Login fehlgeschlagen. Haben sie alles korrekt eingegeben?');
+            $this->addFlash('danger', $this->translator->trans('login_failed'));
         }
 
         return $this->render('login/index.html.twig', [

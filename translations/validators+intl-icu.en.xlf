@@ -1,33 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file source-language="de" target-language="de" datatype="plaintext" original="file.ext">
+  <file source-language="de" target-language="en" datatype="plaintext" original="file.ext">
     <header>
       <tool tool-id="symfony" tool-name="Symfony"/>
     </header>
     <body>
       <trans-unit id="VKDowX6" resname="Error">
         <source>Error</source>
-        <target>Fehler</target>
+        <target>Error</target>
       </trans-unit>
       <trans-unit id="pkoyD3R" resname="current_pw_not_empty">
         <source>current_pw_not_empty</source>
-        <target>Das aktuelle Kennwort darf nicht leer sein</target>
+        <target>The current password is not allowed to be empty</target>
       </trans-unit>
       <trans-unit id="Fsog5B2" resname="pw_not_empty">
         <source>pw_not_empty</source>
-        <target>Das Kennwort darf nicht leer sein</target>
+        <target>The password is not allowed to be empty</target>
       </trans-unit>
       <trans-unit id="fguw8nP" resname="pw_not_long_enough">
         <source>pw_not_long_enough</source>
-        <target>Das Kennwort ist nicht lang genug (mindestens 10 Zeichen)</target>
+        <target>The password is not long enough (min 10 characters)</target>
       </trans-unit>
       <trans-unit id="7jmmemI" resname="pw_repeat_not_equal">
         <source>pw_repeat_not_equal</source>
-        <target>Das Wiederholung des Kennworts stimmt nicht überein</target>
+        <target>The password repetition is not equal to the password</target>
       </trans-unit>
       <trans-unit id="GiC_AHt" resname="pw_not_equal_current">
         <source>pw_not_equal_current</source>
-        <target>Das neue Kennwort darf nicht mit dem alten Kennwort übereinstimmen</target>
+        <target>The new password is not allowed to be the curent password</target>
       </trans-unit>
     </body>
   </file>

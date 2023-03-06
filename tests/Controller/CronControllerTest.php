@@ -4,8 +4,8 @@ namespace tests\Controller;
 
 use App\Controller\CronController;
 use App\Entity\Crontab;
-use App\MerryWeather\AppConfig;
-use App\MerryWeather\SymfonyCli;
+use App\Merryweather\AppConfig;
+use App\Merryweather\SymfonyCli;
 use App\Repository\CrontabRepository;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;

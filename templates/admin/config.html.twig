@@ -1,18 +1,18 @@
 {% extends '@EasyAdmin/page/content.html.twig' %}
 
 {% block page_title %}
-    {{ 'Einstellungen'|trans }}
+    {{ 'configurations'|trans }}
 {% endblock %}
 {% block main %}
     <form method="post" action="{{ ea_url() }}">
         <button class="btn btn-primary action-save" type="submit" >
-            <span class="btn-label"><span class="action-label">{{ 'speichern'|trans }}</span></span>
+            <span class="btn-label"><span class="action-label">{{ 'save'|trans }}</span></span>
         </button>
     <table class="table table-striped log-table">
         <thead>
         <tr>
-            <th scope="col" class="col1">{{ 'Name'|trans }}</th>
-            <th scope="col" class="col2">{{ 'Wert'|trans }}</th>
+            <th scope="col" class="col1">{{ 'name'|trans }}</th>
+            <th scope="col" class="col2">{{ 'value'|trans }}</th>
         </tr>
         </thead>
         <tbody>
@@ -20,7 +20,7 @@
         {% for name, cfg in config %}
             <tr class="">
                 <th scope="row" class="">
-                    <label for="cfg_{{ name }}" class="form-control-label">{{ cfg.name|trans }}</label>
+                    <label for="cfg_{{ name }}" class="form-control-label">{{ name|trans }}</label>
                 </th>
                 <td>
                     {{ include('admin/type/'~ (cfg.type.name|lower) ~'.html.twig', {name: name, value: cfg.value}, with_context = false) }}
@@ -30,7 +30,7 @@
         </tbody>
     </table>
         <button class="btn btn-primary action-save" type="submit" >
-            <span class="btn-label"><span class="action-label">{{ 'speichern'|trans }}</span></span>
+            <span class="btn-label"><span class="action-label">{{ 'save'|trans }}</span></span>
         </button>
     </form>
 {% endblock %}

@@ -1,49 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file source-language="de" target-language="de" datatype="plaintext" original="file.ext">
+  <file source-language="de" target-language="en" datatype="plaintext" original="file.ext">
     <header>
       <tool tool-id="symfony" tool-name="Symfony"/>
     </header>
     <body>
       <trans-unit id="9A1.Ufa" resname="Mon">
         <source>Mon</source>
-        <target>Montag</target>
+        <target>Monday</target>
       </trans-unit>
       <trans-unit id="0es5sJv" resname="Tue">
         <source>Tue</source>
-        <target>Dienstag</target>
+        <target>Tuesday</target>
       </trans-unit>
       <trans-unit id="WDOfRd_" resname="Wed">
         <source>Wed</source>
-        <target>Mittwoch</target>
+        <target>Wednesday</target>
       </trans-unit>
       <trans-unit id="faESEu0" resname="Thu">
         <source>Thu</source>
-        <target>Donnerstag</target>
+        <target>Thursday</target>
       </trans-unit>
       <trans-unit id="Ztq0DOo" resname="Fri">
         <source>Fri</source>
-        <target>Freitag</target>
+        <target>Friday</target>
       </trans-unit>
       <trans-unit id=".etxtWn" resname="Sat">
         <source>Sat</source>
-        <target>Samstag</target>
+        <target>Saturday</target>
       </trans-unit>
       <trans-unit id="2xjxf_U" resname="Sun">
         <source>Sun</source>
-        <target>Sonntag</target>
+        <target>Sunday</target>
       </trans-unit>
       <trans-unit id="XF2xIMs" resname="Jan">
         <source>Jan</source>
-        <target>Januar</target>
+        <target>January</target>
       </trans-unit>
       <trans-unit id="yvcbP1g" resname="Feb">
         <source>Feb</source>
-        <target>Februar</target>
+        <target>February</target>
       </trans-unit>
       <trans-unit id="tLfTgY2" resname="Mar">
         <source>Mar</source>
-        <target>März</target>
+        <target>March</target>
       </trans-unit>
       <trans-unit id="YXUxtP7" resname="Apr">
         <source>Apr</source>
@@ -51,15 +51,15 @@
       </trans-unit>
       <trans-unit id="jHj_W5k" resname="May">
         <source>May</source>
-        <target>Mai</target>
+        <target>May</target>
       </trans-unit>
       <trans-unit id="sn.UbtG" resname="Jun">
         <source>Jun</source>
-        <target>Juni</target>
+        <target>June</target>
       </trans-unit>
       <trans-unit id="xD9WuYB" resname="Jul">
         <source>Jul</source>
-        <target>Juli</target>
+        <target>July</target>
       </trans-unit>
       <trans-unit id="QeHYKqm" resname="Aug">
         <source>Aug</source>
@@ -71,7 +71,7 @@
       </trans-unit>
       <trans-unit id="aHfoSUw" resname="Oct">
         <source>Oct</source>
-        <target>Oktober</target>
+        <target>October</target>
       </trans-unit>
       <trans-unit id="PmMNKWS" resname="Nov">
         <source>Nov</source>
@@ -79,23 +79,23 @@
       </trans-unit>
       <trans-unit id="8qDPvPG" resname="Dec">
         <source>Dec</source>
-        <target>Dezember</target>
+        <target>December</target>
       </trans-unit>
       <trans-unit id="M12p2c4" resname="back_to_app">
         <source>back_to_app</source>
-        <target>Zurück zur Anwendung</target>
+        <target>Back to Application</target>
       </trans-unit>
       <trans-unit id="UVJ5Die" resname="calendar">
         <source>calendar</source>
-        <target>Kalender</target>
+        <target>Calendar</target>
       </trans-unit>
       <trans-unit id="E2qU3h7" resname="distributions">
         <source>distributions</source>
-        <target>Verteilungen</target>
+        <target>Distributions</target>
       </trans-unit>
       <trans-unit id=".cRH.q6" resname="new_distribution">
         <source>new_distribution</source>
-        <target>Neue Verteilung</target>
+        <target>New distribution</target>
       </trans-unit>
       <trans-unit id="O0eKCj." resname="slots">
         <source>slots</source>
@@ -107,11 +107,11 @@
       </trans-unit>
       <trans-unit id="m4Y9cPG" resname="add_user">
         <source>add_user</source>
-        <target>Benutzer hinzufügen</target>
+        <target>Add user</target>
       </trans-unit>
       <trans-unit id="fftM9nd" resname="users">
         <source>users</source>
-        <target>Benutzer</target>
+        <target>Users</target>
       </trans-unit>
       <trans-unit id="8CKJCvs" resname="cron_jobs">
         <source>cron_jobs</source>
@@ -119,7 +119,7 @@
       </trans-unit>
       <trans-unit id="6F7FO9p" resname="configurations">
         <source>configurations</source>
-        <target>Einstellungen</target>
+        <target>Configurations</target>
       </trans-unit>
       <trans-unit id="mPOPEts" resname="logs">
         <source>logs</source>
@@ -127,27 +127,27 @@
       </trans-unit>
       <trans-unit id="L_278zr" resname="deployment_2fa">
         <source>deployment_2fa</source>
-        <target>2FA Code für Deployment</target>
+        <target>2FA code for deployment</target>
       </trans-unit>
       <trans-unit id="2DrMGmf" resname="my_profile">
         <source>my_profile</source>
-        <target>Mein Profil</target>
+        <target>My Profile</target>
       </trans-unit>
       <trans-unit id="FmGRZ0X" resname="config_saved">
         <source>config_saved</source>
-        <target>Einstellungen gespeichert</target>
+        <target>Configuration saved</target>
       </trans-unit>
       <trans-unit id="c_tYN9o" resname="feature_deactivated">
         <source>feature_deactivated</source>
-        <target>Funktion nicht verfügbar</target>
+        <target>Feature deactivated</target>
       </trans-unit>
       <trans-unit id="XohImNo" resname="password">
         <source>password</source>
-        <target>Kennwort</target>
+        <target>Password</target>
       </trans-unit>
       <trans-unit id="hLEZkoC" resname="password_repeat">
         <source>password_repeat</source>
-        <target>Kennwort (Wiederholung)</target>
+        <target>Password (repeat)</target>
       </trans-unit>
       <trans-unit id="jGl25bV" resname="admin">
         <source>admin</source>
@@ -155,79 +155,79 @@
       </trans-unit>
       <trans-unit id="BPiZbad" resname="user">
         <source>user</source>
-        <target>Benutzer</target>
+        <target>User</target>
       </trans-unit>
       <trans-unit id="iSXHGKi" resname="slot_count">
         <source>slot_count</source>
-        <target>Anzahl Slots</target>
+        <target>Slot count</target>
       </trans-unit>
       <trans-unit id="dEN745s" resname="booked_slots">
         <source>booked_slots</source>
-        <target>gebuchte Slots</target>
+        <target>booked slots</target>
       </trans-unit>
       <trans-unit id="jB0DXN_" resname="no_bookings">
         <source>no_bookings</source>
-        <target>keine Buchungen</target>
+        <target>no bookings</target>
       </trans-unit>
       <trans-unit id="uFh7P7a" resname="number_slots_created">
         <source>number_slots_created</source>
-        <target>{count} Slots erstellt</target>
+        <target>created {count} slots</target>
       </trans-unit>
       <trans-unit id="ny7_SY1" resname="slot_not_found">
         <source>slot_not_found</source>
-        <target>Slot nicht gefunden</target>
+        <target>Slot not found</target>
       </trans-unit>
       <trans-unit id="Ln3E_hg" resname="cancel_succesfull">
         <source>cancel_succesfull</source>
-        <target>Stornierung erfolgreich {username} wurden die benutzten Punkte wieder gutgeschrieben</target>
+        <target>cancelation succesful {username} redeemed the spend points</target>
       </trans-unit>
       <trans-unit id="OT3Hjv." resname="something_went_wrong">
         <source>something_went_wrong</source>
-        <target>Etwas ist schiefgelaufen</target>
+        <target>something went wrong</target>
       </trans-unit>
       <trans-unit id="PjmJYgZ" resname="new_password_saved">
         <source>new_password_saved</source>
-        <target>Das neue Kennwort wurde gespeichert</target>
+        <target>New password was saved</target>
       </trans-unit>
       <trans-unit id="3ZppSpi" resname="invalid_current_password">
         <source>invalid_current_password</source>
-        <target>Das aktuelle Kennwort ist ungültig</target>
+        <target>Current password is invalid</target>
       </trans-unit>
       <trans-unit id="ORSErM1" resname="display_name">
         <source>display_name</source>
-        <target>Anzeigename</target>
+        <target>Display name</target>
       </trans-unit>
       <trans-unit id="RVadpX9" resname="phone">
         <source>phone</source>
-        <target>Telefonnummer</target>
+        <target>Phone number</target>
       </trans-unit>
       <trans-unit id="giREF.l" resname="email">
         <source>email</source>
-        <target>EMail</target>
+        <target>email</target>
       </trans-unit>
       <trans-unit id="sjpqhDn" resname="unknown">
         <source>unknown</source>
-        <target>unbekannt</target>
+        <target>unknown</target>
       </trans-unit>
       <trans-unit id="WproAJI" resname="current_password">
         <source>current_password</source>
-        <target>Aktuelles Kennwort</target>
+        <target>Current password</target>
       </trans-unit>
       <trans-unit id="ALnmYiM" resname="new_password">
         <source>new_password</source>
-        <target>Neues Kennwort (mind. 10 Zeichen)</target>
+        <target>New password (min 10 chars)</target>
       </trans-unit>
       <trans-unit id="il_vnIf" resname="new_password_repeat">
         <source>new_password_repeat</source>
-        <target>Neues Kennwort wiederholen</target>
+        <target>New password (repeat)</target>
       </trans-unit>
       <trans-unit id="HtyJ.d5" resname="change_password">
         <source>change_password</source>
-        <target>Kennwort ändern</target>
+        <target>change password</target>
       </trans-unit>
       <trans-unit id="cqI_VJ0" resname="Distribution">
         <source>Distribution</source>
-        <target>Verteilung</target>
+        <target>Distribution</target>
       </trans-unit>
       <trans-unit id="ZsW6E44" resname="admin_dashboard">
         <source>admin_dashboard</source>
@@ -235,19 +235,19 @@
       </trans-unit>
       <trans-unit id="ACcM9j_" resname="logout">
         <source>logout</source>
-        <target>Ausloggen</target>
+        <target>Logout</target>
       </trans-unit>
       <trans-unit id="CkUUSve" resname="mainmenu">
         <source>mainmenu</source>
-        <target>Hauptmenü</target>
+        <target>Main menu</target>
       </trans-unit>
       <trans-unit id="KA1Eqx6" resname="welcome">
         <source>welcome</source>
-        <target>Wilkommen!</target>
+        <target>Welcome!</target>
       </trans-unit>
       <trans-unit id="Ou0Sb7Q" resname="manifest_description">
         <source>manifest_description</source>
-        <target>Slot Reservierung für Lebensmittel-Verteilungen</target>
+        <target>Slot reservation for food sharing</target>
       </trans-unit>
       <trans-unit id="cZiMTY4" resname="Text">
         <source>Text</source>
@@ -255,51 +255,51 @@
       </trans-unit>
       <trans-unit id="FhwLtgl" resname="Active From">
         <source>Active From</source>
-        <target>Aktiv ab</target>
+        <target>Active from</target>
       </trans-unit>
       <trans-unit id="DOezLWq" resname="Active Till">
         <source>Active Till</source>
-        <target>Aktiv bis</target>
+        <target>Active till</target>
       </trans-unit>
       <trans-unit id="FX3KkuQ" resname="save">
         <source>save</source>
-        <target>speichern</target>
+        <target>save</target>
       </trans-unit>
       <trans-unit id="zUJATVK" resname="value">
         <source>value</source>
-        <target>Wert</target>
+        <target>value</target>
       </trans-unit>
       <trans-unit id="gqNTf.D" resname="name">
         <source>name</source>
-        <target>Name</target>
+        <target>name</target>
       </trans-unit>
       <trans-unit id="JUVIPFQ" resname="monthCount">
         <source>monthCount</source>
-        <target>Anzahl an Monaten im Dashboard</target>
+        <target>Number months in dashboard</target>
       </trans-unit>
       <trans-unit id="1_jRQLJ" resname="scoreLimit">
         <source>scoreLimit</source>
-        <target>Maximale Punkte die ein User haben kann</target>
+        <target>Maximum points a user can have</target>
       </trans-unit>
       <trans-unit id="Zs18eCW" resname="scoreRaiseStep">
         <source>scoreRaiseStep</source>
-        <target>Wert um die der CronJob die Punkte erhöht</target>
+        <target>Amount of points that will be added on cron run</target>
       </trans-unit>
       <trans-unit id="_5PXcfl" resname="scoreDistribution">
         <source>scoreDistribution</source>
-        <target>Punkteverteilung auf Slots</target>
+        <target>Distribution of points on slots</target>
       </trans-unit>
       <trans-unit id="z_B58IX" resname="adminCancel">
         <source>adminCancel</source>
-        <target>Admins dürfen Slotbuchungen stornieren</target>
+        <target>Admins can cancel bookings</target>
       </trans-unit>
       <trans-unit id="2isy4ep" resname="cronActive">
         <source>cronActive</source>
-        <target>Cron Funktionalität aktivieren (webcron)</target>
+        <target>Enable webcron functionality</target>
       </trans-unit>
       <trans-unit id="8aJEzB2" resname="confirm_slot_cancel">
         <source>confirm_slot_cancel</source>
-        <target>Möchtest du Deine Buchung für Slot [{text}] wirklich stornieren?</target>
+        <target>Do you really want to cancel [{text}]?</target>
       </trans-unit>
       <trans-unit id="MQ.yABS" resname="close">
         <source>close</source>
@@ -307,47 +307,47 @@
       </trans-unit>
       <trans-unit id="Qli9pvg" resname="confirm_slot_cancel_title">
         <source>confirm_slot_cancel_title</source>
-        <target>Wirklich stornieren?</target>
+        <target>Really cancel?</target>
       </trans-unit>
       <trans-unit id="k5Apjz_" resname="no">
         <source>no</source>
-        <target>Nein</target>
+        <target>No</target>
       </trans-unit>
       <trans-unit id="inmIkP6" resname="yes">
         <source>yes</source>
-        <target>Ja</target>
+        <target>Yes</target>
       </trans-unit>
       <trans-unit id="I3TZF5S" resname="cancel">
         <source>cancel</source>
-        <target>Stornieren</target>
+        <target>Cancel</target>
       </trans-unit>
       <trans-unit id="nWxLPtE" resname="admin_slot_cost">
         <source>admin_slot_cost</source>
-        <target>(Kosten: {score} Punkte)</target>
+        <target>(cost: {score} points)</target>
       </trans-unit>
       <trans-unit id="oztN7fC" resname="adminShowPoints">
         <source>adminShowPoints</source>
-        <target>Admins können die Kosten der Slots sehen</target>
+        <target>Admins can see the costs of slots</target>
       </trans-unit>
       <trans-unit id="kj.t9A7" resname="slotbooking">
         <source>slotbooking</source>
-        <target>Slotbuchung</target>
+        <target>Slotbooking</target>
       </trans-unit>
       <trans-unit id="dchXAX5" resname="no_distribution_planned">
         <source>no_distribution_planned</source>
-        <target>Im Moment is keine Verteilung geplant</target>
+        <target>No distribution planned right now</target>
       </trans-unit>
       <trans-unit id="VjEODsR" resname="n/v">
         <source>n/v</source>
-        <target>N.V.</target>
+        <target>n.a.</target>
       </trans-unit>
       <trans-unit id="knGf4M_" resname="book">
         <source>book</source>
-        <target>Buchen</target>
+        <target>book</target>
       </trans-unit>
       <trans-unit id="uwNHpGj" resname="you">
         <source>you</source>
-        <target>Du</target>
+        <target>You</target>
       </trans-unit>
       <trans-unit id="QoghNQ6" resname="login">
         <source>login</source>
@@ -355,23 +355,23 @@
       </trans-unit>
       <trans-unit id="KdSVbXE" resname="an_error_occured">
         <source>an_error_occured</source>
-        <target>Es ist ein Fehler aufgetreten. ({status_code})</target>
+        <target>An error occured. ({status_code})</target>
       </trans-unit>
       <trans-unit id="0T8urdT" resname="oops">
         <source>oops</source>
-        <target>Uups da ist was schiefgelaufen!</target>
+        <target>Oops something went wrong!</target>
       </trans-unit>
       <trans-unit id="5AzJnHf" resname="back_to_home">
         <source>back_to_home</source>
-        <target>Zurück zur Hauptseite</target>
+        <target>Back to home</target>
       </trans-unit>
       <trans-unit id="i.EXLfW" resname="not_found">
         <source>not_found</source>
-        <target>Uups diese Seite gibt es nicht!</target>
+        <target>Page not found!</target>
       </trans-unit>
       <trans-unit id="uSp2rLW" resname="stornieren">
         <source>stornieren</source>
-        <target>stornieren</target>
+        <target>cancel</target>
       </trans-unit>
       <trans-unit id="AIF3nCh" resname="level">
         <source>level</source>
@@ -391,51 +391,51 @@
       </trans-unit>
       <trans-unit id="zO0oxtw" resname="start">
         <source>start</source>
-        <target>Anfang</target>
+        <target>Start</target>
       </trans-unit>
       <trans-unit id="Nh5I0DC" resname="end">
         <source>end</source>
-        <target>Ende</target>
+        <target>End</target>
       </trans-unit>
       <trans-unit id="C.w.nnT" resname="slot_size">
         <source>slot_size</source>
-        <target>Slot größe (Minuten)</target>
+        <target>Slot size (minutes)</target>
       </trans-unit>
       <trans-unit id="_ohHsMM" resname="create">
         <source>create</source>
-        <target>Erstellen</target>
+        <target>create</target>
       </trans-unit>
       <trans-unit id="MC6lng8" resname="my_score">
         <source>my_score</source>
-        <target>(Meine Punkte: {score})</target>
+        <target>(my score: {score})</target>
       </trans-unit>
       <trans-unit id="CMxiD2w" resname="booking_successful">
         <source>booking_successful</source>
-        <target>Buchung erfolgreich</target>
+        <target>booking successful</target>
       </trans-unit>
       <trans-unit id="as31Ejv" resname="slot_not_bookable">
         <source>slot_not_bookable</source>
-        <target>Dieser Slot ist für Dich nicht buchbar</target>
+        <target>You cannot book this slot</target>
       </trans-unit>
       <trans-unit id="HvgnyG9" resname="booking_failed">
         <source>booking_failed</source>
-        <target>Buchung fehlgeschlagen</target>
+        <target>booking failed</target>
       </trans-unit>
       <trans-unit id="auA7VLO" resname="slot_already_booked">
         <source>slot_already_booked</source>
-        <target>Der Slot ist leider bereits an jemand anderen vergeben</target>
+        <target>This slot is already booked by someone else</target>
       </trans-unit>
       <trans-unit id="79qEWE1" resname="slot_not_yours">
         <source>slot_not_yours</source>
-        <target>Dieser Slot gehört dir nicht</target>
+        <target>That is not your slot</target>
       </trans-unit>
       <trans-unit id="sG_mwe9" resname="login_failed">
         <source>login_failed</source>
-        <target>Login fehlgeschlagen. Haben sie alles korrekt eingegeben?</target>
+        <target>Login failed, did you enter everything correctly?</target>
       </trans-unit>
-      <trans-unit id="en">
-        <source>en</source>
-        <target>english</target>
+      <trans-unit id="de">
+        <source>de</source>
+        <target>deutsch</target>
       </trans-unit>
     </body>
   </file>

@@ -12,10 +12,15 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
-#[Route('/profile')]
+#[Route('/profile/{_locale}')]
 class ProfileController extends AbstractController
 {
+    public function __construct(private readonly TranslatorInterface $translator)
+    {
+    }
+
     #[Route('/changePassword', name: 'app_profile_change_password')]
     public function changePassword(ValidatorInterface $validator, UserRepository $userRepository, UserPasswordHasherInterface $userPasswordHasher, Request $request): Response
     {
@@ -24,7 +29,7 @@ class ProfileController extends AbstractController
             $user = $userRepository->findOneBy(['phone' => $user->getUserIdentifier()]);
         }
         if ($user === null) {
-            $this->addFlash('error', 'Etwas ist schiefgelaufen');
+            $this->addFlash('error', $this->translator->trans('something_went_wrong'));
 
             return $this->redirectToRoute('app_profile');
         }
@@ -54,9 +59,9 @@ class ProfileController extends AbstractController
         if ($userPasswordHasher->isPasswordValid($user, $current)) {
             $user->setPassword($userPasswordHasher->hashPassword($user, $new));
             $userRepository->save($user, true);
-            $this->addFlash('success', 'Das neue Kennwort wurde gespeichert');
+            $this->addFlash('success', $this->translator->trans('new_password_saved'));
         } else {
-            $this->addFlash('danger', 'Das aktuelle Kennwort ist ungültig');
+            $this->addFlash('danger', $this->translator->trans('invalid_current_password'));
         }
 
         return $this->redirectToRoute('app_profile');

@@ -20,6 +20,7 @@ use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Validator\ConstraintViolationList;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 
 class ProfileControllerTest extends TestCase
@@ -50,13 +51,19 @@ class ProfileControllerTest extends TestCase
         });
 
 
-        $controller = new ProfileController();
+        $controller = new ProfileController($this->transLatorMock());
         $controller->setContainer($containerMock);
         $result = $controller->index();
         $this->assertEquals('done', $result->getContent());
         $this->assertEquals(200, $result->getStatusCode());
     }
 
+    private function transLatorMock()
+    {
+        $mock = $this->createMock(TranslatorInterface::class);
+        $mock->method('trans')->willReturnArgument(0);
+        return $mock;
+    }
     /**
      * @param $user
      * @dataProvider changePasswordData
@@ -99,7 +106,7 @@ class ProfileControllerTest extends TestCase
         $userPasswordHasherMock->method('isPasswordValid')->willReturn($valid);
         $requestMock = new Request(request: ['_inputPasswordCurrent' => 'test','_inputPasswordNew'=>'','_inputPasswordNewRepeat'=>'' ]);
 
-        $controller = new ProfileController();
+        $controller = new ProfileController($this->transLatorMock());
         $controller->setContainer($containerMock);
         $result = $controller->changePassword($validatorMock, $userRepositoryMock, $userPasswordHasherMock, $requestMock);
         $this->assertEquals(302, $result->getStatusCode());

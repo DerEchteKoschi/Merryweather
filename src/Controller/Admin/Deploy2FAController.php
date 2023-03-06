@@ -8,11 +8,12 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
-#[Route('/admin')]
+#[Route('/admin/{_locale}')]
 class Deploy2FAController extends AbstractDashboardController
 {
-    public function __construct(private string $kernelSecret, private bool $poorMansDeploymentActive = false)
+    public function __construct(private readonly string $kernelSecret, private readonly TranslatorInterface $translator, private readonly bool $poorMansDeploymentActive = false)
     {
     }
 
@@ -31,6 +32,6 @@ class Deploy2FAController extends AbstractDashboardController
                 'qrcode' => $result
             ]);
         }
-        return new Response('feature unavailable');
+        return new Response($this->translator->trans('feature_deactivated'));
     }
 }

@@ -2,8 +2,8 @@
 
 namespace App;
 
-use App\Command\CronCommand;
-use App\MerryWeather\SymfonyCli;
+use App\Merryweather\CronCommand;
+use App\Merryweather\SymfonyCli;
 use Symfony\Component\Console\Command\LazyCommand;
 
 class Cronjobs

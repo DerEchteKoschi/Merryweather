@@ -3,7 +3,7 @@
 namespace tests\Merryweather\Admin;
 
 use App\Entity\Distribution;
-use App\MerryWeather\Admin\Month;
+use App\Merryweather\Admin\Month;
 use PHPUnit\Framework\TestCase;
 
 class MonthTest extends TestCase

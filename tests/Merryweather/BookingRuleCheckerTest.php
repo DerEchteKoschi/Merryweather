@@ -5,8 +5,8 @@ namespace Merryweather;
 use App\Entity\Distribution;
 use App\Entity\Slot;
 use App\Entity\User;
-use App\MerryWeather\AppConfig;
-use App\MerryWeather\BookingRuleChecker;
+use App\Merryweather\AppConfig;
+use App\Merryweather\BookingRuleChecker;
 use Doctrine\Common\Collections\ArrayCollection;
 use PHPUnit\Framework\TestCase;
 

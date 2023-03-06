@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>MerryWeather: {% block title %}Welcome!{% endblock %}</title>
+    <title>{{ appTitle }}: {% block title %}{{ 'welcome'|trans }}{% endblock %}</title>
     <link rel="icon" href="{{ asset('/favicon.ico') }}">
     {% block stylesheets %}
         {{ encore_entry_link_tags('app') }}
@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="{{ asset('/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('/css/app.css') }}">
     <link rel="stylesheet" href="{{ asset('/fa/css/all.css') }}">
-    <link rel="manifest" href="{{ asset('/manifest.json') }}" />
+    <link rel="manifest" href='data:application/manifest+json,{{ include('manifest.json.twig')|spaceless|replace({"\n":'', "\r":''})|raw }}' />
     {% block javascripts %}
         {{ encore_entry_script_tags('app') }}
     {% endblock %}

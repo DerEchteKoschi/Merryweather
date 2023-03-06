@@ -4,7 +4,14 @@
     <article class="my-3">
         <div class="justify-content-center d-flex"><img src="{{ asset('/img/logo.png') }}" alt="MerryWeather" width="100"></div>
         <div class="bd-heading sticky-xl-top align-self-start mt-5 mb-3 mt-xl-0 mb-xl-2">
-            <h3>Login</h3>
+            <h3>{{ 'login'|trans }}</h3>
+            {% if locales|length > 1 %}
+                {% for lang in locales %}
+                    {% if lang != app.request.locale %}
+                        <a href="{{ path(app.request.attributes.get('_route'), {'_locale': lang} ) }}"><i class=" fa fa-globe"></i> {{ lang|trans }}</a>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
         </div>
         <div>
             <div>
@@ -13,15 +20,15 @@
                         <input type="hidden" name="_target_path" value="/">
                         <div class="form-floating mb-3">
                             <input type="text" class="form-control" id="username" name="_username" value="{{ last_username }}" placeholder="0170258741369">
-                            <label for="username">Telefonnummer</label>
+                            <label for="username">{{ 'phone'|trans }}</label>
                         </div>
                         <div class="form-floating mb-3">
-                            <input type="password" class="form-control" id="password" name="_password" placeholder="Kennwort">
-                            <label for="password">Kennwort</label>
+                            <input type="password" class="form-control" id="password" name="_password" placeholder="{{ 'password'|trans }}">
+                            <label for="password">{{ 'password'|trans }}</label>
                         </div>
                         <div class="col-12">
                             <button type="submit" class="btn btn-primary">
-                                Anmelden
+                                {{ 'login'|trans }}
                             </button>
                         </div>
                     </form>

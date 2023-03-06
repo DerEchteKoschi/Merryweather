@@ -1,10 +1,11 @@
 <?php
 
-namespace App\MerryWeather;
+namespace App\Merryweather;
 
-use App\MerryWeather\Config\DataType;
-use App\MerryWeather\Config\UnknownKeyException;
+use App\Merryweather\Config\DataType;
+use App\Merryweather\Config\UnknownKeyException;
 use App\Repository\AppConfigRepository;
+use Symfony\Component\Translation\TranslatableMessage;
 
 class AppConfig
 {
@@ -17,22 +18,16 @@ class AppConfig
     public const CONFIG_SCORE_RAISE_STEP = 'scoreRaiseStep';
     public const CONFIG_SCORE_DISTRIBUTION = 'scoreDistribution';
     public const CONFIG_ADMIN_CANCEL_ALLOWED = 'adminCancel';
+    public const CONFIG_ADMIN_SHOW_POINTS = 'adminShowPoints';
 
-    public const CONFIG_KEYS = [
-        self::CONFIG_MONTH_COUNT => 'Anzahl an Monaten im Dashboard',
-        self::CONFIG_SCORE_LIMIT => 'Maximale Punkte die ein User haben kann',
-        self::CONFIG_SCORE_RAISE_STEP => 'Wert um die der CronJob die Punkte erhöht',
-        self::CONFIG_SCORE_DISTRIBUTION => 'Punkteverteilung auf Slots',
-        self::CONFIG_ADMIN_CANCEL_ALLOWED => 'Admins dürfen Slotbuchungen stornieren',
-        self::CONFIG_CRON_ACTIVE => 'Cron Funktionalität aktivieren (webcron)',
-    ];
     public const CONFIG_DEFINITION = [
         self::CONFIG_MONTH_COUNT => [DataType::Integer, 3],
-        self::CONFIG_CRON_ACTIVE => [DataType::Boolean, false],
         self::CONFIG_SCORE_LIMIT => [DataType::Integer, 5],
         self::CONFIG_SCORE_RAISE_STEP => [DataType::Integer, 1],
-        self::CONFIG_ADMIN_CANCEL_ALLOWED => [DataType::Boolean, false],
         self::CONFIG_SCORE_DISTRIBUTION => [DataType::IntArray, [2,1,0,0]],
+        self::CONFIG_ADMIN_CANCEL_ALLOWED => [DataType::Boolean, false],
+        self::CONFIG_ADMIN_SHOW_POINTS => [DataType::Boolean, true],
+        self::CONFIG_CRON_ACTIVE => [DataType::Boolean, false],
     ];
 
     /**
@@ -52,7 +47,7 @@ class AppConfig
      */
     public function getConfigValue(string $key, bool $forceFresh = false): null|string|bool|int|float|array
     {
-        if (!isset(self::CONFIG_KEYS[$key])) {
+        if (!isset(self::CONFIG_DEFINITION[$key])) {
             throw new UnknownKeyException($key);
         }
         if (!$forceFresh && isset($this->cache[$key])) {
@@ -87,27 +82,48 @@ class AppConfig
 
     /**
      * @return int[]
+     * @throws UnknownKeyException
      */
     public function getScoreConfig(): array
     {
         return $this->getConfigValue(self::CONFIG_SCORE_DISTRIBUTION);
     }
 
+    /**
+     * @throws UnknownKeyException
+     */
     public function getScoreLimit(): int
     {
         return $this->getConfigValue(self::CONFIG_SCORE_LIMIT);
     }
 
+    /**
+     * @throws UnknownKeyException
+     */
     public function getScoreRaiseStep(): int
     {
         return $this->getConfigValue(self::CONFIG_SCORE_RAISE_STEP);
     }
 
+    /**
+     * @throws UnknownKeyException
+     */
     public function isAdminCancelAllowed(): bool
     {
         return $this->getConfigValue(self::CONFIG_ADMIN_CANCEL_ALLOWED);
     }
 
+    /**
+     * @throws UnknownKeyException
+     */
+    public function isAdminShowPoints(): bool
+    {
+        return $this->getConfigValue(self::CONFIG_ADMIN_SHOW_POINTS);
+    }
+
+    /**
+     * @throws UnknownKeyException
+     */
     public function isCronActive(): bool
     {
         return $this->getConfigValue(self::CONFIG_CRON_ACTIVE);

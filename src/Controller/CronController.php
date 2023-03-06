@@ -2,8 +2,8 @@
 
 namespace App\Controller;
 
-use App\MerryWeather\AppConfig;
-use App\MerryWeather\SymfonyCli;
+use App\Merryweather\AppConfig;
+use App\Merryweather\SymfonyCli;
 use App\Repository\CrontabRepository;
 use Cron\CronExpression;
 use DateTimeImmutable;

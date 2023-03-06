@@ -12,8 +12,10 @@ use Symfony\Component\HttpFoundation\Session\Flash\FlashBag;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 
 class SessionControllerTest extends TestCase
@@ -34,6 +36,8 @@ class SessionControllerTest extends TestCase
         if ($error) {
             $authenticationUtilsMock->method('getLastAuthenticationError')->willReturn(new AuthenticationException('ERROR'));
         }
+        $authMock = $this->createMock(AuthorizationCheckerInterface::class);
+        $authMock->method('isGranted')->willReturn($redirect);
         $sessionMock = $this->createMock(Session::class);
         $sessionMock->method('getFlashBag')->willReturn(new FlashBag());
         $stackMock = $this->createMock(RequestStack::class);
@@ -46,18 +50,19 @@ class SessionControllerTest extends TestCase
         $twigMock->method('render')->willReturn('done');
         $containerMock = $this->createMock(Container::class);
         $containerMock->method('has')->willReturn(true);
-        $containerMock->method('get')->willReturnCallback(function ($string) use ($tokenStorageMock, $twigMock, $stackMock) {
+        $containerMock->method('get')->willReturnCallback(function ($string) use ($tokenStorageMock, $twigMock, $stackMock, $authMock) {
             $mocks = [
                 'security.token_storage' => $tokenStorageMock,
                 'twig' => $twigMock,
-                'request_stack' => $stackMock
+                'request_stack' => $stackMock,
+                'security.authorization_checker' => $authMock
             ];
 
             return $mocks[$string];
         });
 
 
-        $controller = new SessionController();
+        $controller = new SessionController($this->transLatorMock());
         $controller->setContainer($containerMock);
         $result = $controller->login($authenticationUtilsMock);
         if ($redirect) {
@@ -68,9 +73,17 @@ class SessionControllerTest extends TestCase
         }
     }
 
+    private function transLatorMock()
+    {
+        $mock = $this->createMock(TranslatorInterface::class);
+        $mock->method('trans')->willReturnArgument(0);
+
+        return $mock;
+    }
+
     public function testLogout()
     {
-        $controller = new SessionController();
+        $controller = new SessionController($this->transLatorMock());
         $controller->logout();
         $this->assertTrue(true);
     }

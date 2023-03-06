@@ -2,7 +2,7 @@
 
 namespace App\Controller\Admin;
 
-use App\MerryWeather\Admin\LogMessage;
+use App\Merryweather\Admin\LogMessage;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,7 +14,7 @@ use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 
-#[Route('/admin')]
+#[Route('/admin/{_locale}')]
 class LogsController extends AbstractDashboardController
 {
     public function __construct(

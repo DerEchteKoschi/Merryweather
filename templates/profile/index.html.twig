@@ -1,45 +1,45 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Mein Profil{% endblock %}
+{% block title %}{{ 'my_profile'|trans }}{% endblock %}
 
 {% block body %}
     <form class="row">
         <div class="form-group row">
-            <label for="staticDisplayName" class="col-sm-2 col-form-label">Anzeigename</label>
+            <label for="staticDisplayName" class="col-sm-2 col-form-label">{{ 'display_name'|trans }}</label>
             <div class="col-sm-10">
                 <input type="text" readonly class="form-control-plaintext" id="staticDisplayName" value="{{ app.user.displayName }}">
             </div>
         </div>
         <div class="form-group row">
-            <label for="staticPhoneNumber" class="col-sm-2 col-form-label">Telefonnummer</label>
+            <label for="staticPhoneNumber" class="col-sm-2 col-form-label">{{ 'phone'|trans }}</label>
             <div class="col-sm-10">
                 <input type="text" readonly class="form-control-plaintext" id="staticPhoneNumber" value="{{ app.user.phone }}">
             </div>
         </div>
         <div class="form-group row">
-            <label for="staticEmail" class="col-sm-2 col-form-label">eMail</label>
+            <label for="staticEmail" class="col-sm-2 col-form-label">{{ 'email'|trans }}</label>
             <div class="col-sm-10">
-                <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{ app.user.email ? app.user.email : 'unbekannt' }}">
+                <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{ app.user.email ? app.user.email : 'unknown'|trans }}">
             </div>
         </div>
     </form>
         <hr>
-    <form class="row" method="post" action="/profile/changePassword">
+    <form class="row" method="post" action="{{ path('app_profile_change_password') }}">
         <div class="form-floating mb-3">
             <input type="password" class="form-control" id="inputPasswordCurrent" name="_inputPasswordCurrent">
-            <label for="inputPasswordCurrent">Aktuelles Kennwort</label>
+            <label for="inputPasswordCurrent">{{ 'current_password'|trans }}</label>
         </div>
         <div class="form-floating mb-3">
             <input type="password" class="form-control" id="inputPasswordNew" name="_inputPasswordNew">
-            <label for="inputPasswordNew">Neues Kennwort (mind. 10 Zeichen)</label>
+            <label for="inputPasswordNew">{{ 'new_password'|trans }}{{ 'new_password'|trans }}</label>
         </div>
         <div class="form-floating mb-3">
             <input type="password" class="form-control" id="inputPasswordNewRepeat" name="_inputPasswordNewRepeat">
-            <label for="inputPasswordNewRepeat">Neues Kennwort wiederholen</label>
+            <label for="inputPasswordNewRepeat">{{ 'new_password_repeat'|trans }}</label>
         </div>
         <div class="col-12">
             <button type="submit" class="btn btn-primary">
-                Kennwort ändern
+                {{ 'change_password'|trans }}
             </button>
         </div>
     </form>

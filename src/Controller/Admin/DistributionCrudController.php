@@ -5,8 +5,8 @@ namespace App\Controller\Admin;
 use App\Entity\Distribution;
 use App\Entity\Slot;
 use App\Entity\User;
-use App\MerryWeather\AppConfig;
-use App\MerryWeather\BookingRuleChecker;
+use App\Merryweather\AppConfig;
+use App\Merryweather\BookingRuleChecker;
 use App\Repository\DistributionRepository;
 use App\Repository\SlotRepository;
 use App\Repository\UserRepository;
@@ -29,10 +29,11 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class DistributionCrudController extends AbstractCrudController
 {
-    public function __construct(private AppConfig $config)
+    public function __construct(private readonly AppConfig $config, private readonly TranslatorInterface $translator)
     {
     }
 
@@ -48,14 +49,14 @@ class DistributionCrudController extends AbstractCrudController
         return [
             IdField::new('id')->hideOnForm(),
             TextField::new('text'),
-            CollectionField::new('slots')->setLabel('Anzahl Slots')->hideOnIndex()->hideOnForm()->formatValue(static function ($value, Distribution $distribution) use ($controller) {
+            CollectionField::new('slots')->setLabel($this->translator->trans('slot_count'))->hideOnIndex()->hideOnForm()->formatValue(static function ($value, Distribution $distribution) use ($controller) {
                 if ($distribution->getSlots()->count() === 0) {
                     return $controller->renderView('admin/create_slots.html.twig', ['linkUrl' => $controller->generateUrl('app_admin_slots_create', ['distributionId' => $distribution->getId()])]);
                 }
 
                 return $distribution->getSlots()->count();
             }),
-            CollectionField::new('slots')->setLabel('gebuchte Slots')->onlyOnIndex()->formatValue(static function ($value, Distribution $distribution) {
+            CollectionField::new('slots')->setLabel($this->translator->trans('booked_slots'))->onlyOnIndex()->formatValue(static function ($value, Distribution $distribution) {
                 $count = $distribution->getSlots()->count();
                 $booked = 0;
                 foreach ($distribution->getSlots()->getIterator() as $slot) {
@@ -68,7 +69,7 @@ class DistributionCrudController extends AbstractCrudController
             DateField::new('activeFrom'),
             DateField::new('activeTill'),
             CollectionField::new('slots')
-                           ->setLabel('gebuchte Slots')
+                           ->setLabel($this->translator->trans('booked_slots'))
                            ->hideOnIndex()
                            ->hideOnForm()
                            ->formatValue(static function ($value, Distribution $distribution) use ($controller) {
@@ -86,7 +87,7 @@ class DistributionCrudController extends AbstractCrudController
                                    }
                                }
 
-                               return empty($result) ? 'keine Buchungen' : '<div class="container">' . $result . '</div>';
+                               return empty($result) ? $controller->translator->trans('no_bookings') : '<div class="container">' . $result . '</div>';
                            })
         ];
     }
@@ -139,7 +140,7 @@ class DistributionCrudController extends AbstractCrudController
                 $slotRepository->save($slot);
                 $count++;
             }
-            $this->addFlash('success', sprintf('%d Slots erstellt', $count));
+            $this->addFlash('success', $this->translator->trans('number_slots_created', ['count' => $count]));
             $entityManager->flush();
         } catch (\Exception $e) {
             $this->addFlash('danger', $e->getMessage());
@@ -180,7 +181,7 @@ class DistributionCrudController extends AbstractCrudController
         if ($this->config->isAdminCancelAllowed()) {
             $slot = $slotRepository->find($slotId);
             if ($slot === null) {
-                $this->addFlash('danger', 'Slot nicht gefunden');
+                $this->addFlash('danger', $this->translator->trans('slot_not_found'));
             } else {
                 /** @var User $user */
                 $user = $slot->getUser();
@@ -188,10 +189,10 @@ class DistributionCrudController extends AbstractCrudController
                 $bookRuleChecker->raiseUserScore($user, $bookRuleChecker->pointsNeededForSlot($slot));
                 $userRepository->save($user, true);
                 $slotRepository->save($slot, true);
-                $this->addFlash('success', sprintf('Stornierung erfolgreich %s wurden die benutzten Punkte wieder gutgeschrieben', $user->getDisplayName()));
+                $this->addFlash('success', $this->translator->trans('cancel_succesfull', ['username' => $user->getDisplayName()]));
             }
         } else {
-            $this->addFlash('warning', 'Diese Funktion ist deaktiviert');
+            $this->addFlash('warning', $this->translator->trans('feature_deactivated'));
         }
 
         return $this->redirect($adminUrlGenerator->setDashboard(AdminDashboardController::class)->setController(DistributionCrudController::class)->setEntityId($distributionId)->setAction('detail')->generateUrl());

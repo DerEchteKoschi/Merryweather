@@ -1,10 +1,9 @@
-<nav class="navbar sticky-top navbar-expand-md bg-primary-subtle" aria-label="hauptmenü">
+<nav class="navbar sticky-top navbar-expand-md bg-primary-subtle" aria-label="{{ 'mainmenu'|trans }}">
     <div class="container-fluid">
         <a class="navbar-brand" href="/">
             <img src="{{ asset('/img/logo.png') }}" alt="MerryWeather" width="30" height="24">
         </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-                aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false">
             <span class="navbar-toggler-icon"></span>
         </button>
         {% if app.request.attributes.get('_route') != null %}
@@ -15,31 +14,40 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link {% if currentPath == '/' %}active{% endif %}" href="/"><i class="fa fa-square-share-nodes"></i>Verteilung</a>
+                    <a class="nav-link {% if currentPath == path('app_slots') %}active{% endif %}" href="{{ path('app_slots') }}"><i class="fa fa-square-share-nodes"></i>
+                        {{ 'Distribution'|trans }}
+                    </a>
                 </li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle {% if currentPath starts with '/profile' %}active{% endif %}" href="#" role="button" data-bs-toggle="dropdown">
+                    <a class="nav-link dropdown-toggle {% if currentPath == path('app_profile') %}active{% endif %}" href="#" role="button" data-bs-toggle="dropdown">
                         <i class=" fa fa-user{{ is_granted('ROLE_ADMIN') ? '-gear' : '' }}"></i>
-                        {{ app.user }}{{ is_granted('ROLE_ADMIN') ? ' (My Score: ' ~ app.user.score ~ ')' : '' }}
+                        {{ app.user }} {{ userScore() }}
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="/profile"><i class=" fa fa-address-card"></i>Mein Profil</a></li>
+                        <li><a class="dropdown-item" href="{{ path('app_profile') }}"><i class=" fa fa-address-card"></i>{{ 'my_profile'|trans }}</a></li>
                         {% if is_granted('ROLE_ADMIN') %}
                             <li>
-                                <a class="dropdown-item" href="/admin">
+                                <a class="dropdown-item" href="{{ path('admin') }}">
                                     <i class=" fa fa-wrench"></i>
-                                    Admin Dashboard
+                                    {{ 'admin_dashboard'|trans }}
                                 </a>
                             </li>
                         {% endif %}
+                        {% if locales|length > 1 %}
+                            <div class="dropdown-divider"></div>
+                            <li class="dropdown-item">
+                                {% for lang in locales %}
+                                    {% if lang != app.request.locale %}
+                                        <a class="dropdown-lang-item" href="{{ path(app.request.attributes.get('_route'), {'_locale': lang} ) }}"><i class=" fa fa-globe"></i>{{ lang|trans }}</a>
+                                    {% endif %}
+                                {% endfor %}
+                            </li>
+                        {% endif %}
                         <div class="dropdown-divider"></div>
-                        <li><a class="dropdown-item" href="/logout"><i class=" fa fa-power-off"></i>Ausloggen</a></li>
-
+                        <li><a class="dropdown-item" href="{{ path('app_logout') }}"><i class=" fa fa-power-off"></i>{{ 'logout'|trans }}</a></li>
                     </ul>
                 </li>
-
             </ul>
         </div>
-
     </div>
 </nav>

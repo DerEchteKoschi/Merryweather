@@ -2,7 +2,7 @@
 
 namespace tests\Merryweather\Admin;
 
-use App\MerryWeather\Admin\LogMessage;
+use App\Merryweather\Admin\LogMessage;
 use PHPUnit\Framework\TestCase;
 
 class LogMessageTest extends TestCase

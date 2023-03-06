@@ -1,6 +1,6 @@
 <?php
 
-namespace App\MerryWeather;
+namespace App\Merryweather;
 
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Input\ArgvInput;

@@ -17,8 +17,8 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Throwable;
 
 #[AsCommand(
-    name: 'Create:User',
-    description: 'create a user in DB',
+    name: 'create:user',
+    description: 'creates a user in DB',
 )]
 class CreateUserCommand extends Command
 {

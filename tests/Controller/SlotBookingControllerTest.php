@@ -5,7 +5,7 @@ namespace Controller;
 use App\Controller\SlotBookingController;
 use App\Entity\Slot;
 use App\Entity\User;
-use App\MerryWeather\BookingRuleChecker;
+use App\Merryweather\BookingRuleChecker;
 use App\Repository\DistributionRepository;
 use App\Repository\SlotRepository;
 use App\Repository\UserRepository;
@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\Session\Flash\FlashBag;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 
 class SlotBookingControllerTest extends TestCase
@@ -57,7 +58,7 @@ public function cancelData()
         $distributionRepositoryMock = $this->createMock(DistributionRepository::class);
         $distributionRepositoryMock->method('findCurrentDistributions')->willReturn([]);
 
-        $controller = new SlotBookingController();
+        $controller = new SlotBookingController($this->transLatorMock());
         $controller->setContainer($containerMock);
         $response = $controller->index($distributionRepositoryMock);
         $this->assertEquals('done', $response->getContent());
@@ -105,7 +106,7 @@ public function cancelData()
         $bookingRuleCheckerMock = $this->createMock(BookingRuleChecker::class);
         $bookingRuleCheckerMock->method('userCanBook')->willReturn($bookable);
 
-        $controller = new SlotBookingController();
+        $controller = new SlotBookingController($this->transLatorMock());
         $controller->setContainer($containerMock);
         $response = $controller->book(1, $slotRepositoryMock, $userRepositoryMock, $bookingRuleCheckerMock);
         $this->assertEquals(302, $response->getStatusCode());
@@ -155,10 +156,17 @@ public function cancelData()
         $bookingRuleCheckerMock = $this->createMock(BookingRuleChecker::class);
         $bookingRuleCheckerMock->method('userCanCancel')->willReturn($cancellable);
 
-        $controller = new SlotBookingController();
+        $controller = new SlotBookingController($this->transLatorMock());
         $controller->setContainer($containerMock);
         $response = $controller->cancel(1, $slotRepositoryMock, $userRepositoryMock, $bookingRuleCheckerMock);
         $this->assertEquals(302, $response->getStatusCode());
         $this->assertEquals('app_slots', $response->getTargetUrl());
+    }
+
+    private function transLatorMock()
+    {
+        $mock = $this->createMock(TranslatorInterface::class);
+        $mock->method('trans')->willReturnArgument(0);
+        return $mock;
     }
 }

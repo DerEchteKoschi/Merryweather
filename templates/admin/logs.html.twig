@@ -1,7 +1,7 @@
 {% extends '@EasyAdmin/page/content.html.twig' %}
 
 {% block page_title %}
-    Logs
+    {{ 'logs'|trans }}
 {% endblock %}
 {% block main %}
     <ul class="nav nav-pills nav-fill" id="myTab">
@@ -14,9 +14,9 @@
     <table class="table table-striped log-table">
         <thead>
         <tr>
-            <th scope="col" class="col1">Level</th>
-            <th scope="col" class="col2">Time</th>
-            <th scope="col" class="col3">Message</th>
+            <th scope="col" class="col1">{{ 'level'|trans }}</th>
+            <th scope="col" class="col2">{{ 'time'|trans }}</th>
+            <th scope="col" class="col3">{{ 'message'|trans }}</th>
             <!-- <th scope="col">Context</th> -->
         </tr>
         </thead>

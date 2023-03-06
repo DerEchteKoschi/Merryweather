@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'an_error_occured'|trans({'status_code': status_code}) }}{% endblock %}
+{% block body %}
+    <h1>{% block error %}{% endblock %}</h1>
+
+    <p>
+        <strong>{{ status_text }}</strong><br/>
+        <a href="{{ path('app_slots') }}">
+            {{ 'back_to_home'|trans }}
+        </a> (<span id="countdown">10</span>).
+    </p>
+    <script>
+        let countdown=10;
+        let cdEl = window.document.querySelector('#countdown');
+        let handle = window.setInterval(function(){
+            cdEl.setHTML(--countdown);
+            if (countdown <= 0) {
+                window.clearInterval(handle);
+                window.location = '{{ path('app_slots') }}'
+            }
+        },1000);
+    </script>
+
+{% endblock %}
