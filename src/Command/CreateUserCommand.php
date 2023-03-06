@@ -55,7 +55,6 @@ class CreateUserCommand extends Command
         $user->setPassword($this->passwordHasher->hashPassword($user, $io->ask('password', PasswordSuggest::suggestPassword())));
         $user->setActive($io->confirm('set active'));
         $user->setScore(3);
-        //$user->setNeedToChangePassword($io->confirm('need to change password after login', true));
 
         if ($isAdmin) {
             $user->setRoles(['ROLE_USER', 'ROLE_ADMIN']);

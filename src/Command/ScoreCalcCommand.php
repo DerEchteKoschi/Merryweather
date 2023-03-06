@@ -34,7 +34,7 @@ class ScoreCalcCommand extends Command implements CronCommand, LoggerAwareInterf
                 $this->userRepository->save($user, true);
                 $this->logger->info($user->getDisplayName() . ' changed to ' . $user->getScore());
             } else {
-                $this->logger->info($user->getDisplayName() . ' already at maximum Score');
+                $this->logger->info($user->getDisplayName() . ' reached maximum score');
             }
         }
 
