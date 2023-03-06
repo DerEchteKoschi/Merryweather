@@ -2,8 +2,8 @@
 
 namespace App\Controller\Admin;
 
-use App\Cronjobs;
 use App\Entity\Crontab;
+use App\Merryweather\Cronjobs;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
@@ -13,7 +13,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
 class CrontabCrudController extends AbstractCrudController
 {
-    public function __construct(private Cronjobs $cronjobs)
+    public function __construct(private readonly Cronjobs $cronjobs)
     {
     }
 

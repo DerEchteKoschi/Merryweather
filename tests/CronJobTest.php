@@ -1,14 +1,16 @@
 <?php
 
-use App\Command\CronCommand;
 use App\Command\ScoreCalcCommand;
-use App\Cronjobs;
+use App\Merryweather\Cronjobs;
 use App\Merryweather\SymfonyCli;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Command\LazyCommand;
 
+/**
+ * @small
+ * @group unitTests
+ */
 class CronJobTest extends TestCase
 {
     public function testClass()
@@ -19,7 +21,11 @@ class CronJobTest extends TestCase
         $cmdMock = $this->createMock(ScoreCalcCommand::class);
         $cmdMock->method('getDescription')->willReturn('description');
         $cmdMock->method('getName')->willReturn('name');
-        $appMock->method('all')->willReturn([new LazyCommand('lazy',[],'lazy',false, function() use ($cmdMock) { return $cmdMock; })]);
+        $appMock->method('all')->willReturn([
+            new LazyCommand('lazy', [], 'lazy', false, function () use ($cmdMock) {
+                return $cmdMock;
+            })
+        ]);
         $cj = new Cronjobs($symfonyCliMock);
         $result = $cj->generate();
         $this->assertEquals(['description' => ['name' => 'name']], $result);

@@ -21,7 +21,7 @@ class Deploy2FAController extends AbstractDashboardController
      * @throws \Exception
      */
     #[Route('/2fa', name: 'admin_2fa')]
-    public function twofa(Request $request): Response
+    public function twofa(): Response
     {
         if ($this->poorMansDeploymentActive) {
             $result = (new QRCode(new QROptions([
