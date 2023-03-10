@@ -23,14 +23,14 @@ class MerryweatherExtensionTest extends TestCase
     {
         $met = new MerryweatherExtension();
         $functions = $met->getFunctions();
-        $this->assertCount(4, $functions);
+        $this->assertCount(5, $functions);
         $names = [];
         foreach ($functions as $function) {
             $this->assertInstanceOf(TwigFunction::class, $function);
             $names[] = $function->getName();
         }
         sort($names);
-        $this->assertEquals(['bootstrapClassForLog', 'canBook', 'canCancel', 'slotCost'], $names);
+        $this->assertEquals(['bootstrapClassForLog', 'canBook', 'canCancel', 'userScore', 'slotCost'], $names);
     }
 
     public function testGetNodeVisitors()
