@@ -1,5 +1,7 @@
 <?php
 
+namespace UnitTest\Merryweather;
+
 use App\Command\ScoreCalcCommand;
 use App\Merryweather\Cronjobs;
 use App\Merryweather\SymfonyCli;

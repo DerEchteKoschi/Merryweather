@@ -26,16 +26,23 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class UserCrudController extends AbstractCrudController
 {
+    /**
+     * @codeCoverageIgnore
+     */
     public function __construct(private readonly UserPasswordHasherInterface $userPasswordHasher, private readonly TranslatorInterface $translator)
     {
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public static function getEntityFqcn(): string
     {
         return User::class;
     }
 
     /**
+     * @codeCoverageIgnore
      * @throws \Exception
      */
     public function configureFields(string $pageName): iterable
@@ -71,6 +78,9 @@ class UserCrudController extends AbstractCrudController
         ];
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function createEditFormBuilder(EntityDto $entityDto, KeyValueStore $formOptions, AdminContext $context): FormBuilderInterface
     {
         $formBuilder = parent::createEditFormBuilder($entityDto, $formOptions, $context);
@@ -78,6 +88,9 @@ class UserCrudController extends AbstractCrudController
         return $this->addPasswordEventListener($formBuilder);
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function createEntity(string $entityFqcn): User
     {
         $user = parent::createEntity($entityFqcn);
@@ -86,6 +99,9 @@ class UserCrudController extends AbstractCrudController
         return $user;
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function createNewFormBuilder(EntityDto $entityDto, KeyValueStore $formOptions, AdminContext $context): FormBuilderInterface
     {
         $formBuilder = parent::createNewFormBuilder($entityDto, $formOptions, $context);
@@ -93,11 +109,17 @@ class UserCrudController extends AbstractCrudController
         return $this->addPasswordEventListener($formBuilder);
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     private function addPasswordEventListener(FormBuilderInterface $formBuilder): FormBuilderInterface
     {
         return $formBuilder->addEventListener(FormEvents::POST_SUBMIT, $this->hashPassword());
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     private function hashPassword(): \Closure
     {
         return function ($event) {

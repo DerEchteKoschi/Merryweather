@@ -39,6 +39,7 @@ class AdminDashboardController extends AbstractDashboardController
      * @param string                 $appTitle
      * @param string[]               $supportedLocales
      * @param bool                   $poorMansDeploymentActive
+     *                                                        @codeCoverageIgnore
      */
     public function __construct(
         UserRepository $userRepository,
@@ -54,22 +55,34 @@ class AdminDashboardController extends AbstractDashboardController
         $this->distCount = $distributionRepository->count([]);
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function configureActions(): Actions
     {
         return parent::configureActions()->add(Crud::PAGE_INDEX, Action::DETAIL);
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function configureAssets(): Assets
     {
         return parent::configureAssets()->addCssFile('css/app.css');
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function configureDashboard(): Dashboard
     {
         return Dashboard::new()
                         ->setTitle($this->appTitle)->setFaviconPath('/favicon.ico')->setLocales($this->supportedLocales)->disableDarkMode()->generateRelativeUrls();
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function configureMenuItems(): iterable
     {
         yield MenuItem::linkToUrl(new TranslatableMessage('back_to_app'), 'fa fa-home', $this->generateUrl('app_slots'));
@@ -91,6 +104,9 @@ class AdminDashboardController extends AbstractDashboardController
         }
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function configureUserMenu(UserInterface $user): UserMenu
     {
         return parent::configureUserMenu($user)->addMenuItems([

@@ -1,5 +1,7 @@
 <?php
 
+namespace UnitTest;
+
 use PHPUnit\Framework\TestCase;
 
 class KernelTest extends TestCase

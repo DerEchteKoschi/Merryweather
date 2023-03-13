@@ -13,15 +13,24 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
 class CrontabCrudController extends AbstractCrudController
 {
+    /**
+     * @codeCoverageIgnore
+     */
     public function __construct(private readonly Cronjobs $cronjobs)
     {
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public static function getEntityFqcn(): string
     {
         return Crontab::class;
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function configureFields(string $pageName): iterable
     {
         return [

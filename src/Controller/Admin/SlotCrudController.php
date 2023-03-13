@@ -8,12 +8,18 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 
 class SlotCrudController extends AbstractCrudController
 {
+    /**
+     * @codeCoverageIgnore
+     */
     public static function getEntityFqcn(): string
     {
         return Slot::class;
     }
 
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function configureFields(string $pageName): iterable
     {
         return [

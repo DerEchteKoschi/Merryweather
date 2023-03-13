@@ -34,6 +34,7 @@
     },
     "require-dev": {
         "dg/bypass-finals": "^1.4",
+        "doctrine/doctrine-fixtures-bundle": "*",
         "phpunit/phpunit": "^9.5",
         "roave/security-advisories": "dev-latest",
         "symfony/browser-kit": "6.2.*",

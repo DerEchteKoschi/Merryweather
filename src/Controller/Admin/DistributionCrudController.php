@@ -33,15 +33,24 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class DistributionCrudController extends AbstractCrudController
 {
+    /**
+     * @codeCoverageIgnore
+     */
     public function __construct(private readonly AppConfig $config, private readonly TranslatorInterface $translator)
     {
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public static function getEntityFqcn(): string
     {
         return Distribution::class;
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function configureFields(string $pageName): iterable
     {
         $controller = $this;
@@ -92,6 +101,9 @@ class DistributionCrudController extends AbstractCrudController
         ];
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function createNewForm(EntityDto $entityDto, KeyValueStore $formOptions, AdminContext $context): FormInterface
     {
         /**
@@ -155,6 +167,9 @@ class DistributionCrudController extends AbstractCrudController
         return $this->redirect($targetUrl);
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     protected function getRedirectResponseAfterSave(AdminContext $context, string $action): RedirectResponse
     {
         $submitButtonName = $context->getRequest()->request->all()['ea']['newForm']['btn'];

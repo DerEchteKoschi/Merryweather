@@ -30,7 +30,7 @@ class MerryweatherExtensionTest extends TestCase
             $names[] = $function->getName();
         }
         sort($names);
-        $this->assertEquals(['bootstrapClassForLog', 'canBook', 'canCancel', 'userScore', 'slotCost'], $names);
+        $this->assertEquals(['bootstrapClassForLog', 'canBook', 'canCancel', 'slotCost', 'userScore'], $names);
     }
 
     public function testGetNodeVisitors()

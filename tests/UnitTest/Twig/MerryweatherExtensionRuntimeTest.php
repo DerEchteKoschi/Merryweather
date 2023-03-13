@@ -26,15 +26,15 @@ class MerryweatherExtensionRuntimeTest extends TestCase
     {
         $dt = new DateTimeImmutable('now');
 
-        yield ['primary', new LogMessage('', '', 100, '', $dt)];
-        yield ['info', new LogMessage('', '', 200, '', $dt)];
-        yield ['success', new LogMessage('', '', 250, '', $dt)];
-        yield ['warning', new LogMessage('', '', 300, '', $dt)];
-        yield ['danger', new LogMessage('', '', 400, '', $dt)];
-        yield ['danger', new LogMessage('', '', 500, '', $dt)];
-        yield ['danger', new LogMessage('', '', 550, '', $dt)];
-        yield ['danger', new LogMessage('', '', 600, '', $dt)];
-        yield ['99', new LogMessage('', '', 99, '', $dt)];
+        yield 'loglevel 100' => ['primary', new LogMessage('', '', 100, '', $dt)];
+        yield 'loglevel 200' => ['info', new LogMessage('', '', 200, '', $dt)];
+        yield 'loglevel 250' => ['success', new LogMessage('', '', 250, '', $dt)];
+        yield 'loglevel 300' => ['warning', new LogMessage('', '', 300, '', $dt)];
+        yield 'loglevel 400' => ['danger', new LogMessage('', '', 400, '', $dt)];
+        yield 'loglevel 500' => ['danger', new LogMessage('', '', 500, '', $dt)];
+        yield 'loglevel 550' => ['danger', new LogMessage('', '', 550, '', $dt)];
+        yield 'loglevel 600' => ['danger', new LogMessage('', '', 600, '', $dt)];
+        yield 'loglevel 99 (unkown level)' => ['99', new LogMessage('', '', 99, '', $dt)];
 
     }
 
@@ -49,7 +49,7 @@ class MerryweatherExtensionRuntimeTest extends TestCase
     /**
      * @dataProvider logTestProvider
      */
-    public function testBootstrapClassForLog(string $expected, LogMessage $log)
+    public function testBootstrapClassForLogMessage(string $expected, LogMessage $log)
     {
         $merryweatherExtensionRuntime = $this->newMerryweatherExtensionRuntime();
         $class = $merryweatherExtensionRuntime->bootstrapClassForLog($log);
