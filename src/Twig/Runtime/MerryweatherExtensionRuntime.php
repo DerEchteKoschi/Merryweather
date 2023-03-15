@@ -20,8 +20,7 @@ class MerryweatherExtensionRuntime implements RuntimeExtensionInterface
         private readonly SlotRepository $slotRepository,
         private readonly Security $security,
         private readonly TranslatorInterface $translator,
-        private readonly AppConfig $appConfig,
-        private readonly array $supportedLocales
+        private readonly AppConfig $appConfig
     ) {
     }
 

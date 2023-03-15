@@ -12,14 +12,12 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
  */
 class UserFixture extends Fixture
 {
-
     public function __construct(private readonly UserPasswordHasherInterface $userPasswordHasher)
     {
     }
 
     public function load(ObjectManager $manager): void
     {
-
         $manager->persist($this->getUser('1234', 'user1'));
         $manager->persist($this->getUser('2345', 'user2', roles: ['ROLE_USER', 'ROLE_ADMIN']));
         $manager->persist($this->getUser('3456', 'user3', false)->setActive(false));
@@ -30,6 +28,8 @@ class UserFixture extends Fixture
     /**
      * @param string $phone
      * @param string $displayName
+     * @param bool   $isActive
+     * @param string[]  $roles
      * @return User
      */
     protected function getUser(string $phone, string $displayName, bool $isActive = true, array $roles = ['ROLE_USER']): User
