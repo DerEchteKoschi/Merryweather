@@ -1,5 +1,5 @@
 #!/usr/bin/env sh
-
+export XDEBUG_MODE=off
 echo cs-fixer
 echo --------
 FILE=tools/php-cs-fixer/vendor
