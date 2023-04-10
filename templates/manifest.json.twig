@@ -1,16 +1,19 @@
 {
     "$schema": "https://json.schemastore.org/web-manifest-combined.json",
     "background_color": "#fff",
+    "id": "app_merryweather",
+    "theme_color": "#cfe2ff",
     "description": "{{ 'manifest_description'|trans() }}",
     "display": "standalone",
     "icons": [
         {
-            "src": "img/logo.png",
+            "src": "{{ asset('img/logo.png') }}",
             "sizes": "512x512",
             "type": "image/png"
         }
     ],
     "name": "{{ appTitle }}",
     "short_name": "{{ appTitle }}",
-    "start_url": "."
+    "start_url": ".",
+    "orientation": "portrait-primary"
 }

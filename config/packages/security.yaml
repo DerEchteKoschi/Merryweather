@@ -46,6 +46,7 @@ security:
         # - { path: ^/profile, roles: ROLE_USER }
         - { path: ^/login, roles: PUBLIC_ACCESS }
         - { path: ^/cron, roles: PUBLIC_ACCESS }
+        - { path: ^/manifest, roles: PUBLIC_ACCESS }
         - { path: ^/, roles: IS_AUTHENTICATED }
         - { path: ^/admin, roles: ROLE_ADMIN }
 when@test:
