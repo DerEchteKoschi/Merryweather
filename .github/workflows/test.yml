@@ -4,14 +4,21 @@ on:
     branches:
       - '**'
 jobs:
-  build-check:
+  codestyle:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: php-actions/composer@v6 # or alternative dependency management
-      - run: ./check.sh
+      - run: composer install --working-dir=tools/php-cs-fixer
+      - run: tools/php-cs-fixer/vendor/bin/php-cs-fixer fix src --dry-run
 
-  build-test:
+  stan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - run: composer install --working-dir=tools/phpstan
+      - run: tools/phpstan/vendor/bin/phpstan analyse -c phpstan.neon
+
+  unittest:
     runs-on: ubuntu-latest
 
     steps:
