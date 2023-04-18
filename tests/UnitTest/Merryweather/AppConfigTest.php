@@ -29,7 +29,7 @@ class AppConfigTest extends TestCase
         $appConfig = new AppConfig($appConfigRepositoryMock);
         $this->assertTrue($appConfig->isCronActive());
         $this->assertTrue($appConfig->isAdminCancelAllowed());
-        $this->assertSame([1, 2, 3], $appConfig->getScoreConfig());
+        $this->assertSame([[1, 2, 3],[4,5]], $appConfig->getScoreConfig());
         $this->assertEquals(6, $appConfig->getScoreRaiseStep());
         $this->assertEquals(5, $appConfig->getScoreLimit());
         $this->assertEquals(6, $appConfig->getMonthCount());
@@ -67,7 +67,7 @@ class AppConfigTest extends TestCase
             'scoreRaiseStep' => (new \App\Entity\AppConfig())->setValue('6'),
             'scoreLimit' => null,
             'monthCount' => (new \App\Entity\AppConfig())->setValue('6'),
-            'scoreDistribution' => (new \App\Entity\AppConfig())->setValue('1,2,3'),
+            'scoreDistribution' => (new \App\Entity\AppConfig())->setValue('1,2,3;4,5'),
         ];
     }
 }

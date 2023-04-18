@@ -9,4 +9,5 @@ enum DataType
     case String;
     case Float;
     case IntArray;
+    case IntArrayArray;
 }

@@ -2,6 +2,7 @@
 
 namespace App\Merryweather;
 
+use App\Entity\Distribution;
 use App\Entity\Slot;
 use App\Entity\User;
 use Psr\Log\LoggerAwareInterface;
@@ -15,48 +16,65 @@ class BookingRuleChecker implements LoggerAwareInterface
     {
     }
 
-    public function lowerUserScoreBySlot(User $user, Slot $slot): void
+    private static function getCost($scoreConfig, $slotPosition, $totalNoOfSlots, $dayIndex, $dayCount)
     {
-        $this->lowerUserScore($user, $this->pointsNeededForSlot($slot));
-    }
-
-    public function raiseUserScoreBySlot(User $user, Slot $slot): void
-    {
-        $this->raiseUserScore($user, $this->pointsNeededForSlot($slot));
-    }
-
-    public function pointsNeededForSlot(Slot $slot): int
-    {
-        $scoreConfig = $this->appConfig->getScoreConfig();
-        $scoreConfigCount = count($scoreConfig);
+        $scoreConfigForDay = self::configNeededForDay($scoreConfig, $dayCount, $dayIndex);
+        $scoreConfigCount = count($scoreConfigForDay);
         if ($scoreConfigCount === 0) {
             return 0;
         }
-        $totalNoOfSlots = $slot->getDistribution()->getSlots()->count();
+        if ($scoreConfigCount >= $totalNoOfSlots) {
+            return $scoreConfigForDay[$slotPosition];
+        }
+
+        $factor = $scoreConfigCount / $totalNoOfSlots;
+
+        return $scoreConfigForDay[(int)($factor * $slotPosition)];
+    }
+
+    public function lowerUserScore(User $user, int $toSub = 1): void
+    {
+        $score = $user->getScore();
+        $score -= $toSub;
+        if ($score < 0) {
+            $score = 0;
+        }
+        $user->setScore($score);
+    }
+
+    public function lowerUserScoreBySlot(User $user, Slot $slot): int
+    {
+        $pointsNeeded = $this->pointsNeededForSlot($slot);
+        $this->lowerUserScore($user, $pointsNeeded);
+
+        return $pointsNeeded;
+    }
+
+    public function pointsNeededForSlot(Slot $slot, $day = 'today'): int
+    {
+        /** @var Distribution $distribution */
+        $distribution = $slot->getDistribution();
+        $today = new \DateTimeImmutable($day);
+        $days = $distribution->getActiveTill()->diff($distribution->getActiveFrom())->d;
+        if ($today <= $distribution->getActiveFrom()) {
+            $dayIndex = 0;
+        } elseif ($today > $distribution->getActiveTill()) {
+            $dayIndex = $days - 1;
+        } else {
+            $dayIndex = $today->diff($distribution->getActiveFrom())->d;
+        }
+
         $slotPosition = 0;
-        $cost = 0;
-        foreach ($slot->getDistribution()->getSlots() as $slotFromList) {
+        foreach ($distribution->getSlots() as $slotFromList) {
             if ($slot === $slotFromList) {
                 break;
             }
             $slotPosition++;
         }
+        $totalNoOfSlots = $distribution->getSlots()->count();
 
-        if ($scoreConfigCount >= $totalNoOfSlots) {
-            return $scoreConfig[$slotPosition];
-        }
+        return self::getCost($this->appConfig->getScoreConfig(), $slotPosition, $totalNoOfSlots, $dayIndex, $days);
 
-        $factor = $scoreConfigCount / $totalNoOfSlots;
-        return $scoreConfig[(int)($factor * $slotPosition)];
-    }
-
-    public function userCanBook(User $user, Slot $slot): bool
-    {
-        return ($slot->getDistribution() !== null)
-               && !$this->isSlotInPast($slot)
-               && ($slot->getUser() === null)
-               && $this->hasBookednoOtherSlotOfSameDistribution($slot, $user)
-               && $user->getScore() >= $this->pointsNeededForSlot($slot);
     }
 
     public function raiseUserScore(User $user, int $toAdd = 1): bool
@@ -75,14 +93,18 @@ class BookingRuleChecker implements LoggerAwareInterface
         return $hasChanged;
     }
 
-    public function lowerUserScore(User $user, int $toSub = 1): void
+    public function raiseUserScoreBySlot(User $user, Slot $slot): void
     {
-        $score = $user->getScore();
-        $score -= $toSub;
-        if ($score < 0) {
-            $score = 0;
-        }
-        $user->setScore($score);
+        $this->raiseUserScore($user, $slot->getAmountPaid() ?? $this->pointsNeededForSlot($slot));
+    }
+
+    public function userCanBook(User $user, Slot $slot): bool
+    {
+        return ($slot->getDistribution() !== null)
+               && !$this->isSlotInPast($slot)
+               && ($slot->getUser() === null)
+               && $this->hasBookednoOtherSlotOfSameDistribution($slot, $user)
+               && $user->getScore() >= $this->pointsNeededForSlot($slot);
     }
 
     public function userCanCancel(User $user, Slot $slot): bool
@@ -107,6 +129,21 @@ class BookingRuleChecker implements LoggerAwareInterface
         }
 
         return $hasBookedNoSlotOfDistribution;
+    }
+
+    private static function configNeededForDay($dayConfig, $range, $day)
+    {
+        if (count($dayConfig) === 1) {
+            return $dayConfig[0];
+        }
+
+        if (count($dayConfig) >= $range) {
+            return $dayConfig[$day - 1];
+        }
+
+        $factor = count($dayConfig) / $range;
+
+        return $dayConfig[(int)($factor * ($day - 1))];
     }
 
     /**

@@ -26,6 +26,9 @@ class Slot
     #[ORM\Column(type: Types::TIME_IMMUTABLE)]
     private ?DateTimeImmutable $startAt = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?int $amountPaid = null;
+
     public function getDistribution(): ?Distribution
     {
         return $this->distribution;
@@ -83,6 +86,18 @@ class Slot
     public function setUser(?User $user): self
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getAmountPaid(): ?int
+    {
+        return $this->amountPaid;
+    }
+
+    public function setAmountPaid(?int $amountPaid): self
+    {
+        $this->amountPaid = $amountPaid;
 
         return $this;
     }

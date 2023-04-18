@@ -1,0 +1,32 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block page_title %}
+    {{ appTitle }} {{ 'slotView'|trans }}
+{% endblock %}
+{% block main %}
+    <div class="m-4">
+        {{ config }}
+        <table class="table table-striped table-hover">
+            <thead class="table-dark">
+            <th>Slot</th>
+            {% for head in header %}
+                <th scope="col">{{ head|date('d.m.y') }}</th>
+            {% endfor %}
+            </thead>
+            <tbody>
+            {% for slot in slots %}
+                <tr>
+                    {% for day in slot %}
+                        {% if loop.index == 1 %}
+                        <th scope="row" class="table-dark">{{ day }}</th>
+                        {% else %}
+                        <td class="text-center">{{ day }}</td>
+                        {% endif %}
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+{% endblock %}

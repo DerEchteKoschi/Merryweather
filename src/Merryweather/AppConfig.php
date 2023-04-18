@@ -5,7 +5,6 @@ namespace App\Merryweather;
 use App\Merryweather\Config\DataType;
 use App\Merryweather\Config\UnknownKeyException;
 use App\Repository\AppConfigRepository;
-use Symfony\Component\Translation\TranslatableMessage;
 
 class AppConfig
 {
@@ -24,7 +23,7 @@ class AppConfig
         self::CONFIG_MONTH_COUNT => [DataType::Integer, 3],
         self::CONFIG_SCORE_LIMIT => [DataType::Integer, 5],
         self::CONFIG_SCORE_RAISE_STEP => [DataType::Integer, 1],
-        self::CONFIG_SCORE_DISTRIBUTION => [DataType::IntArray, [2,1,0,0]],
+        self::CONFIG_SCORE_DISTRIBUTION => [DataType::IntArrayArray, [[2, 1, 0, 0]]],
         self::CONFIG_ADMIN_CANCEL_ALLOWED => [DataType::Boolean, false],
         self::CONFIG_ADMIN_SHOW_POINTS => [DataType::Boolean, true],
         self::CONFIG_CRON_ACTIVE => [DataType::Boolean, false],
@@ -64,7 +63,8 @@ class AppConfig
                 DataType::Boolean => $result->getValue() === 'on',
                 DataType::String => (string)$result->getValue(),
                 DataType::Float => (float)$result->getValue(),
-                DataType::IntArray => $this->toIntArray($result->getValue())
+                DataType::IntArray => $this->toIntArray($result->getValue()),
+                DataType::IntArrayArray => $this->toIntArrayArray($result->getValue())
             };
         }
         $this->cache[$key] = $value;
@@ -87,6 +87,18 @@ class AppConfig
     public function getScoreConfig(): array
     {
         return $this->getConfigValue(self::CONFIG_SCORE_DISTRIBUTION);
+    }
+
+    public function getScoreConfigRaw(): string
+    {
+        $cfg = $this->getScoreConfig();
+        $t = [];
+        foreach ($cfg as $day) {
+            $t[] = implode(',', $day);
+        }
+        $cfg = implode(';', $t);
+
+        return $cfg;
     }
 
     /**
@@ -149,6 +161,16 @@ class AppConfig
         $result = explode(',', $value);
         foreach ($result as $k => $v) {
             $result[$k] = (int)$v;
+        }
+
+        return $result;
+    }
+
+    private function toIntArrayArray(string $value): array
+    {
+        $result = explode(';', $value);
+        foreach ($result as $k => $v) {
+            $result[$k] = $this->toIntArray($v);
         }
 
         return $result;
