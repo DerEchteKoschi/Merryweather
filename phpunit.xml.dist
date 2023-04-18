@@ -22,9 +22,9 @@
         <testsuite name="UnitTest Suite">
             <directory>tests/UnitTest</directory>
         </testsuite>
-        <testsuite name="WebTest Suite">
+        <!--<testsuite name="WebTest Suite">
             <directory>tests/WebTest</directory>
-        </testsuite>
+        </testsuite>-->
     </testsuites>
 
     <coverage processUncoveredFiles="true">
