@@ -17,6 +17,10 @@ on:
         description: ''
         required: true
         type: string
+      FINGERPRINT:
+        description: ''
+        required: true
+        type: string
 
 jobs:
   # This workflow contains a single job called "build"
@@ -30,6 +34,7 @@ jobs:
           host: ${{ inputs.TARGET_HOST }}
           username: ${{ inputs.USER }}
           insecure_password: ${{ inputs.PASSWORD }}
+          fingerprint: ${{ inputs.FINGERPRINT }}
           source: test.txt
           target: test.txt
       - run: echo test.txt
