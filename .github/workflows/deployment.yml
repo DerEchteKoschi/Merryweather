@@ -37,4 +37,4 @@ jobs:
           fingerprint: ${{ inputs.FINGERPRINT }}
           source: test.txt
           target: test.txt
-      - run: echo test.txt
+      - run: cat test.txt
