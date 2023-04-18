@@ -86,7 +86,13 @@ class BookingRuleChecker implements LoggerAwareInterface
     }
 
     public function userCanCancel(User $user, Slot $slot): bool
+
+
     {
+
+
+
+
         return ($slot->getDistribution() !== null)
                && !$this->isSlotInPast($slot)
                && ($slot->getUser() === $user);
