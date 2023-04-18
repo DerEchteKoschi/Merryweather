@@ -27,9 +27,9 @@ jobs:
         uses: nicklasfrahm/scp-action@main
         with:
           direction: download
-          host: ${{ input.TARGET_HOST }}
-          username: ${{ input.USER }}
-          insecure_password: ${{ input.PASSWORD }}
+          host: ${{ inputs.TARGET_HOST }}
+          username: ${{ inputs.USER }}
+          insecure_password: ${{ inputs.PASSWORD }}
           source: test.txt
           target: test.txt
       - run: echo test.txt
