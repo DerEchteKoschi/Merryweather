@@ -13,8 +13,7 @@ class ManifestController extends AbstractController
     #[Route('/manifest.json', name: 'app_manifest')]
     public function index(): Response
     {
-
         return $this->render('manifest.json.twig', [
-        ],new JsonResponse());
+        ], new JsonResponse());
     }
 }
