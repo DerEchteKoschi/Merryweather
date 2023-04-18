@@ -205,7 +205,7 @@ class DistributionCrudController extends AbstractCrudController
                 /** @var User $user */
                 $user = $slot->getUser();
                 $slot->setUser(null);
-                $bookRuleChecker->raiseUserScore($user, $bookRuleChecker->pointsNeededForSlot($slot));
+                $bookRuleChecker->raiseUserScoreBySlot($user, $slot);
                 $userRepository->save($user, true);
                 $slotRepository->save($slot, true);
                 $this->addFlash('success', $this->translator->trans('cancel_succesfull', ['username' => $user->getDisplayName()]));

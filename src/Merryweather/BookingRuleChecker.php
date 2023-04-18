@@ -32,7 +32,7 @@ class BookingRuleChecker implements LoggerAwareInterface
         return $scoreConfigForDay[(int)($factor * $slotPosition)];
     }
 
-    public function lowerUserScore(User $user, int $toSub = 1): void
+    private function lowerUserScore(User $user, int $toSub = 1): void
     {
         $score = $user->getScore();
         $score -= $toSub;
