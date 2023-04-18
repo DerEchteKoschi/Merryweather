@@ -1,0 +1,35 @@
+name: deploy
+
+# Controls when the workflow will run
+on:
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+    inputs:
+      TARGET_HOST:
+        description: 'example.org'
+        required: true
+        type: string
+      USER:
+        description: ''
+        required: true
+        type: string
+      PASSWORD:
+        description: ''
+        required: true
+        type: string
+
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+steps:
+  - name: Download file via SSH
+    uses: nicklasfrahm/scp-action@main
+    with:
+      direction: download
+      host: ${{ input.TARGET_HOST }}
+      username: ${{ input.USER }}
+      insecure_password: ${{ input.PASSWORD }}
+      source: test.txt
+      target: test.txt
+  - run: echo test.txt
