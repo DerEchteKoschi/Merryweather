@@ -4,23 +4,7 @@ name: deploy
 on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
-    inputs:
-      DHOST:
-        description: 'example.org'
-        required: true
-        type: string
-      DUSER:
-        description: ''
-        required: true
-        type: string
-      DPASSWORD:
-        description: ''
-        required: true
-        type: string
-      HOST:
-        description: 'webhost'
-        required: true
-        type: string
+
 
 jobs:
   # This workflow contains a single job called "build"
@@ -32,10 +16,10 @@ jobs:
         run: echo "random_number=$(($RANDOM))" >> $GITHUB_OUTPUT
       - uses: actions/checkout@v3
       - run: sudo apt install lftp
-      - run: sshpass -p ${{ inputs.DPASSWORD }} scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${{ secrets.DUSER }}@${{ secrets.DHOST }}:/.env.local.php .env.local.php
+      - run: sshpass -p ${{ secrets.DEPLOYMENT_PASSWORD }} scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${{ secrets.DEPLOYMENT_USER }}@${{ secrets.DEPLOYMENT_HOST }}:/.env.local.php .env.local.php
       - uses: php-actions/composer@v6
       - run: echo '<?php return "${{ steps.generate_number.outputs.random_number }}"; ' > ./public/deploy/ci.php
-      - run: lftp -e "mirror -R . ." -u ${{ inputs.DUSER }},${{ inputs.DPASSWORD }} ${{ inputs.DHOST }}
-      - run: curl https://deployment:${{ steps.generate_number.outputs.random_number }}@${{ inputs.HOST }}/deploy.php
+      - run: lftp -e "mirror -R . ." -u ${{ secrets.DEPLOYMENT_USER }},${{ secrets.DEPLOYMENT_PASSWORD }} ${{ secrets.DEPLOYMENT_HOST }}
+      - run: curl https://deployment:${{ steps.generate_number.outputs.random_number }}@${{ secrets.WEB_HOST }}/deploy.php
 
 
