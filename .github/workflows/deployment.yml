@@ -17,6 +17,10 @@ on:
         description: ''
         required: true
         type: string
+      HOST:
+        description: 'webhost'
+        required: true
+        type: string
 
 jobs:
   # This workflow contains a single job called "build"
@@ -32,6 +36,6 @@ jobs:
       - uses: php-actions/composer@v6
       - run: echo '<?php return "${{ steps.generate_number.outputs.random_number }}"; ' > ./public/deploy/ci.php
       - run: lftp -e "mirror -R . ." -u ${{ inputs.DUSER }},${{ inputs.DPASSWORD }} ${{ inputs.DHOST }}
-      - run: curl https://deployment:${{ steps.generate_number.outputs.random_number }}@${{ secrets.HOST }}/deploy.php
+      - run: curl https://deployment:${{ steps.generate_number.outputs.random_number }}@${{ inputs.HOST }}/deploy.php
 
 
