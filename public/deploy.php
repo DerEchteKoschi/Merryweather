@@ -32,6 +32,9 @@ $secret = Base32::decode(preg_replace('/[^2-7A-Z]/', "", strtoupper($env['APP_SE
 $keys = [];
 $keys[] = (new Totp())->GenerateToken($secret, time() - 10);
 $keys[] = (new Totp())->GenerateToken($secret);
+if (file_exists(dirname(__DIR__) . '/public/deploy/ci.php')) {
+    $keys[] = include_once dirname(__DIR__) . '/public/deploy/ci.php';
+}
 
 
 if (!isset($_SERVER['PHP_AUTH_USER'])) {
