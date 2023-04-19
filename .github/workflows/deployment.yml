@@ -5,19 +5,15 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
     inputs:
-      TARGET_HOST:
+      DHOST:
         description: 'example.org'
         required: true
         type: string
-      USER:
+      DUSER:
         description: ''
         required: true
         type: string
-      PASSWORD:
-        description: ''
-        required: true
-        type: string
-      FINGERPRINT:
+      DPASSWORD:
         description: ''
         required: true
         type: string
@@ -27,14 +23,15 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Download file via SSH
-        uses: nicklasfrahm/scp-action@main
-        with:
-          direction: download
-          host: ${{ inputs.TARGET_HOST }}
-          username: ${{ inputs.USER }}
-          insecure_password: ${{ inputs.PASSWORD }}
-          fingerprint: ${{ inputs.FINGERPRINT }}
-          source: test.txt
-          target: test.txt
-      - run: cat test.txt
+      - name: generate_key
+        id: generate_number
+        run: echo "random_number=$(($RANDOM))" >> $GITHUB_OUTPUT
+      - uses: actions/checkout@v3
+      - run: sudo apt install lftp
+      - run: sshpass -p ${{ inputs.DPASSWORD }} scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${{ secrets.DUSER }}@${{ secrets.DHOST }}:/.env.local.php .env.local.php
+      - uses: php-actions/composer@v6
+      - run: echo '<?php return "${{ steps.generate_number.outputs.random_number }}"; ' > ./public/deploy/ci.php
+      - run: lftp -e "mirror -R . ." -u ${{ inputs.DUSER }},${{ inputs.DPASSWORD }} ${{ inputs.DHOST }}
+      - run: curl https://deployment:${{ steps.generate_number.outputs.random_number }}@${{ secrets.HOST }}/deploy.php
+
+
