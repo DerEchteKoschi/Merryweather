@@ -47,8 +47,7 @@ class AdminDashboardController extends AbstractDashboardController
         private readonly DistributionRepository $distributionRepository,
         private readonly AppConfig $appConfig,
         private readonly string $appTitle,
-        private readonly array $supportedLocales,
-        private readonly bool $poorMansDeploymentActive = false
+        private readonly array $supportedLocales
     ) {
         $this->slotCount = $slotRepository->count([]);
         $this->userCount = $userRepository->count([]);
@@ -99,9 +98,6 @@ class AdminDashboardController extends AbstractDashboardController
         }
         yield MenuItem::linkToRoute(new TranslatableMessage('configurations'), 'fa fa-wrench', 'admin_config');
         yield MenuItem::linkToRoute(new TranslatableMessage('logs'), 'fa fa-list-ul', 'admin_logs');
-        if ($this->poorMansDeploymentActive) {
-            yield MenuItem::linkToRoute(new TranslatableMessage('deployment_2fa'), 'fa fa-qrcode', 'admin_2fa');
-        }
     }
 
     /**
