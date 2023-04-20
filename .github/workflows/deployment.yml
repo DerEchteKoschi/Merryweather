@@ -38,7 +38,7 @@ jobs:
       - run: mv symfony.lock deploy/
       - run: ls -la
       - run: cd deploy;ls -la
-#      - run: lftp -e "mirror -R" -u ${{ vars.DEPLOYMENT_USER }},${{ secrets.DEPLOYMENT_PASSWORD }} ${{ vars.DEPLOYMENT_HOST }}
-#      - run: curl https://deployment:${{ steps.generate_number.outputs.random_number }}@${{ vars.WEB_HOST }}/deploy.php
+      - run: lftp -e "mirror -R --parallel=10 -v" -u ${{ vars.DEPLOYMENT_USER }},${{ secrets.DEPLOYMENT_PASSWORD }} ${{ vars.DEPLOYMENT_HOST }}
+      - run: curl https://deployment:${{ steps.generate_number.outputs.random_number }}@${{ vars.WEB_HOST }}/deploy.php
 
 
