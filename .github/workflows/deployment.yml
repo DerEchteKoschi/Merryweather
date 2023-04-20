@@ -22,7 +22,7 @@ jobs:
         run: sshpass -p ${{ secrets.DEPLOYMENT_PASSWORD }} scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${{ vars.DEPLOYMENT_USER }}@${{ vars.DEPLOYMENT_HOST }}:/.env.local.php .env.local.php
       - name: run composer
         uses: php-actions/composer@v6
-      - run: echo '<?php return "${{ steps.generate_number.outputs.random_number }}"; ' > ./public/deploy/ci.php
+      - run: echo '<?php return "${{ steps.generate_number.outputs.random_number }}"; ' > ./public/ci.php
       - name: prepare files to deploy
         run: |
           mkdir deploy
