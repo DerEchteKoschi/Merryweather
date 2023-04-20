@@ -35,7 +35,7 @@ jobs:
       - run: sudo mv vendor deploy/
       - run: mv .env.local.php deploy/
       - run: mv composer.* deploy/
-      - run: mv symfony deploy/
+      - run: mv symfony.lock deploy/
       - run: ls -la
       - run: cd deploy
       - run: ls -la
