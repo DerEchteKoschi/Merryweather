@@ -38,7 +38,6 @@ class AdminDashboardController extends AbstractDashboardController
      * @param AppConfig              $appConfig
      * @param string                 $appTitle
      * @param string[]               $supportedLocales
-     * @param bool                   $poorMansDeploymentActive
      *                                                        @codeCoverageIgnore
      */
     public function __construct(
