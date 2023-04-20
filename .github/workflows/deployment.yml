@@ -31,8 +31,8 @@ jobs:
       - run: mv src deploy/
       - run: mv templates deploy/
       - run: mv translations deploy/
-      - run: mv var deploy/
-      - run: mv vendor deploy/
+      - run: sudo mv var deploy/
+      - run: sudo mv vendor deploy/
       - run: mv .env.local.php deploy/
       - run: mv composer.* deploy/
       - run: mv symfony deploy/
