@@ -18,7 +18,6 @@ services:
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
         bind:
             $logpath: '%logpath%'
-            $poorMansDeploymentActive: '%env(bool:default:false_fallback:POOR_MANS_DEPLOYMENT)%'
             $appTitle: '%app.title%'
             $supportedLocales: '%app.supported_locales%'
 
@@ -33,6 +32,3 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
-    App\Controller\Admin\Deploy2FAController:
-        arguments:
-            $kernelSecret: '%kernel.secret%'
