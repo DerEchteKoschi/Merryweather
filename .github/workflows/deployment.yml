@@ -11,15 +11,35 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: generate_key
+      - name: prepare tools
+        run: sudo apt install lftp
+      - name: generate deployment key
         id: generate_number
         run: echo "random_number=$(($RANDOM))" >> $GITHUB_OUTPUT
-      - uses: actions/checkout@v3
-      - run: sudo apt install lftp
+      - name: checkout
+        uses: actions/checkout@v3
+      - name: get depoyed env-config
       - run: sshpass -p ${{ secrets.DEPLOYMENT_PASSWORD }} scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${{ vars.DEPLOYMENT_USER }}@${{ vars.DEPLOYMENT_HOST }}:/.env.local.php .env.local.php
-      - uses: php-actions/composer@v6
+      - name: run composer
+        uses: php-actions/composer@v6
       - run: echo '<?php return "${{ steps.generate_number.outputs.random_number }}"; ' > ./public/deploy/ci.php
-      - run: lftp -e "mirror -R" -u ${{ vars.DEPLOYMENT_USER }},${{ secrets.DEPLOYMENT_PASSWORD }} ${{ vars.DEPLOYMENT_HOST }}
-      - run: curl https://deployment:${{ steps.generate_number.outputs.random_number }}@${{ vars.WEB_HOST }}/deploy.php
+      - run: mkdir deploy
+      - run: mv bin deploy/
+      - run: mv config deploy/
+      - run: mv migrations deploy/
+      - run: mv public deploy/
+      - run: mv src deploy/
+      - run: mv templates deploy/
+      - run: mv translations deploy/
+      - run: mv var deploy/
+      - run: mv vendor deploy/
+      - run: mv .env.local.php deploy/
+      - run: mv composer.* deploy/
+      - run: mv symfony deploy/
+      - run: ls -la
+      - run: cd deploy
+      - run: ls -la
+#      - run: lftp -e "mirror -R" -u ${{ vars.DEPLOYMENT_USER }},${{ secrets.DEPLOYMENT_PASSWORD }} ${{ vars.DEPLOYMENT_HOST }}
+#      - run: curl https://deployment:${{ steps.generate_number.outputs.random_number }}@${{ vars.WEB_HOST }}/deploy.php
 
 
