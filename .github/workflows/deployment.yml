@@ -19,7 +19,7 @@ jobs:
       - run: sshpass -p ${{ secrets.DEPLOYMENT_PASSWORD }} scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${{ vars.DEPLOYMENT_USER }}@${{ vars.DEPLOYMENT_HOST }}:/.env.local.php .env.local.php
       - uses: php-actions/composer@v6
       - run: echo '<?php return "${{ steps.generate_number.outputs.random_number }}"; ' > ./public/deploy/ci.php
-      - run: lftp -e "mirror -R . ." -u ${{ vars.DEPLOYMENT_USER }},${{ secrets.DEPLOYMENT_PASSWORD }} ${{ vars.DEPLOYMENT_HOST }}
+      - run: lftp -e "mirror -R" -u ${{ vars.DEPLOYMENT_USER }},${{ secrets.DEPLOYMENT_PASSWORD }} ${{ vars.DEPLOYMENT_HOST }}
       - run: curl https://deployment:${{ steps.generate_number.outputs.random_number }}@${{ vars.WEB_HOST }}/deploy.php
 
 
