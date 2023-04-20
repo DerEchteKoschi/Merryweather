@@ -1,42 +1,46 @@
 name: deployment
+run-name: Deploy to ${{ vars.WEB_HOST }} by @${{ github.actor }}
 
 # Controls when the workflow will run
 on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-
 jobs:
   # This workflow contains a single job called "build"
-  build:
+  deployment:
     runs-on: ubuntu-latest
     steps:
-      - name: prepare tools
+      - name: prepare
         run: sudo apt install lftp
       - name: generate deployment key
         id: generate_number
         run: echo "random_number=$(($RANDOM))" >> $GITHUB_OUTPUT
       - name: checkout
         uses: actions/checkout@v3
-      - name: get depoyed env-config
+      - name: get deployed env-config
         run: sshpass -p ${{ secrets.DEPLOYMENT_PASSWORD }} scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${{ vars.DEPLOYMENT_USER }}@${{ vars.DEPLOYMENT_HOST }}:/.env.local.php .env.local.php
       - name: run composer
         uses: php-actions/composer@v6
       - run: echo '<?php return "${{ steps.generate_number.outputs.random_number }}"; ' > ./public/deploy/ci.php
-      - run: mkdir deploy
-      - run: mv bin deploy/
-      - run: mv config deploy/
-      - run: mv migrations deploy/
-      - run: mv public deploy/
-      - run: mv src deploy/
-      - run: mv templates deploy/
-      - run: mv translations deploy/
-      - run: sudo mv var deploy/
-      - run: sudo mv vendor deploy/
-      - run: mv .env.local.php deploy/
-      - run: mv composer.* deploy/
-      - run: mv symfony.lock deploy/
-      - run: cd deploy;lftp -e "mirror -R --parallel=10 -v" -u ${{ vars.DEPLOYMENT_USER }},${{ secrets.DEPLOYMENT_PASSWORD }} ${{ vars.DEPLOYMENT_HOST }}
-      - run: curl https://deployment:${{ steps.generate_number.outputs.random_number }}@${{ vars.WEB_HOST }}/deploy.php
+      - name: prepare files to deploy
+        run: |
+          mkdir deploy
+          mv bin deploy/
+          mv config deploy/
+          mv migrations deploy/
+          mv public deploy/
+          mv src deploy/
+          mv templates deploy/
+          mv translations deploy/
+          sudo mv var deploy/
+          sudo mv vendor deploy/
+          mv .env.local.php deploy/
+          mv composer.* deploy/
+          mv symfony.lock deploy/
+      - name: copy files to target
+        run: cd deploy;lftp -e "mirror -R --parallel=20" -u ${{ vars.DEPLOYMENT_USER }},${{ secrets.DEPLOYMENT_PASSWORD }} ${{ vars.DEPLOYMENT_HOST }}
+      - name: execute migrations
+        run: curl https://deployment:${{ steps.generate_number.outputs.random_number }}@${{ vars.WEB_HOST }}/deploy.php
 
 
