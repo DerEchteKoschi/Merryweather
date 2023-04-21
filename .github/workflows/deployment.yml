@@ -18,11 +18,23 @@ jobs:
         run: echo "random_number=$(($RANDOM))" >> $GITHUB_OUTPUT
       - name: checkout
         uses: actions/checkout@v3
-      - name: get deployed env-config
-        run: sshpass -p ${{ secrets.DEPLOYMENT_PASSWORD }} scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${{ vars.DEPLOYMENT_USER }}@${{ vars.DEPLOYMENT_HOST }}:/.env.local.php .env.local.php
+      - name: prepare .env
+        run: |
+          echo APP_ENV=prod >> .env
+          echo APP_DEBUG=false >> .env
+          echo APP_SECRET=${{ secrets.APP }} >> .env
+          echo DATABASE_URL="mysql://${{ vars.DB_USER }}:${{ secrets.DB_PASSWORD }}@${{ vars.DB_HOST }}:3306/${{ vars.DB_NAME }}?serverVersion=mariadb-10.8.3&charset=utf8mb4" >> .env
       - name: run composer
         uses: php-actions/composer@v6
+      - name: dump-env
+        uses: php-actions/composer@v6
+        with:
+          command: symfony:dump-env prod
+      - run: cat .env.local.php
       - run: echo '<?php return "${{ steps.generate_number.outputs.random_number }}"; ' > ./public/ci.php
+#      - run: |
+#          echo '<html>die App wird gerade aktualisiert bitte haben sie etwas Geduld und versuchen sie es in 5 minuten noch einmal.<br>' > index.php
+#          echo 'the App is updated right now please be patient and try again in 5 minutes</html>' >> index.php
       - name: prepare files to deploy
         run: |
           mkdir deploy
@@ -38,8 +50,15 @@ jobs:
           mv .env.local.php deploy/
           mv composer.* deploy/
           mv symfony.lock deploy/
-      - name: copy files to target
-        run: cd deploy;lftp -e "mirror -R --parallel=20" -u ${{ vars.DEPLOYMENT_USER }},${{ secrets.DEPLOYMENT_PASSWORD }} ${{ vars.DEPLOYMENT_HOST }}
+#          mv deploy/public/index.php index.php_bak
+#      - name: clean target
+#        run: echo not implemented yet
+#      - name: activate maintenance info
+#        run: echo not implemented yet
+#      - name: copy files to target
+#        run: cd deploy;lftp -e "mirror -R --parallel=20" -u ${{ vars.DEPLOYMENT_USER }},${{ secrets.DEPLOYMENT_PASSWORD }} ${{ vars.DEPLOYMENT_HOST }}
+#      - name: deactivate maintenance info
+#        run: echo not implemented yet
       - name: execute migrations
         run: curl https://deployment:${{ steps.generate_number.outputs.random_number }}@${{ vars.WEB_HOST }}/deploy.php
 
