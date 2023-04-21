@@ -56,11 +56,11 @@ jobs:
           mv deploy/public/maintenance.html deploy/public/index.php
       - run: cd deploy/public; ls
       - name: activate maintenance info
-        run: lftp -e "put deploy/public/index.php /public/index.php; exit" -u ${{ vars.DEPLOYMENT_USER }},${{ secrets.DEPLOYMENT_PASSWORD }} ${{ vars.DEPLOYMENT_HOST }}
+        run: lftp -e "put ./deploy/public/index.php /public/index.php; exit" -u ${{ vars.DEPLOYMENT_USER }},${{ secrets.DEPLOYMENT_PASSWORD }} ${{ vars.DEPLOYMENT_HOST }}
       - name: copy files to target
-        run: cd deploy;lftp -e "mirror -R --parallel=30 -n --delete -x var/log/ . test/; exit" -u ${{ vars.DEPLOYMENT_USER }},${{ secrets.DEPLOYMENT_PASSWORD }} ${{ vars.DEPLOYMENT_HOST }}
+        run: cd deploy;lftp -e "mirror -R --parallel=30 -n --delete -x var/log/ . .; exit" -u ${{ vars.DEPLOYMENT_USER }},${{ secrets.DEPLOYMENT_PASSWORD }} ${{ vars.DEPLOYMENT_HOST }}
       - name: deactivate maintenance info
-        run: lftp -e "put index.php_bak /public/index.php; exit" -u ${{ vars.DEPLOYMENT_USER }},${{ secrets.DEPLOYMENT_PASSWORD }} ${{ vars.DEPLOYMENT_HOST }}
+        run: lftp -e "put ./index.php_bak /public/index.php; exit" -u ${{ vars.DEPLOYMENT_USER }},${{ secrets.DEPLOYMENT_PASSWORD }} ${{ vars.DEPLOYMENT_HOST }}
       - name: execute migrations
         run: curl --fail-with-body https://deployment:${{ steps.generate_number.outputs.random_number }}@${{ vars.WEB_HOST }}/deploy.php
 
