@@ -79,6 +79,11 @@ class LogsController extends AbstractDashboardController
         return [$logfiles, $logs];
     }
 
+    /**
+     * @param bool|string[] $glob
+     * @param string $active
+     * @return string[]|false
+     */
     private function filterLogs(bool|array $glob, string $active): array|false
     {
         if ($glob === false) {
@@ -91,6 +96,7 @@ class LogsController extends AbstractDashboardController
             if ($pos < $limit || pathinfo($file)['basename'] === $active) {
                 $result[] = $file;
             }
+            $pos++;
         }
         return $result;
     }
