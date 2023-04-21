@@ -20,14 +20,14 @@ jobs:
         uses: actions/checkout@v3
       - name: Get current date
         id: date
-        run: echo "::set-output name=date::$(date +'%Y%m%d%T')"
+        run: echo "name=date::$(date +'%Y%m%d_%T')" >> $GITHUB_OUTPUT
       - name: prepare .env
         run: |
           echo APP_ENV=prod >> .env
           echo APP_DEBUG=false >> .env
           echo APP_SECRET=${{ secrets.APP }} >> .env
           echo DATABASE_URL="mysql://${{ vars.DB_USER }}:${{ secrets.DB_PASSWORD }}@${{ vars.DB_HOST }}:3306/${{ vars.DB_NAME }}?serverVersion=mariadb-10.8.3&charset=utf8mb4" >> .env
-          echo APP_VERSION=$RELEASE_NAME
+          echo APP_VERSION=$RELEASE_NAME >> .env
         env:
           RELEASE_NAME: ${{ github.ref_name }}-${{ steps.date.outputs.date }}
       - run: cat .env
