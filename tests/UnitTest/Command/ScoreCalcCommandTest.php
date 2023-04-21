@@ -29,15 +29,16 @@ class ScoreCalcCommandTest extends TestCase
         $configMock = $this->createMock(AppConfig::class);
         $configMock->method('getScoreRaiseStep')->willReturn(2);
         $configMock->method('getScoreLimit')->willReturn(21);
-        $bookingRuleCheckerMock = new BookingRuleChecker($configMock);
+        $bookingRuleCheckerMock = new BookingRuleChecker($configMock, $userRepositoryMock);
 
         $loggerMock = $this->createMock(LoggerInterface::class);
         $loggerMock->expects($this->exactly(3))->method('info')->withConsecutive(
-            [$this->equalTo('A changed to 21')],
-            [$this->equalTo('B changed to 2')],
+            [$this->equalTo('raised score for user [A ()] from 20 to 21')],
+            [$this->equalTo('raised score for user [B ()] from 0 to 2')],
             [$this->equalTo('C reached maximum score')],
         );
 
+        $bookingRuleCheckerMock->setLogger($loggerMock);
         $command = new ScoreCalcCommand($userRepositoryMock, $bookingRuleCheckerMock, $configMock);
         $command->setLogger($loggerMock);
         $application = new Application();
