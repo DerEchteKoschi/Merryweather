@@ -9,14 +9,18 @@ use App\Repository\DistributionRepository;
 use App\Repository\SlotRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\OptimisticLockException;
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerAwareTrait;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[Route('/{_locale}')]
-class SlotBookingController extends AbstractController
+class SlotBookingController extends AbstractController implements LoggerAwareInterface
 {
+    use LoggerAwareTrait;
+
     public function __construct(private readonly TranslatorInterface $translator)
     {
     }
@@ -37,8 +41,10 @@ class SlotBookingController extends AbstractController
                     $slotRepository->save($slot, true);
                     $bookRuleChecker->lowerUserScoreBySlot($user, $slot);
                     $userRepository->save($user, true);
+                    $this->logger->info(sprintf('User %s booked Slot %s', $user, $slot->getText()));
                     $this->addFlash('success', $this->translator->trans('booking_successful'));
                 } else {
+                    $this->logger->warning(sprintf('User %s tried to book Slot %s', $user, $slot->getText()));
                     $this->addFlash('warning', $this->translator->trans('slot_not_bookable'));
                 }
             } catch (OptimisticLockException $ole) {
@@ -64,8 +70,10 @@ class SlotBookingController extends AbstractController
             $bookRuleChecker->raiseUserScoreBySlot($user, $slot);
             $userRepository->save($user, true);
             $slotRepository->save($slot, true);
+            $this->logger->info(sprintf('User %s canceled Slot %s', $user, $slot->getText()));
             $this->addFlash('success', 'Stornierung erfolgreich');
         } elseif ($slot->getUser() !== null) {
+            $this->logger->alert(sprintf('User %s tried to cancel Slot %s that belongs to %s', $user, $slot->getText(), $slot->getUser()));
             $this->addFlash('warning', $this->translator->trans('slot_not_yours'));
         }
 

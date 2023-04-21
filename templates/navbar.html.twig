@@ -45,6 +45,10 @@
                         {% endif %}
                         <div class="dropdown-divider"></div>
                         <li><a class="dropdown-item" href="{{ path('app_logout') }}"><i class=" fa fa-power-off"></i>{{ 'logout'|trans }}</a></li>
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <div class="dropdown-divider"></div>
+                            <li class=""><span class="dropdown-item-text small"><span class="badge bg-secondary">{{ version }}</span></span></li>
+                        {% endif %}
                     </ul>
                 </li>
             </ul>

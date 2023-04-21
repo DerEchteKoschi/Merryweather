@@ -8,8 +8,10 @@ parameters:
     false_fallback: false
     mw: 'Merryweather'
     loc: '["de", "en"]'
+    dev: 'dev'
     app.title: '%env(string:default:mw:APP_TITLE)%'
     app.supported_locales: '%env(json:default:loc:ACTIVE_LOCALES)%'
+    app.version: '%env(string:default:dev:APP_VERSION)%'
 
 services:
     # default configuration for services in *this* file

@@ -4,6 +4,7 @@ twig:
     globals:
         appTitle: '%app.title%'
         locales: '%app.supported_locales%'
+        version: '%app.version%'
 
 when@test:
     twig:
