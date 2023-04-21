@@ -11,6 +11,7 @@ use App\Repository\SlotRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\OptimisticLockException;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\NullLogger;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -87,9 +88,11 @@ class SlotBookingControllerTest extends TestCase
         $userRepositoryMock = $this->createMock(UserRepository::class);
         $bookingRuleCheckerMock = $this->createMock(BookingRuleChecker::class);
         $bookingRuleCheckerMock->method('userCanBook')->willReturn($bookable);
+        $bookingRuleCheckerMock->setLogger(new NullLogger());
 
         $controller = new SlotBookingController($this->transLatorMock());
         $controller->setContainer($containerMock);
+        $controller->setLogger(new NullLogger());
         $response = $controller->book(1, $slotRepositoryMock, $userRepositoryMock, $bookingRuleCheckerMock);
         $this->assertEquals(302, $response->getStatusCode());
         $this->assertEquals('app_slots', $response->getTargetUrl());
@@ -137,9 +140,12 @@ class SlotBookingControllerTest extends TestCase
         $userRepositoryMock = $this->createMock(UserRepository::class);
         $bookingRuleCheckerMock = $this->createMock(BookingRuleChecker::class);
         $bookingRuleCheckerMock->method('userCanCancel')->willReturn($cancellable);
+        $bookingRuleCheckerMock->setLogger(new NullLogger());
 
         $controller = new SlotBookingController($this->transLatorMock());
         $controller->setContainer($containerMock);
+        $controller->setLogger(new NullLogger());
+
         $response = $controller->cancel(1, $slotRepositoryMock, $userRepositoryMock, $bookingRuleCheckerMock);
         $this->assertEquals(302, $response->getStatusCode());
         $this->assertEquals('app_slots', $response->getTargetUrl());

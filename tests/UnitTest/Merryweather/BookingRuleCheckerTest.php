@@ -7,9 +7,11 @@ use App\Entity\Slot;
 use App\Entity\User;
 use App\Merryweather\AppConfig;
 use App\Merryweather\BookingRuleChecker;
+use App\Repository\UserRepository;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 
 /**
  * @small
@@ -33,7 +35,9 @@ class BookingRuleCheckerTest extends TestCase
     {
         $cfgMock = $this->createMock(AppConfig::class);
         $cfgMock->method('getScoreConfig')->willReturn([[3, 1]]);
-        $brc = new BookingRuleChecker($cfgMock);
+        $userRepositoryMock = $this->createMock(UserRepository::class);
+        $brc = new BookingRuleChecker($cfgMock, $userRepositoryMock);
+        $brc->setLogger($this->createMock(LoggerInterface::class));
 
         $distMock = $this->createMock(Distribution::class);
         $distMock->method('getActiveTill')->willReturn(new DateTimeImmutable());
@@ -58,7 +62,10 @@ class BookingRuleCheckerTest extends TestCase
     {
         $cfgMock = $this->createMock(AppConfig::class);
         $cfgMock->method('getScoreConfig')->willReturn([3, 1]);
-        $brc = new BookingRuleChecker($cfgMock);
+        $userRepositoryMock = $this->createMock(UserRepository::class);
+
+        $brc = new BookingRuleChecker($cfgMock, $userRepositoryMock);
+        $brc->setLogger($this->createMock(LoggerInterface::class));
 
         $distMock = $this->createMock(Distribution::class);
         $distMock->method('getActiveTill')->willReturn(new DateTimeImmutable());
@@ -86,7 +93,10 @@ class BookingRuleCheckerTest extends TestCase
         $cfgMock = $this->createMock(AppConfig::class);
         $cfgMock->method('getScoreConfig')->willReturn($slotCfg);
         $cfgMock->method('getScoreLimit')->willReturn(20);
-        $brc = new BookingRuleChecker($cfgMock);
+        $userRepositoryMock = $this->createMock(UserRepository::class);
+
+        $brc = new BookingRuleChecker($cfgMock, $userRepositoryMock);
+        $brc->setLogger($this->createMock(LoggerInterface::class));
 
         $distMock = $this->createMock(Distribution::class);
         $distMock->method('getActiveTill')->willReturn(new DateTimeImmutable($till));
