@@ -55,8 +55,10 @@ jobs:
           mv symfony.lock deploy/
           mv deploy/public/index.php index.php_bak
           mv deploy/public/maintenance.html deploy/public/index.php
+      - name: activate maintenance info
+        run: lftp -e "put deploy/public/index.php /public/index.php; exit" -u ${{ vars.DEPLOYMENT_USER }},${{ secrets.DEPLOYMENT_PASSWORD }} ${{ vars.DEPLOYMENT_HOST }}
       - name: copy files to target
-        run: cd deploy;lftp -e "mirror -R --parallel=30 -n --delete -v -x var/log/ . test/; exit" -u ${{ vars.DEPLOYMENT_USER }},${{ secrets.DEPLOYMENT_PASSWORD }} ${{ vars.DEPLOYMENT_HOST }}
+        run: cd deploy;lftp -e "mirror -R --parallel=30 -n --delete -x var/log/ . test/; exit" -u ${{ vars.DEPLOYMENT_USER }},${{ secrets.DEPLOYMENT_PASSWORD }} ${{ vars.DEPLOYMENT_HOST }}
       - name: deactivate maintenance info
         run: lftp -e "put index.php_bak /public/index.php; exit" -u ${{ vars.DEPLOYMENT_USER }},${{ secrets.DEPLOYMENT_PASSWORD }} ${{ vars.DEPLOYMENT_HOST }}
       - name: execute migrations
