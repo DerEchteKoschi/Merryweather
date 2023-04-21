@@ -29,7 +29,7 @@ jobs:
           echo DATABASE_URL="mysql://${{ vars.DB_USER }}:${{ secrets.DB_PASSWORD }}@${{ vars.DB_HOST }}:3306/${{ vars.DB_NAME }}?serverVersion=mariadb-10.8.3&charset=utf8mb4" >> .env
           echo APP_VERSION=$RELEASE_NAME
         env:
-          RELEASE_NAME: ${{ GITHUB_REF_NAME }}-${{ steps.date.outputs.date }}
+          RELEASE_NAME: ${{ github.ref_name }}-${{ steps.date.outputs.date }}
       - run: cat .env
       - name: run composer
         uses: php-actions/composer@v6
