@@ -59,6 +59,7 @@ class LogsController extends AbstractDashboardController
             $first = false;
             $active = $request->query->get('log');
         }
+        $glob = $this->filterLogs($glob, $active);
         foreach ($glob as $file) {
             $pi = pathinfo($file);
             $logfiles[] = [
@@ -76,5 +77,21 @@ class LogsController extends AbstractDashboardController
         }
 
         return [$logfiles, $logs];
+    }
+
+    private function filterLogs(bool|array $glob, string $active): array|false
+    {
+        if ($glob === false) {
+            return false;
+        }
+        $limit = 7;
+        $pos = 0;
+        $result = [];
+        foreach ($glob as $file) {
+            if ($pos < $limit || pathinfo($file)['basename'] === $active) {
+                $result[] = $file;
+            }
+        }
+        return $result;
     }
 }

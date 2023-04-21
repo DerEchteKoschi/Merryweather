@@ -20,7 +20,7 @@ jobs:
         uses: actions/checkout@v3
       - name: Get current date
         id: date
-        run: echo "name=date::$(date +'%Y%m%d_%T')" >> $GITHUB_OUTPUT
+        run: echo "date=$(date +'%Y%m%d_%T')" >> $GITHUB_OUTPUT
       - name: prepare .env
         run: |
           echo APP_ENV=prod >> .env
@@ -55,11 +55,11 @@ jobs:
           mv symfony.lock deploy/
           mv deploy/public/index.php index.php_bak
           mv deploy/public/maintenance.html deploy/public/index.php
-#      - name: copy files to target
-#        run: cd deploy;lftp -e "mirror -R --parallel=20 -n --delete -v -x var/log/ . test/; exit" -u ${{ vars.DEPLOYMENT_USER }},${{ secrets.DEPLOYMENT_PASSWORD }} ${{ vars.DEPLOYMENT_HOST }}
-#      - name: deactivate maintenance info
-#        run: lftp -e "put index.php_bak /public/index.php; exit" -u ${{ vars.DEPLOYMENT_USER }},${{ secrets.DEPLOYMENT_PASSWORD }} ${{ vars.DEPLOYMENT_HOST }}
-#      - name: execute migrations
-#        run: curl --fail-with-body https://deployment:${{ steps.generate_number.outputs.random_number }}@${{ vars.WEB_HOST }}/deploy.php
+      - name: copy files to target
+        run: cd deploy;lftp -e "mirror -R --parallel=30 -n --delete -v -x var/log/ . test/; exit" -u ${{ vars.DEPLOYMENT_USER }},${{ secrets.DEPLOYMENT_PASSWORD }} ${{ vars.DEPLOYMENT_HOST }}
+      - name: deactivate maintenance info
+        run: lftp -e "put index.php_bak /public/index.php; exit" -u ${{ vars.DEPLOYMENT_USER }},${{ secrets.DEPLOYMENT_PASSWORD }} ${{ vars.DEPLOYMENT_HOST }}
+      - name: execute migrations
+        run: curl --fail-with-body https://deployment:${{ steps.generate_number.outputs.random_number }}@${{ vars.WEB_HOST }}/deploy.php
 
 

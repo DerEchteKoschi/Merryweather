@@ -30,10 +30,7 @@ class ScoreCalcCommand extends Command implements CronCommand, LoggerAwareInterf
     {
         $users = $this->userRepository->findBy(['active' => true]);
         foreach ($users as $user) {
-            if ($this->scoreChecker->raiseUserScore($user, $this->config->getScoreRaiseStep())) {
-                $this->userRepository->save($user, true);
-                $this->logger->info($user->getDisplayName() . ' changed to ' . $user->getScore());
-            } else {
+            if (!$this->scoreChecker->raiseUserScore($user, $this->config->getScoreRaiseStep())) {
                 $this->logger->info($user->getDisplayName() . ' reached maximum score');
             }
         }

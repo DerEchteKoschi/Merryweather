@@ -5,6 +5,7 @@ namespace App\Merryweather;
 use App\Entity\Distribution;
 use App\Entity\Slot;
 use App\Entity\User;
+use App\Repository\UserRepository;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 
@@ -12,7 +13,7 @@ class BookingRuleChecker implements LoggerAwareInterface
 {
     use LoggerAwareTrait;
 
-    public function __construct(private readonly AppConfig $appConfig)
+    public function __construct(private readonly AppConfig $appConfig, private readonly UserRepository $userRepository)
     {
     }
 
@@ -80,7 +81,7 @@ class BookingRuleChecker implements LoggerAwareInterface
     public function raiseUserScore(User $user, int $toAdd = 1): bool
     {
         $hasChanged = false;
-        $score = $user->getScore();
+        $previousScore = $score = $user->getScore();
         $score += $toAdd;
         if ($score > $this->appConfig->getScoreLimit()) {
             $score = $this->appConfig->getScoreLimit();
@@ -88,8 +89,9 @@ class BookingRuleChecker implements LoggerAwareInterface
         if ($score !== $user->getScore()) {
             $user->setScore($score);
             $hasChanged = true;
+            $this->userRepository->save($user, true);
+            $this->logger->info(sprintf('raised score for user [%s] from %d to %d', $user, $previousScore, $score));
         }
-
         return $hasChanged;
     }
 
