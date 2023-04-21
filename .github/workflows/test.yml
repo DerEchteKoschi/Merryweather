@@ -1,8 +1,9 @@
 name: Test
 on:
-  push:
-    branches:
-      - '**'
+  workflow_dispatch:
+#  push:
+#    branches:
+#      - '**'
 jobs:
   codestyle:
     runs-on: ubuntu-latest
