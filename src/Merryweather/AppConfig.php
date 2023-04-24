@@ -81,7 +81,7 @@ class AppConfig
     }
 
     /**
-     * @return int[]
+     * @return int[][]
      * @throws UnknownKeyException
      */
     public function getScoreConfig(): array
@@ -166,6 +166,10 @@ class AppConfig
         return $result;
     }
 
+    /**
+     * @param string $value
+     * @return int[][]
+     */
     private function toIntArrayArray(string $value): array
     {
         $result = explode(';', $value);
