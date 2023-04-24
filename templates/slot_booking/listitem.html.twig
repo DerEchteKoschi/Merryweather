@@ -1,0 +1,13 @@
+{% if slot.user.id != null %}
+    {% if canCancel(slot) %}
+        {{ include('slot_booking/cancel.html.twig',{ slotId: slot.id, link:path('app_slot_cancel' , {slotId: slot.id})}) }}
+    {% elseif slot.user.id is same as(app.user.id) %}
+        {{ include('slot_booking/slot.html.twig', {type:'secondary disabled', slotId: slot.id, text: slot.text, link:'#', button: 'outline-secondary', action: 'you'|trans }) }}
+    {% else %}
+        {{ include('slot_booking/slot.html.twig', {type:'secondary disabled', slotId: slot.id, text: slot.text, link:'#', button: 'outline-dark', action: slot.user.displayName }) }}
+    {% endif %}
+{% elseif canBook(slot) %}
+    {{ include('slot_booking/slot.html.twig', {type:'success', slotId: slot.id, text: slot.text, link:path('app_slot_book' , {slotId: slot.id}), button: 'success', action:'book'|trans}) }}
+{% else %}
+    {{ include('slot_booking/slot.html.twig', {type:'secondary disabled', slotId: slot.id, text: slot.text, link:'#', button: 'outline-secondary', action: 'n/v'|trans}) }}
+{% endif %}

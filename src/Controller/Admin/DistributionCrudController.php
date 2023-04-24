@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 use App\Entity\Distribution;
 use App\Entity\Slot;
 use App\Entity\User;
+use App\Events\SlotCanceledEvent;
 use App\Merryweather\AppConfig;
 use App\Merryweather\BookingRuleChecker;
 use App\Repository\DistributionRepository;
@@ -25,6 +26,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -37,7 +39,7 @@ class DistributionCrudController extends AbstractCrudController
     /**
      * @codeCoverageIgnore
      */
-    public function __construct(private readonly AppConfig $config, private readonly TranslatorInterface $translator, private readonly BookingRuleChecker $bookingRuleChecker)
+    public function __construct(private readonly AppConfig $config, private readonly TranslatorInterface $translator, private readonly BookingRuleChecker $bookingRuleChecker, private readonly EventDispatcherInterface $eventDispatcher)
     {
     }
 
@@ -82,26 +84,26 @@ class DistributionCrudController extends AbstractCrudController
             DateField::new('activeFrom'),
             DateField::new('activeTill'),
             CollectionField::new('slots')
-                           ->setLabel($this->translator->trans('booked_slots'))
-                           ->hideOnIndex()
-                           ->hideOnForm()
-                           ->formatValue(static function ($value, Distribution $distribution) use ($controller) {
-                               $result = '';
-                               $template = $controller->config->isAdminCancelAllowed() ? 'admin/slotCancel.html.twig' : 'admin/slot.html.twig';
-                               foreach ($distribution->getSlots()->getIterator() as $slot) {
-                                   if ($slot->getUser() !== null) {
-                                       $result .= $controller->renderView($template, [
-                                           'slot' => \App\Dto\Slot::fromEntity($slot),
-                                           'cancelUrl' => $controller->generateUrl('app_admin_slot_cancel', [
-                                               'slotId' => $slot->getId(),
-                                               'distributionId' => $distribution->getId()
-                                           ])
-                                       ]);
-                                   }
-                               }
+                ->setLabel($this->translator->trans('booked_slots'))
+                ->hideOnIndex()
+                ->hideOnForm()
+                ->formatValue(static function ($value, Distribution $distribution) use ($controller) {
+                    $result = '';
+                    $template = $controller->config->isAdminCancelAllowed() ? 'admin/slotCancel.html.twig' : 'admin/slot.html.twig';
+                    foreach ($distribution->getSlots()->getIterator() as $slot) {
+                        if ($slot->getUser() !== null) {
+                            $result .= $controller->renderView($template, [
+                                'slot' => \App\Dto\Slot::fromEntity($slot),
+                                'cancelUrl' => $controller->generateUrl('app_admin_slot_cancel', [
+                                    'slotId' => $slot->getId(),
+                                    'distributionId' => $distribution->getId()
+                                ])
+                            ]);
+                        }
+                    }
 
-                               return empty($result) ? $controller->translator->trans('no_bookings') : '<div class="container">' . $result . '</div>';
-                           })
+                    return empty($result) ? $controller->translator->trans('no_bookings') : '<div class="container">' . $result . '</div>';
+                })
         ];
     }
 
@@ -131,13 +133,14 @@ class DistributionCrudController extends AbstractCrudController
 
     #[Route('/admin/createslots/{distributionId}', name: 'app_admin_slots_create')]
     public function createSlots(
-        int $distributionId,
-        Request $request,
+        int                    $distributionId,
+        Request                $request,
         EntityManagerInterface $entityManager,
-        AdminUrlGenerator $adminUrlGenerator,
-        SlotRepository $slotRepository,
+        AdminUrlGenerator      $adminUrlGenerator,
+        SlotRepository         $slotRepository,
         DistributionRepository $distributionRepository
-    ): Response {
+    ): Response
+    {
         $distribution = $distributionRepository->find($distributionId);
         if (!$distribution instanceof Distribution) {
             throw new \LogicException('Entity is missing or not a Distribution');
@@ -180,7 +183,7 @@ class DistributionCrudController extends AbstractCrudController
 
         if (Action::SAVE_AND_RETURN === $submitButtonName) {
             $url = $context->getReferrer()
-                   ?? $this->container->get(AdminUrlGenerator::class)->setAction(Action::DETAIL)->setEntityId($context->getEntity()->getPrimaryKeyValue())->generateUrl();
+                ?? $this->container->get(AdminUrlGenerator::class)->setAction(Action::DETAIL)->setEntityId($context->getEntity()->getPrimaryKeyValue())->generateUrl();
 
             return $this->redirect($url);
         }
@@ -190,13 +193,14 @@ class DistributionCrudController extends AbstractCrudController
 
     #[Route('/admin/cancel/{slotId}/{distributionId}', name: 'app_admin_slot_cancel')]
     public function adminCancel(
-        int $slotId,
-        int $distributionId,
-        SlotRepository $slotRepository,
-        UserRepository $userRepository,
+        int                $slotId,
+        int                $distributionId,
+        SlotRepository     $slotRepository,
+        UserRepository     $userRepository,
         BookingRuleChecker $bookRuleChecker,
-        AdminUrlGenerator $adminUrlGenerator
-    ): Response {
+        AdminUrlGenerator  $adminUrlGenerator
+    ): Response
+    {
         if ($this->config->isAdminCancelAllowed()) {
             $slot = $slotRepository->find($slotId);
             if ($slot === null) {
@@ -208,6 +212,7 @@ class DistributionCrudController extends AbstractCrudController
                 $bookRuleChecker->raiseUserScoreBySlot($user, $slot, true);
                 $userRepository->save($user, true);
                 $slotRepository->save($slot, true);
+                $this->eventDispatcher->dispatch(new SlotCanceledEvent($slot, true), SlotCanceledEvent::NAME);
                 $this->addFlash('success', $this->translator->trans('cancel_succesfull', ['username' => $user->getDisplayName()]));
             }
         } else {
