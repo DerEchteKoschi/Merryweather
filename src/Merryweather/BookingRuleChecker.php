@@ -2,7 +2,6 @@
 
 namespace App\Merryweather;
 
-use App\Entity\Distribution;
 use App\Entity\Slot;
 use App\Entity\User;
 use App\Repository\UserRepository;
@@ -17,74 +16,48 @@ class BookingRuleChecker implements LoggerAwareInterface
     {
     }
 
-    /**
-     * @param int[][] $scoreConfig
-     * @param int $slotPosition
-     * @param int $totalNoOfSlots
-     * @param int $dayIndex
-     * @param int $dayCount
-     * @return int
-     */
-    private static function getCost(array $scoreConfig, int $slotPosition, int $totalNoOfSlots, int $dayIndex, int $dayCount): int
+    public function lowerUserScoreBySlot(User $user, Slot $slot): void
     {
-        $scoreConfigForDay = self::configNeededForDay($scoreConfig, $dayCount, $dayIndex);
-        $scoreConfigCount = count($scoreConfigForDay);
+        $this->lowerUserScore($user, $this->pointsNeededForSlot($slot));
+    }
+
+    public function raiseUserScoreBySlot(User $user, Slot $slot): void
+    {
+        $this->raiseUserScore($user, $this->pointsNeededForSlot($slot));
+    }
+
+    public function pointsNeededForSlot(Slot $slot): int
+    {
+        $scoreConfig = $this->appConfig->getScoreConfig();
+        $scoreConfigCount = count($scoreConfig);
         if ($scoreConfigCount === 0) {
             return 0;
         }
-        if ($scoreConfigCount >= $totalNoOfSlots) {
-            return $scoreConfigForDay[$slotPosition];
-        }
-
-        $factor = $scoreConfigCount / $totalNoOfSlots;
-
-        return $scoreConfigForDay[(int)($factor * $slotPosition)];
-    }
-
-    private function lowerUserScore(User $user, int $toSub = 1): void
-    {
-        $previousScore = $score = $user->getScore();
-        $score -= $toSub;
-        if ($score < 0) {
-            $score = 0;
-        }
-        $user->setScore($score);
-        $this->userRepository->save($user, true);
-        $this->logger->info(sprintf('lowered score for user [%s] from %d to %d', $user, $previousScore, $score));
-    }
-
-    public function lowerUserScoreBySlot(User $user, Slot $slot): int
-    {
-        $pointsNeeded = $this->pointsNeededForSlot($slot);
-        $this->lowerUserScore($user, $pointsNeeded);
-
-        return $pointsNeeded;
-    }
-
-    public function pointsNeededForSlot(Slot $slot, string $day = 'today'): int
-    {
-        /** @var Distribution $distribution */
-        $distribution = $slot->getDistribution();
-        $today = new \DateTimeImmutable($day);
-        $days = $distribution->getActiveTill()->diff($distribution->getActiveFrom())->d;
-        if ($today <= $distribution->getActiveFrom()) {
-            $dayIndex = 0;
-        } elseif ($today > $distribution->getActiveTill()) {
-            $dayIndex = $days - 1;
-        } else {
-            $dayIndex = $today->diff($distribution->getActiveFrom())->d;
-        }
-
+        $totalNoOfSlots = $slot->getDistribution()->getSlots()->count();
         $slotPosition = 0;
-        foreach ($distribution->getSlots() as $slotFromList) {
+        $cost = 0;
+        foreach ($slot->getDistribution()->getSlots() as $slotFromList) {
             if ($slot === $slotFromList) {
                 break;
             }
             $slotPosition++;
         }
-        $totalNoOfSlots = $distribution->getSlots()->count();
 
-        return self::getCost($this->appConfig->getScoreConfig(), $slotPosition, $totalNoOfSlots, $dayIndex, $days);
+        if ($scoreConfigCount >= $totalNoOfSlots) {
+            return $scoreConfig[$slotPosition];
+        }
+
+        $factor = $scoreConfigCount / $totalNoOfSlots;
+        return $scoreConfig[(int)($factor * $slotPosition)];
+    }
+
+    public function userCanBook(User $user, Slot $slot): bool
+    {
+        return ($slot->getDistribution() !== null)
+               && !$this->isSlotInPast($slot)
+               && ($slot->getUser() === null)
+               && $this->hasBookednoOtherSlotOfSameDistribution($slot, $user)
+               && $user->getScore() >= $this->pointsNeededForSlot($slot);
     }
 
     public function raiseUserScore(User $user, int $toAdd = 1): bool
@@ -104,25 +77,23 @@ class BookingRuleChecker implements LoggerAwareInterface
         return $hasChanged;
     }
 
-    public function raiseUserScoreBySlot(User $user, Slot $slot, bool $refund = false): void
+    public function lowerUserScore(User $user, int $toSub = 1): void
     {
-        $this->raiseUserScore($user, $refund ? ($slot->getAmountPaid() ?? $this->pointsNeededForSlot($slot)) : $this->pointsNeededForSlot($slot));
-    }
-
-    public function userCanBook(User $user, Slot $slot): bool
-    {
-        return ($slot->getDistribution() !== null)
-            && !$this->isSlotInPast($slot)
-            && ($slot->getUser() === null)
-            && $this->hasBookednoOtherSlotOfSameDistribution($slot, $user)
-            && $user->getScore() >= $this->pointsNeededForSlot($slot);
+        $previousScore = $score = $user->getScore();
+        $score -= $toSub;
+        if ($score < 0) {
+            $score = 0;
+        }
+        $user->setScore($score);
+        $this->userRepository->save($user, true);
+        $this->logger->info(sprintf('lowered score for user [%s] from %d to %d', $user, $previousScore, $score));
     }
 
     public function userCanCancel(User $user, Slot $slot): bool
     {
         return ($slot->getDistribution() !== null)
-            && !$this->isSlotInPast($slot)
-            && ($slot->getUser() === $user);
+               && !$this->isSlotInPast($slot)
+               && ($slot->getUser() === $user);
     }
 
     /**
@@ -140,27 +111,6 @@ class BookingRuleChecker implements LoggerAwareInterface
         }
 
         return $hasBookedNoSlotOfDistribution;
-    }
-
-    /**
-     * @param int[][] $dayConfig
-     * @param int $range
-     * @param int $day
-     * @return int[]
-     */
-    private static function configNeededForDay(array $dayConfig, int $range, int $day): array
-    {
-        if (count($dayConfig) === 1) {
-            return $dayConfig[0];
-        }
-
-        if (count($dayConfig) >= $range) {
-            return $dayConfig[$day - 1];
-        }
-
-        $factor = count($dayConfig) / $range;
-
-        return $dayConfig[(int)($factor * ($day - 1))];
     }
 
     /**

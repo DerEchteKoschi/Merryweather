@@ -21,27 +21,24 @@ class BookingRuleCheckerTest extends TestCase
 {
     public function slotData()
     {
-        yield [[[]], 3, [0, 0, 0]];
-        yield [[[3]], 3, [3, 3, 3]];
-        yield [[[3, 2]], 3, [3, 3, 2]];
-        yield [[[3, 2]], 5, [3, 3, 3, 2, 2]];
-        yield [[[3, 2]], 1, [3]];
-        yield [[[30, 2]], 1, [20]];
-        yield [[[4,2],[2, 0]], 1, [4]];
-        yield [[[4,2],[2, 0]], 1, [2], '4 days ago'];
+        yield [[], 3, [0, 0, 0]];
+        yield [[3], 3, [3, 3, 3]];
+        yield [[3, 2], 3, [3, 3, 2]];
+        yield [[3, 2], 5, [3, 3, 3, 2, 2]];
+        yield [[3, 2], 1, [3]];
+        yield [[30, 2], 1, [20]];
     }
 
     public function testCanBook()
     {
         $cfgMock = $this->createMock(AppConfig::class);
-        $cfgMock->method('getScoreConfig')->willReturn([[3, 1]]);
+        $cfgMock->method('getScoreConfig')->willReturn([3, 1]);
         $userRepositoryMock = $this->createMock(UserRepository::class);
         $brc = new BookingRuleChecker($cfgMock, $userRepositoryMock);
         $brc->setLogger($this->createMock(LoggerInterface::class));
 
         $distMock = $this->createMock(Distribution::class);
         $distMock->method('getActiveTill')->willReturn(new DateTimeImmutable());
-        $distMock->method('getActiveFrom')->willReturn(new DateTimeImmutable('yesterday'));
         $slots = new ArrayCollection();
         foreach (['-10 minutes', 'now', '+10 minutes'] as $dateString) {
             $slotMock = $this->createMock(Slot::class);
@@ -88,7 +85,7 @@ class BookingRuleCheckerTest extends TestCase
     /**
      * @dataProvider slotData
      */
-    public function testRaiseAndLower($slotCfg, $maxSlots, $costs, $from='yesterday', $till='today')
+    public function testRaiseAndLower($slotCfg, $maxSlots, $costs)
     {
         $cfgMock = $this->createMock(AppConfig::class);
         $cfgMock->method('getScoreConfig')->willReturn($slotCfg);
@@ -99,9 +96,6 @@ class BookingRuleCheckerTest extends TestCase
         $brc->setLogger($this->createMock(LoggerInterface::class));
 
         $distMock = $this->createMock(Distribution::class);
-        $distMock->method('getActiveTill')->willReturn(new DateTimeImmutable($till));
-        $distMock->method('getActiveFrom')->willReturn(new DateTimeImmutable($from));
-
         $slots = new ArrayCollection();
         for ($i = 0; $i < $maxSlots; $i++) {
             $slotMock = $this->createMock(Slot::class);
