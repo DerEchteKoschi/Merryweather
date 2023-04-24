@@ -35,12 +35,15 @@ class BookingRuleChecker implements LoggerAwareInterface
 
     private function lowerUserScore(User $user, int $toSub = 1): void
     {
-        $score = $user->getScore();
+        $previousScore = $score = $user->getScore();
         $score -= $toSub;
         if ($score < 0) {
             $score = 0;
         }
         $user->setScore($score);
+        $this->userRepository->save($user, true);
+        $this->logger->info(sprintf('lowered score for user [%s] from %d to %d', $user, $previousScore, $score));
+
     }
 
     public function lowerUserScoreBySlot(User $user, Slot $slot): int
