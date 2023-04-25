@@ -2,10 +2,10 @@
 
 namespace App\Events;
 
-use App\Entity\Slot;
+use App\Dto\Slot;
 use Symfony\Contracts\EventDispatcher\Event;
 
-class SlotBookedEvent extends Event
+class SlotBookedEvent extends Event implements SlotEvent
 {
     public const NAME = 'slot.booked';
 

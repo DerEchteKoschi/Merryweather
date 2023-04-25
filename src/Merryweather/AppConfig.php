@@ -18,6 +18,7 @@ class AppConfig
     public const CONFIG_SCORE_DISTRIBUTION = 'scoreDistribution';
     public const CONFIG_ADMIN_CANCEL_ALLOWED = 'adminCancel';
     public const CONFIG_ADMIN_SHOW_POINTS = 'adminShowPoints';
+    public const CONFIG_MERCURE_ACTIVE = 'mercure.active';
 
     public const CONFIG_DEFINITION = [
         self::CONFIG_MONTH_COUNT => [DataType::Integer, 3],
@@ -27,6 +28,7 @@ class AppConfig
         self::CONFIG_ADMIN_CANCEL_ALLOWED => [DataType::Boolean, false],
         self::CONFIG_ADMIN_SHOW_POINTS => [DataType::Boolean, true],
         self::CONFIG_CRON_ACTIVE => [DataType::Boolean, false],
+        self::CONFIG_MERCURE_ACTIVE => [DataType::Boolean, false],
     ];
 
     /**
@@ -139,6 +141,14 @@ class AppConfig
     public function isCronActive(): bool
     {
         return $this->getConfigValue(self::CONFIG_CRON_ACTIVE);
+    }
+
+    /**
+     * @throws UnknownKeyException
+     */
+    public function isMercureActive(): bool
+    {
+        return $this->getConfigValue(self::CONFIG_MERCURE_ACTIVE);
     }
 
     public function setConfigValue(int|string $key, string $value): void

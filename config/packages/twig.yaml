@@ -5,6 +5,7 @@ twig:
         appTitle: '%app.title%'
         locales: '%app.supported_locales%'
         version: '%app.version%'
+        appConfig: "@App\\Merryweather\\AppConfig"
 
 when@test:
     twig:

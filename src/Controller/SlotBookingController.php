@@ -47,7 +47,7 @@ class SlotBookingController extends AbstractController implements LoggerAwareInt
                     $slotRepository->save($slot, true);
                     $userRepository->save($user, true);
                     $this->logger->info(sprintf('User %s booked Slot %s', $user, $slot->getText()));
-                    $this->eventDispatcher->dispatch(new SlotBookedEvent($slot), SlotBookedEvent::NAME);
+                    $this->eventDispatcher->dispatch(new SlotBookedEvent(Slot::fromEntity($slot)), SlotBookedEvent::NAME);
                     $this->addFlash('success', $this->translator->trans('booking_successful'));
                 } else {
                     $this->logger->warning(sprintf('User %s tried to book Slot %s', $user, $slot->getText()));
@@ -72,12 +72,13 @@ class SlotBookingController extends AbstractController implements LoggerAwareInt
         if ($slot === null) {
             $this->addFlash('danger', $this->translator->trans('slot_not_found'));
         } elseif ($slot->getUser() === $user) {
+            $slotDto = Slot::fromEntity($slot);
             $slot->setUser(null);
             $bookRuleChecker->raiseUserScoreBySlot($user, $slot);
             $userRepository->save($user, true);
             $slotRepository->save($slot, true);
             $this->logger->info(sprintf('User %s canceled Slot %s', $user, $slot->getText()));
-            $this->eventDispatcher->dispatch(new SlotCanceledEvent($slot), SlotCanceledEvent::NAME);
+            $this->eventDispatcher->dispatch(new SlotCanceledEvent($slotDto), SlotCanceledEvent::NAME);
             $this->addFlash('success', 'Stornierung erfolgreich');
         } elseif ($slot->getUser() !== null) {
             $this->logger->alert(sprintf('User %s tried to cancel Slot %s that belongs to %s', $user, $slot->getText(), $slot->getUser()));
@@ -103,6 +104,16 @@ class SlotBookingController extends AbstractController implements LoggerAwareInt
         $slot = $slotRepository->find($slotId);
         return $this->render('slot_booking/listitem.html.twig', [
             'slot' => Slot::fromEntity($slot)
+        ]);
+    }
+
+    #[Route('/slotsList', name: 'app_slot_list')]
+    public function slotList(DistributionRepository $distributionRepository): Response
+    {
+        $dists = Distribution::fromList($distributionRepository->findCurrentDistributions());
+
+        return $this->render('slot_booking/list.html.twig', [
+            'dists' => $dists
         ]);
     }
 

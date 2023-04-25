@@ -206,13 +206,14 @@ class DistributionCrudController extends AbstractCrudController
             if ($slot === null) {
                 $this->addFlash('danger', $this->translator->trans('slot_not_found'));
             } else {
+                $slotDto = \App\Dto\Slot::fromEntity($slot);
                 /** @var User $user */
                 $user = $slot->getUser();
                 $slot->setUser(null);
                 $bookRuleChecker->raiseUserScoreBySlot($user, $slot, true);
                 $userRepository->save($user, true);
                 $slotRepository->save($slot, true);
-                $this->eventDispatcher->dispatch(new SlotCanceledEvent($slot, true), SlotCanceledEvent::NAME);
+                $this->eventDispatcher->dispatch(new SlotCanceledEvent($slotDto, true), SlotCanceledEvent::NAME);
                 $this->addFlash('success', $this->translator->trans('cancel_succesfull', ['username' => $user->getDisplayName()]));
             }
         } else {

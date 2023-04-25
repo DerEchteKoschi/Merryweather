@@ -3,38 +3,30 @@
 {% block title %}{{ 'slotbooking'|trans }}{% endblock %}
 
 {% block javascripts %}
+    {% if appConfig.mercureActive %}
     <script>
+        const me = {{ app.user.id }};
         const eventSource = new EventSource("{{ mercure('booking')|escape('js') }}");
         eventSource.onmessage = event => {
             const data = JSON.parse(event.data);
-
-            let path  = "{{  path('app_slot_row', {slotId: -1}) }}".replace('-1', data.slotId);
-
-            $.ajax( path )
-                .done(function(response) {
+            if (!data.hasOwnProperty('owner') || !data.hasOwnProperty('slotId')) {
+                console.log('incompatible data received', data);
+                return;
+            }
+            if (data.owner === me) {
+                $.ajax("{{ path('app_slot_list') }}").done(function (response) {
+                    $('#slotlist').replaceWith(response);
+                });
+            } else {
+                $.ajax("{{ path('app_slot_row', {slotId: -1}) }}".replace('-1', data.slotId)).done(function (response) {
                     $('#slot_' + data.slotId).replaceWith(response);
                 });
+            }
         }
     </script>
+    {%  endif %}
 {% endblock %}
 
 {% block body %}
-
-        <div>
-            {% if dists|length < 1 %}
-                {{ 'no_distribution_planned'|trans }}
-            {% else %}
-                {% for dist in dists %}
-                    <h5 class="container">
-                        {{ dist.text }}
-                    </h5>
-                    <div class="list-group">
-                        {% for slot in dist.slots %}
-                            {{ include('slot_booking/listitem.html.twig') }}
-                        {% endfor %}
-                    </div>
-                {% endfor %}
-            {% endif %}
-        </div>
-
+{{ include('slot_booking/list.html.twig') }}
 {% endblock %}

@@ -2,15 +2,15 @@
 
 namespace App\Events;
 
-use App\Entity\Slot;
+use App\Dto\Slot;
 use Symfony\Contracts\EventDispatcher\Event;
 
-class SlotCanceledEvent extends Event
+class SlotCanceledEvent extends Event implements SlotEvent
 {
     public const NAME = 'slot.canceled';
 
     public function __construct(
-        protected Slot $slot, protected bool $byAdmin = false
+        protected Slot $slot
     )
     {
     }
@@ -20,8 +20,4 @@ class SlotCanceledEvent extends Event
         return $this->slot;
     }
 
-    public function isByAdmin(): bool
-    {
-        return $this->byAdmin;
-    }
 }

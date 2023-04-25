@@ -40,7 +40,15 @@
     border: 0;
     border-radius: var(--bs-dropdown-item-border-radius, 0);
 }
+
 .dropdown-lang-item:hover, .dropdown-item:focus {
     color: var(--bs-dropdown-link-active-bg);
     background-color: var(--bs-dropdown-link-hover-bg);
+}
+
+#slotlist * {
+    -webkit-user-select: none; /* Chrome all / Safari all */
+    -moz-user-select: none; /* Firefox all */
+    -ms-user-select: none; /* IE 10+ */
+    user-select: none;
 }
