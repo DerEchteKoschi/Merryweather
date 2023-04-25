@@ -27,6 +27,7 @@ class SlotCrudController extends AbstractCrudController
             'startAt',
             AssociationField::new('distribution')->setCrudController(DistributionCrudController::class),
             AssociationField::new('user')->setCrudController(UserCrudController::class),
+            'amountPaid',
         ];
     }
 }

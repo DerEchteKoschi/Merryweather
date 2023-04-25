@@ -14,6 +14,7 @@ use DateInterval;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\KeyValueStore;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
@@ -36,7 +37,7 @@ class DistributionCrudController extends AbstractCrudController
     /**
      * @codeCoverageIgnore
      */
-    public function __construct(private readonly AppConfig $config, private readonly TranslatorInterface $translator)
+    public function __construct(private readonly AppConfig $config, private readonly TranslatorInterface $translator, private readonly BookingRuleChecker $bookingRuleChecker)
     {
     }
 
@@ -58,7 +59,9 @@ class DistributionCrudController extends AbstractCrudController
         return [
             IdField::new('id')->hideOnForm(),
             TextField::new('text'),
-            CollectionField::new('slots')->setLabel($this->translator->trans('slot_count'))->hideOnIndex()->hideOnForm()->formatValue(static function ($value, Distribution $distribution) use ($controller) {
+            CollectionField::new('slots')->setLabel($this->translator->trans('slot_count'))->hideOnIndex()->hideOnForm()->formatValue(static function ($value, Distribution $distribution) use (
+                $controller
+            ) {
                 if ($distribution->getSlots()->count() === 0) {
                     return $controller->renderView('admin/create_slots.html.twig', ['linkUrl' => $controller->generateUrl('app_admin_slots_create', ['distributionId' => $distribution->getId()])]);
                 }
@@ -73,6 +76,7 @@ class DistributionCrudController extends AbstractCrudController
                         $booked++;
                     }
                 }
+
                 return sprintf('%d/%d', $booked, $count);
             }),
             DateField::new('activeFrom'),
@@ -201,7 +205,7 @@ class DistributionCrudController extends AbstractCrudController
                 /** @var User $user */
                 $user = $slot->getUser();
                 $slot->setUser(null);
-                $bookRuleChecker->raiseUserScore($user, $bookRuleChecker->pointsNeededForSlot($slot));
+                $bookRuleChecker->raiseUserScoreBySlot($user, $slot, true);
                 $userRepository->save($user, true);
                 $slotRepository->save($slot, true);
                 $this->addFlash('success', $this->translator->trans('cancel_succesfull', ['username' => $user->getDisplayName()]));
@@ -211,5 +215,52 @@ class DistributionCrudController extends AbstractCrudController
         }
 
         return $this->redirect($adminUrlGenerator->setDashboard(AdminDashboardController::class)->setController(DistributionCrudController::class)->setEntityId($distributionId)->setAction('detail')->generateUrl());
+    }
+
+    public function configureActions(Actions $actions): Actions
+    {
+        $showSlots = Action::new('viewSlots', 'View Slots', 'fa fa-file-invoice')
+                           ->linkToCrudAction('renderSlots');
+
+        return $actions
+            ->add(Crud::PAGE_DETAIL, $showSlots)->add(Crud::PAGE_INDEX, $showSlots);
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function renderSlots(AdminContext $context): Response
+    {
+        /** @var Distribution $distribution */
+        $distribution = $context->getEntity()->getInstance();
+        $slots = [];
+        $daycount = $distribution->getActiveFrom()->diff($distribution->getActiveTill())->days + 1;
+        $oneDay = new DateInterval('P1D');
+        $startDate = new DateTimeImmutable($distribution->getActiveFrom()->format('c'));
+        $currentDate = $startDate;
+        $header = [];
+        foreach ($distribution->getSlots() as $slot) {
+            $slotRow = [$slot->getText()];
+            $tHeader = [];
+            while ($currentDate <= $distribution->getActiveTill()) {
+                if (empty($header)) {
+                    $tHeader[] = $currentDate;
+                }
+                $slotRow[] = $this->bookingRuleChecker->pointsNeededForSlot($slot, $currentDate->format('c'));
+                $currentDate = $currentDate->add($oneDay);
+            }
+            if (empty($header)) {
+                $header = $tHeader;
+            }
+            $currentDate = $startDate;
+            $slots[] = $slotRow;
+        }
+
+
+        return $this->render('admin/distributionSlots.html.twig', [
+            'slots' => $slots,
+            'header' => $header,
+            'config' => $this->config->getScoreConfigRaw()
+        ]);
     }
 }

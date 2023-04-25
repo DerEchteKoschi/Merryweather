@@ -38,8 +38,9 @@ class SlotBookingController extends AbstractController implements LoggerAwareInt
                 $slotRepository->lock($slot);
                 if ($bookRuleChecker->userCanBook($user, $slot)) {
                     $slot->setUser($user);
+                    $pointsPayed = $bookRuleChecker->lowerUserScoreBySlot($user, $slot);
+                    $slot->setAmountPaid($pointsPayed);
                     $slotRepository->save($slot, true);
-                    $bookRuleChecker->lowerUserScoreBySlot($user, $slot);
                     $userRepository->save($user, true);
                     $this->logger->info(sprintf('User %s booked Slot %s', $user, $slot->getText()));
                     $this->addFlash('success', $this->translator->trans('booking_successful'));

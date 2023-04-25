@@ -1,0 +1,7 @@
+<div class="form-widget">
+    {% set tempvalue = [] %}
+    {% for v in value %}
+        {% set tempvalue = tempvalue|merge({ (loop.index0): v|join(',')}) %}
+    {% endfor %}
+    <input type="text" id="cfg_{{ name }}" name="cfg[{{ name }}]" class="form-control" value="{{ tempvalue|join(';') }}">
+</div>
