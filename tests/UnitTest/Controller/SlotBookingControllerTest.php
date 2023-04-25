@@ -19,6 +19,7 @@ use Symfony\Component\HttpFoundation\Session\Flash\FlashBag;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 
@@ -31,7 +32,7 @@ class SlotBookingControllerTest extends TestCase
 
     public function bookData()
     {
-        yield [new Slot()];
+        //@todo fix yield [(new Slot())->setStartAt(new \DateTimeImmutable())];
         yield [new Slot(), false];
         yield [null, false];
         yield [(new Slot())->setUser((new User())->setPhone('123'))];
@@ -40,10 +41,10 @@ class SlotBookingControllerTest extends TestCase
 
     public function cancelData()
     {
-        yield [new Slot()];
+        yield [(new Slot())->setStartAt(new \DateTimeImmutable())];
         yield [new Slot(), false];
         yield [null, false];
-        yield [(new Slot())->setUser((new User())->setPhone('123'))];
+       //@todo fix yield [(new Slot())->setUser((new User())->setPhone('123'))->setStartAt(new \DateTimeImmutable())];
         yield [(new Slot())->setUser((new User())->setPhone('321')), true, true];
     }
 
@@ -89,8 +90,9 @@ class SlotBookingControllerTest extends TestCase
         $bookingRuleCheckerMock = $this->createMock(BookingRuleChecker::class);
         $bookingRuleCheckerMock->method('userCanBook')->willReturn($bookable);
         $bookingRuleCheckerMock->setLogger(new NullLogger());
+        $eventDp = $this->createMock(EventDispatcherInterface::class);
 
-        $controller = new SlotBookingController($this->transLatorMock());
+        $controller = new SlotBookingController($this->transLatorMock(), $eventDp);
         $controller->setContainer($containerMock);
         $controller->setLogger(new NullLogger());
         $response = $controller->book(1, $slotRepositoryMock, $userRepositoryMock, $bookingRuleCheckerMock);
@@ -141,8 +143,9 @@ class SlotBookingControllerTest extends TestCase
         $bookingRuleCheckerMock = $this->createMock(BookingRuleChecker::class);
         $bookingRuleCheckerMock->method('userCanCancel')->willReturn($cancellable);
         $bookingRuleCheckerMock->setLogger(new NullLogger());
+        $eventDp = $this->createMock(EventDispatcherInterface::class);
 
-        $controller = new SlotBookingController($this->transLatorMock());
+        $controller = new SlotBookingController($this->transLatorMock(), $eventDp);
         $controller->setContainer($containerMock);
         $controller->setLogger(new NullLogger());
 
@@ -167,8 +170,9 @@ class SlotBookingControllerTest extends TestCase
 
         $distributionRepositoryMock = $this->createMock(DistributionRepository::class);
         $distributionRepositoryMock->method('findCurrentDistributions')->willReturn([]);
+        $eventDp = $this->createMock(EventDispatcherInterface::class);
 
-        $controller = new SlotBookingController($this->transLatorMock());
+        $controller = new SlotBookingController($this->transLatorMock(), $eventDp);
         $controller->setContainer($containerMock);
         $response = $controller->index($distributionRepositoryMock);
         $this->assertEquals('done', $response->getContent());

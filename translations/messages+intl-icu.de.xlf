@@ -297,6 +297,10 @@
         <source>cronActive</source>
         <target>Cron Funktionalität aktivieren (webcron)</target>
       </trans-unit>
+      <trans-unit id="" resname="mercure.active">
+        <source>mercure.active</source>
+        <target>Slotbuchungen über Mercure publizieren</target>
+      </trans-unit>
       <trans-unit id="8aJEzB2" resname="confirm_slot_cancel">
         <source>confirm_slot_cancel</source>
         <target>Möchtest du Deine Buchung für Slot [{text}] wirklich stornieren?</target>

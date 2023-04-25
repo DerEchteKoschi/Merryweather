@@ -3,12 +3,16 @@
 namespace App\Controller;
 
 use App\Dto\Distribution;
+use App\Dto\Slot;
 use App\Entity\User;
+use App\Events\SlotBookedEvent;
+use App\Events\SlotCanceledEvent;
 use App\Merryweather\BookingRuleChecker;
 use App\Repository\DistributionRepository;
 use App\Repository\SlotRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\OptimisticLockException;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -21,7 +25,7 @@ class SlotBookingController extends AbstractController implements LoggerAwareInt
 {
     use LoggerAwareTrait;
 
-    public function __construct(private readonly TranslatorInterface $translator)
+    public function __construct(private readonly TranslatorInterface $translator, private readonly EventDispatcherInterface $eventDispatcher)
     {
     }
 
@@ -43,6 +47,7 @@ class SlotBookingController extends AbstractController implements LoggerAwareInt
                     $slotRepository->save($slot, true);
                     $userRepository->save($user, true);
                     $this->logger->info(sprintf('User %s booked Slot %s', $user, $slot->getText()));
+                    $this->eventDispatcher->dispatch(new SlotBookedEvent(Slot::fromEntity($slot)), SlotBookedEvent::NAME);
                     $this->addFlash('success', $this->translator->trans('booking_successful'));
                 } else {
                     $this->logger->warning(sprintf('User %s tried to book Slot %s', $user, $slot->getText()));
@@ -67,11 +72,13 @@ class SlotBookingController extends AbstractController implements LoggerAwareInt
         if ($slot === null) {
             $this->addFlash('danger', $this->translator->trans('slot_not_found'));
         } elseif ($slot->getUser() === $user) {
+            $slotDto = Slot::fromEntity($slot);
             $slot->setUser(null);
             $bookRuleChecker->raiseUserScoreBySlot($user, $slot);
             $userRepository->save($user, true);
             $slotRepository->save($slot, true);
             $this->logger->info(sprintf('User %s canceled Slot %s', $user, $slot->getText()));
+            $this->eventDispatcher->dispatch(new SlotCanceledEvent($slotDto), SlotCanceledEvent::NAME);
             $this->addFlash('success', 'Stornierung erfolgreich');
         } elseif ($slot->getUser() !== null) {
             $this->logger->alert(sprintf('User %s tried to cancel Slot %s that belongs to %s', $user, $slot->getText(), $slot->getUser()));
@@ -87,6 +94,25 @@ class SlotBookingController extends AbstractController implements LoggerAwareInt
         $dists = Distribution::fromList($distributionRepository->findCurrentDistributions());
 
         return $this->render('slot_booking/index.html.twig', [
+            'dists' => $dists
+        ]);
+    }
+
+    #[Route('/slot/{slotId}', name: 'app_slot_row')]
+    public function slotRow(int $slotId, SlotRepository $slotRepository): Response
+    {
+        $slot = $slotRepository->find($slotId);
+        return $this->render('slot_booking/listitem.html.twig', [
+            'slot' => Slot::fromEntity($slot)
+        ]);
+    }
+
+    #[Route('/slotsList', name: 'app_slot_list')]
+    public function slotList(DistributionRepository $distributionRepository): Response
+    {
+        $dists = Distribution::fromList($distributionRepository->findCurrentDistributions());
+
+        return $this->render('slot_booking/list.html.twig', [
             'dists' => $dists
         ]);
     }

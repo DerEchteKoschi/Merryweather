@@ -29,6 +29,7 @@ class AppConfigTest extends TestCase
         $appConfig = new AppConfig($appConfigRepositoryMock);
         $this->assertTrue($appConfig->isCronActive());
         $this->assertTrue($appConfig->isAdminCancelAllowed());
+        $this->assertTrue($appConfig->isMercureActive());
         $this->assertSame([[1, 2, 3],[4,5]], $appConfig->getScoreConfig());
         $this->assertEquals(6, $appConfig->getScoreRaiseStep());
         $this->assertEquals(5, $appConfig->getScoreLimit());
@@ -68,6 +69,7 @@ class AppConfigTest extends TestCase
             'scoreLimit' => null,
             'monthCount' => (new \App\Entity\AppConfig())->setValue('6'),
             'scoreDistribution' => (new \App\Entity\AppConfig())->setValue('1,2,3;4,5'),
+            'mercure.active' => (new \App\Entity\AppConfig())->setValue('on'),
         ];
     }
 }

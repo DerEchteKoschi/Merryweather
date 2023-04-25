@@ -1,0 +1,14 @@
+<div id="slotlist">
+    {% if dists|length < 1 %}
+        {{ 'no_distribution_planned'|trans }}
+    {% else %}
+        {% for dist in dists %}
+            <h5 class="container">{{ dist.text }}</h5>
+            <div  class="list-group" >
+                {% for slot in dist.slots %}
+                    {{ include('slot_booking/listitem.html.twig') }}
+                {% endfor %}
+            </div>
+        {% endfor %}
+    {% endif %}
+</div>
