@@ -28,6 +28,9 @@ jobs:
           echo APP_SECRET=${{ secrets.APP }} >> .env
           echo DATABASE_URL="mysql://${{ vars.DB_USER }}:${{ secrets.DB_PASSWORD }}@${{ vars.DB_HOST }}:3306/${{ vars.DB_NAME }}?serverVersion=mariadb-10.8.3&charset=utf8mb4" >> .env
           echo APP_VERSION=$RELEASE_NAME >> .env
+          echo MERCURE_URL=https://www.gnewikow.net/.well-known/mercure >> .env
+          echo MERCURE_PUBLIC_URL=https://www.gnewikow.net/.well-known/mercure >> .env
+          echo MERCURE_JWT_SECRET="${{ secrets.APP }}" >> .env
         env:
           RELEASE_NAME: ${{ github.ref_name }}-${{ steps.date.outputs.date }}
       - name: run composer install
