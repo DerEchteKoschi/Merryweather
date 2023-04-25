@@ -223,7 +223,7 @@ class DistributionCrudController extends AbstractCrudController
                            ->linkToCrudAction('renderSlots');
 
         return $actions
-            ->add(Crud::PAGE_DETAIL, $showSlots);
+            ->add(Crud::PAGE_DETAIL, $showSlots)->add(Crud::PAGE_INDEX, $showSlots);
     }
 
     /**
