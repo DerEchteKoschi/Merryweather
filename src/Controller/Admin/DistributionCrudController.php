@@ -26,7 +26,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
-use Psr\EventDispatcher\EventDispatcherInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -139,8 +139,7 @@ class DistributionCrudController extends AbstractCrudController
         AdminUrlGenerator      $adminUrlGenerator,
         SlotRepository         $slotRepository,
         DistributionRepository $distributionRepository
-    ): Response
-    {
+    ): Response {
         $distribution = $distributionRepository->find($distributionId);
         if (!$distribution instanceof Distribution) {
             throw new \LogicException('Entity is missing or not a Distribution');
@@ -199,8 +198,7 @@ class DistributionCrudController extends AbstractCrudController
         UserRepository     $userRepository,
         BookingRuleChecker $bookRuleChecker,
         AdminUrlGenerator  $adminUrlGenerator
-    ): Response
-    {
+    ): Response {
         if ($this->config->isAdminCancelAllowed()) {
             $slot = $slotRepository->find($slotId);
             if ($slot === null) {
@@ -213,7 +211,7 @@ class DistributionCrudController extends AbstractCrudController
                 $bookRuleChecker->raiseUserScoreBySlot($user, $slot, true);
                 $userRepository->save($user, true);
                 $slotRepository->save($slot, true);
-                $this->eventDispatcher->dispatch(new SlotCanceledEvent($slotDto, true), SlotCanceledEvent::NAME);
+                $this->eventDispatcher->dispatch(new SlotCanceledEvent($slotDto), SlotCanceledEvent::NAME);
                 $this->addFlash('success', $this->translator->trans('cancel_succesfull', ['username' => $user->getDisplayName()]));
             }
         } else {

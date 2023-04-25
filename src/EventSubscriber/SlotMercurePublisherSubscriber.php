@@ -14,15 +14,13 @@ use Symfony\Component\Mercure\Update;
 
 class SlotMercurePublisherSubscriber implements EventSubscriberInterface, LoggerAwareInterface
 {
-
     use LoggerAwareTrait;
     public function __construct(private readonly HubInterface $hub, private readonly AppConfig $appConfig)
     {
-
     }
 
     /**
-     * @param SlotCanceledEvent $event
+     * @param SlotEvent $event
      * @return void
      */
     public function publish(SlotEvent $event, string $type): void
@@ -46,7 +44,6 @@ class SlotMercurePublisherSubscriber implements EventSubscriberInterface, Logger
     public function onSlotBooked(SlotBookedEvent $event): void
     {
         $this->publish($event, 'booked');
-
     }
 
     public static function getSubscribedEvents(): array

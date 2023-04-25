@@ -11,8 +11,7 @@ class SlotBookedEvent extends Event implements SlotEvent
 
     public function __construct(
         protected Slot $slot,
-    )
-    {
+    ) {
     }
 
     public function getSlot(): Slot

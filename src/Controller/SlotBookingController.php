@@ -12,7 +12,7 @@ use App\Repository\DistributionRepository;
 use App\Repository\SlotRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\OptimisticLockException;
-use Psr\EventDispatcher\EventDispatcherInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -116,6 +116,4 @@ class SlotBookingController extends AbstractController implements LoggerAwareInt
             'dists' => $dists
         ]);
     }
-
-
 }
