@@ -29,9 +29,12 @@ class BookingRuleChecker implements LoggerAwareInterface
         $this->logger->info(sprintf('lowered score for user [%s] from %d to %d', $user, $previousScore, $score));
     }
 
-    public function lowerUserScoreBySlot(User $user, Slot $slot): void
+    public function lowerUserScoreBySlot(User $user, Slot $slot): int
     {
-        $this->lowerUserScore($user, $this->pointsNeededForSlot($slot));
+        $pointsNeeded = $this->pointsNeededForSlot($slot);
+        $this->lowerUserScore($user, $pointsNeeded);
+
+        return $pointsNeeded;
     }
 
     public function pointsNeededForSlot(Slot $slot, string $day = 'today'): int
@@ -78,9 +81,9 @@ class BookingRuleChecker implements LoggerAwareInterface
         return $hasChanged;
     }
 
-    public function raiseUserScoreBySlot(User $user, Slot $slot): void
+    public function raiseUserScoreBySlot(User $user, Slot $slot, bool $refund = false): void
     {
-        $this->raiseUserScore($user, $this->pointsNeededForSlot($slot));
+        $this->raiseUserScore($user, $refund ? ($slot->getAmountPaid() ?? $this->pointsNeededForSlot($slot)) : $this->pointsNeededForSlot($slot));
     }
 
     public function userCanBook(User $user, Slot $slot): bool
