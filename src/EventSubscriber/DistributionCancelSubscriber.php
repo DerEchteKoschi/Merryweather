@@ -3,13 +3,13 @@
 namespace App\EventSubscriber;
 
 use App\Entity\Distribution;
-use App\Merryweather\BookingRuleChecker;
+use App\Merryweather\BookingService;
 use EasyCorp\Bundle\EasyAdminBundle\Event\BeforeEntityDeletedEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class DistributionCancelSubscriber implements EventSubscriberInterface
 {
-    public function __construct(private readonly BookingRuleChecker $bookingRuleChecker)
+    public function __construct(private readonly BookingService $bookingRuleChecker)
     {
     }
 

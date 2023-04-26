@@ -5,7 +5,7 @@ namespace UnitTest\Controller;
 use App\Controller\SlotBookingController;
 use App\Entity\Slot;
 use App\Entity\User;
-use App\Merryweather\BookingRuleChecker;
+use App\Merryweather\BookingService;
 use App\Repository\DistributionRepository;
 use App\Repository\SlotRepository;
 use App\Repository\UserRepository;
@@ -87,7 +87,7 @@ class SlotBookingControllerTest extends TestCase
         }
 
         $userRepositoryMock = $this->createMock(UserRepository::class);
-        $bookingRuleCheckerMock = $this->createMock(BookingRuleChecker::class);
+        $bookingRuleCheckerMock = $this->createMock(BookingService::class);
         $bookingRuleCheckerMock->method('userCanBook')->willReturn($bookable);
         $bookingRuleCheckerMock->setLogger(new NullLogger());
         $eventDp = $this->createMock(EventDispatcherInterface::class);
@@ -140,7 +140,7 @@ class SlotBookingControllerTest extends TestCase
         $slotRepositoryMock->method('find')->willReturn($slot);
 
         $userRepositoryMock = $this->createMock(UserRepository::class);
-        $bookingRuleCheckerMock = $this->createMock(BookingRuleChecker::class);
+        $bookingRuleCheckerMock = $this->createMock(BookingService::class);
         $bookingRuleCheckerMock->method('userCanCancel')->willReturn($cancellable);
         $bookingRuleCheckerMock->setLogger(new NullLogger());
         $eventDp = $this->createMock(EventDispatcherInterface::class);

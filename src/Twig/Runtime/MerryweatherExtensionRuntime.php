@@ -7,7 +7,7 @@ use App\Entity\Slot;
 use App\Entity\User;
 use App\Merryweather\Admin\LogMessage;
 use App\Merryweather\AppConfig;
-use App\Merryweather\BookingRuleChecker;
+use App\Merryweather\BookingService;
 use App\Repository\SlotRepository;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -16,7 +16,7 @@ use Twig\Extension\RuntimeExtensionInterface;
 class MerryweatherExtensionRuntime implements RuntimeExtensionInterface
 {
     public function __construct(
-        private readonly BookingRuleChecker $bookingRuleChecker,
+        private readonly BookingService $bookingRuleChecker,
         private readonly SlotRepository $slotRepository,
         private readonly Security $security,
         private readonly TranslatorInterface $translator,

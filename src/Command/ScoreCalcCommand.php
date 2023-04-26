@@ -3,7 +3,7 @@
 namespace App\Command;
 
 use App\Merryweather\AppConfig;
-use App\Merryweather\BookingRuleChecker;
+use App\Merryweather\BookingService;
 use App\Merryweather\CronCommand;
 use App\Repository\UserRepository;
 use Psr\Log\LoggerAwareInterface;
@@ -21,7 +21,7 @@ class ScoreCalcCommand extends Command implements CronCommand, LoggerAwareInterf
 {
     use LoggerAwareTrait;
 
-    public function __construct(private UserRepository $userRepository, private BookingRuleChecker $scoreChecker, private AppConfig $config)
+    public function __construct(private UserRepository $userRepository, private BookingService $scoreChecker, private AppConfig $config)
     {
         parent::__construct(null);
     }

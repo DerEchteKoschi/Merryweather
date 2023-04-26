@@ -6,7 +6,7 @@ use App\Entity\Distribution;
 use App\Entity\Slot;
 use App\Entity\User;
 use App\Merryweather\AppConfig;
-use App\Merryweather\BookingRuleChecker;
+use App\Merryweather\BookingService;
 use App\Repository\UserRepository;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -36,7 +36,7 @@ class BookingRuleCheckerTest extends TestCase
         $cfgMock = $this->createMock(AppConfig::class);
         $cfgMock->method('getScoreConfig')->willReturn([[3, 1]]);
         $userRepositoryMock = $this->createMock(UserRepository::class);
-        $brc = new BookingRuleChecker($cfgMock, $userRepositoryMock);
+        $brc = new BookingService($cfgMock, $userRepositoryMock);
         $brc->setLogger($this->createMock(LoggerInterface::class));
 
         $distMock = $this->createMock(Distribution::class);
@@ -64,7 +64,7 @@ class BookingRuleCheckerTest extends TestCase
         $cfgMock->method('getScoreConfig')->willReturn([[3, 1]]);
         $userRepositoryMock = $this->createMock(UserRepository::class);
 
-        $brc = new BookingRuleChecker($cfgMock, $userRepositoryMock);
+        $brc = new BookingService($cfgMock, $userRepositoryMock);
         $brc->setLogger($this->createMock(LoggerInterface::class));
 
         $distMock = $this->createMock(Distribution::class);
@@ -95,7 +95,7 @@ class BookingRuleCheckerTest extends TestCase
         $cfgMock->method('getScoreLimit')->willReturn(20);
         $userRepositoryMock = $this->createMock(UserRepository::class);
 
-        $brc = new BookingRuleChecker($cfgMock, $userRepositoryMock);
+        $brc = new BookingService($cfgMock, $userRepositoryMock);
         $brc->setLogger($this->createMock(LoggerInterface::class));
 
         $distMock = $this->createMock(Distribution::class);

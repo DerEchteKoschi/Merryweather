@@ -6,7 +6,7 @@ use App\Entity\Slot;
 use App\Entity\User;
 use App\Merryweather\Admin\LogMessage;
 use App\Merryweather\AppConfig;
-use App\Merryweather\BookingRuleChecker;
+use App\Merryweather\BookingService;
 use App\Repository\SlotRepository;
 use App\Twig\Runtime\MerryweatherExtensionRuntime;
 use DateTimeImmutable;
@@ -80,7 +80,7 @@ class MerryweatherExtensionRuntimeTest extends TestCase
     {
         $slot = $this->getSlotMock();
 
-        $bookingRuleChecker = $this->createMock(BookingRuleChecker::class);
+        $bookingRuleChecker = $this->createMock(BookingService::class);
         $bookingRuleChecker->method('pointsNeededForSlot')->with($this->equalTo($slot))->willReturn(815);
 
         $securityMock = $this->createMock(Security::class);
@@ -108,7 +108,7 @@ class MerryweatherExtensionRuntimeTest extends TestCase
     {
         $slot = $this->getSlotMock();
 
-        $bookingRuleChecker = $this->createMock(BookingRuleChecker::class);
+        $bookingRuleChecker = $this->createMock(BookingService::class);
         $bookingRuleChecker->method('pointsNeededForSlot')->with($this->equalTo($slot))->willReturn(815);
 
         $securityMock = $this->createMock(Security::class);
@@ -147,7 +147,7 @@ class MerryweatherExtensionRuntimeTest extends TestCase
      */
     protected function prepare($method): array
     {
-        $bookingRuleChecker = $this->createMock(BookingRuleChecker::class);
+        $bookingRuleChecker = $this->createMock(BookingService::class);
         $slot = $this->getSlotMock();
         $bookingRuleChecker->method($method)->with($this->isInstanceOf(User::class), $this->equalTo($slot))->willReturn(true);
         $merryweatherExtensionRuntime = $this->newMerryweatherExtensionRuntime(slotMock: $slot, bookingRuleChecker: $bookingRuleChecker);
@@ -168,7 +168,7 @@ class MerryweatherExtensionRuntimeTest extends TestCase
         }
 
         if ($bookingRuleChecker === null) {
-            $bookingRuleChecker = $this->createMock(BookingRuleChecker::class);
+            $bookingRuleChecker = $this->createMock(BookingService::class);
             $bookingRuleChecker->method('pointsNeededForSlot')->with($this->equalTo($slotMock))->willReturn(815);
         }
 

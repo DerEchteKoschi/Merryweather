@@ -5,7 +5,7 @@ namespace UnitTest\Command;
 use App\Command\ScoreCalcCommand;
 use App\Entity\User;
 use App\Merryweather\AppConfig;
-use App\Merryweather\BookingRuleChecker;
+use App\Merryweather\BookingService;
 use App\Repository\UserRepository;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
@@ -29,7 +29,7 @@ class ScoreCalcCommandTest extends TestCase
         $configMock = $this->createMock(AppConfig::class);
         $configMock->method('getScoreRaiseStep')->willReturn(2);
         $configMock->method('getScoreLimit')->willReturn(21);
-        $bookingRuleCheckerMock = new BookingRuleChecker($configMock, $userRepositoryMock);
+        $bookingRuleCheckerMock = new BookingService($configMock, $userRepositoryMock);
 
         $loggerMock = $this->createMock(LoggerInterface::class);
         $loggerMock->expects($this->exactly(3))->method('info')->withConsecutive(

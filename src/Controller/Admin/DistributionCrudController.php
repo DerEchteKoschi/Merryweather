@@ -7,7 +7,7 @@ use App\Entity\Slot;
 use App\Entity\User;
 use App\Events\SlotCanceledEvent;
 use App\Merryweather\AppConfig;
-use App\Merryweather\BookingRuleChecker;
+use App\Merryweather\BookingService;
 use App\Repository\DistributionRepository;
 use App\Repository\SlotRepository;
 use App\Repository\UserRepository;
@@ -39,7 +39,7 @@ class DistributionCrudController extends AbstractCrudController
     /**
      * @codeCoverageIgnore
      */
-    public function __construct(private readonly AppConfig $config, private readonly TranslatorInterface $translator, private readonly BookingRuleChecker $bookingRuleChecker, private readonly EventDispatcherInterface $eventDispatcher)
+    public function __construct(private readonly AppConfig $config, private readonly TranslatorInterface $translator, private readonly BookingService $bookingRuleChecker, private readonly EventDispatcherInterface $eventDispatcher)
     {
     }
 
@@ -196,7 +196,7 @@ class DistributionCrudController extends AbstractCrudController
         int                $distributionId,
         SlotRepository     $slotRepository,
         UserRepository     $userRepository,
-        BookingRuleChecker $bookRuleChecker,
+        BookingService $bookRuleChecker,
         AdminUrlGenerator  $adminUrlGenerator
     ): Response {
         if ($this->config->isAdminCancelAllowed()) {
