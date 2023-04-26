@@ -76,6 +76,7 @@ class SlotBookingController extends AbstractController implements LoggerAwareInt
             $slot->setUser(null);
             $bookRuleChecker->raiseUserScoreBySlot($user, $slot);
             $userRepository->save($user, true);
+            $slot->setAmountPaid(null);
             $slotRepository->save($slot, true);
             $this->logger->info(sprintf('User %s canceled Slot %s', $user, $slot->getText()));
             $this->eventDispatcher->dispatch(new SlotCanceledEvent($slotDto), SlotCanceledEvent::NAME);
