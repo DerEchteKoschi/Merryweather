@@ -66,10 +66,9 @@ class BookingService implements LoggerAwareInterface
     }
 
     /**
-     * @throws OptimisticLockException
      * @throws BookingException
      */
-    public function cancelSlot(int|Slot $slot): void
+    public function cancelSlot(int|Slot $slot, bool $cancelByAdmin = false): void
     {
         /** @var User $user */
         $user = $this->security->getUser();
@@ -80,14 +79,15 @@ class BookingService implements LoggerAwareInterface
         if ($slot === null) {
             throw BookingException::slotNotFound();
         }
-        if ($slot->getUser() === $user) {
-            $slotDto = \App\Dto\Slot::fromEntity($slot);
+        $adminHandled = ($cancelByAdmin && $this->security->isGranted('ROLE_ADMIN'));
+        if ($slot->getUser() === $user || $adminHandled) {
+            $this->raiseUserScoreBySlot($slot, $adminHandled);
             $slot->setUser(null);
-            $this->raiseUserScoreBySlot($user, $slot);
-            $this->userRepository->save($user, true);
+            $this->userRepository->save($user);
+            $slot->setAmountPaid(null);
             $this->slotRepository->save($slot, true);
+            $this->eventDispatcher->dispatch(new SlotCanceledEvent(\App\Dto\Slot::fromEntity($slot)), SlotCanceledEvent::NAME);
             $this->logger->info(sprintf('User %s canceled Slot %s', $user, $slot->getText()));
-            $this->eventDispatcher->dispatch(new SlotCanceledEvent($slotDto), SlotCanceledEvent::NAME);
         } elseif ($slot->getUser() !== null) {
             $this->logger->alert(sprintf('User %s tried to cancel Slot %s that belongs to %s', $user, $slot->getText(), $slot->getUser()));
             throw BookingException::slotNotYours();
@@ -158,9 +158,9 @@ class BookingService implements LoggerAwareInterface
         return $hasChanged;
     }
 
-    public function raiseUserScoreBySlot(User $user, Slot $slot, bool $refund = false): void
+    private function raiseUserScoreBySlot(Slot $slot, bool $refund = false): void
     {
-        $this->raiseUserScore($user, $refund ? ($slot->getAmountPaid() ?? $this->pointsNeededForSlot($slot)) : $this->pointsNeededForSlot($slot));
+        $this->raiseUserScore($slot->getUser(), $refund ? ($slot->getAmountPaid() ?? $this->pointsNeededForSlot($slot)) : $this->pointsNeededForSlot($slot));
     }
 
     public function userCanBook(User $user, Slot $slot): bool

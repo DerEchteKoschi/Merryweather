@@ -8,6 +8,7 @@ use App\Merryweather\BookingException;
 use App\Merryweather\BookingService;
 use App\Repository\DistributionRepository;
 use App\Repository\SlotRepository;
+use Doctrine\ORM\OptimisticLockException;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
@@ -21,7 +22,7 @@ class SlotBookingController extends AbstractController implements LoggerAwareInt
 {
     use LoggerAwareTrait;
 
-    public function __construct(private readonly TranslatorInterface $translator, private readonly EventDispatcherInterface $eventDispatcher, private readonly BookingService $bookingService)
+    public function __construct(private readonly TranslatorInterface $translator, private readonly BookingService $bookingService)
     {
     }
 
@@ -36,6 +37,7 @@ class SlotBookingController extends AbstractController implements LoggerAwareInt
         }
         return $this->redirectToRoute('app_slots');
     }
+
 
     #[Route('/cancel/{slotId}', name: 'app_slot_cancel')]
     public function cancel(int $slotId): Response

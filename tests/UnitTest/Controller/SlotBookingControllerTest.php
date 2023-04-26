@@ -87,15 +87,15 @@ class SlotBookingControllerTest extends TestCase
         }
 
         $userRepositoryMock = $this->createMock(UserRepository::class);
-        $bookingRuleCheckerMock = $this->createMock(BookingService::class);
-        $bookingRuleCheckerMock->method('userCanBook')->willReturn($bookable);
-        $bookingRuleCheckerMock->setLogger(new NullLogger());
+        $bookingServiceMock = $this->createMock(BookingService::class);
+        $bookingServiceMock->method('userCanBook')->willReturn($bookable);
+        $bookingServiceMock->setLogger(new NullLogger());
         $eventDp = $this->createMock(EventDispatcherInterface::class);
 
-        $controller = new SlotBookingController($this->transLatorMock(), $eventDp);
+        $controller = new SlotBookingController($this->translatorMock(), $bookingServiceMock);
         $controller->setContainer($containerMock);
         $controller->setLogger(new NullLogger());
-        $response = $controller->book(1, $slotRepositoryMock, $userRepositoryMock, $bookingRuleCheckerMock);
+        $response = $controller->book(1, );
         $this->assertEquals(302, $response->getStatusCode());
         $this->assertEquals('app_slots', $response->getTargetUrl());
     }
@@ -145,11 +145,11 @@ class SlotBookingControllerTest extends TestCase
         $bookingRuleCheckerMock->setLogger(new NullLogger());
         $eventDp = $this->createMock(EventDispatcherInterface::class);
 
-        $controller = new SlotBookingController($this->transLatorMock(), $eventDp);
+        $controller = new SlotBookingController($this->translatorMock(), $bookingRuleCheckerMock);
         $controller->setContainer($containerMock);
         $controller->setLogger(new NullLogger());
 
-        $response = $controller->cancel(1, $slotRepositoryMock, $userRepositoryMock, $bookingRuleCheckerMock);
+        $response = $controller->cancel(1);
         $this->assertEquals(302, $response->getStatusCode());
         $this->assertEquals('app_slots', $response->getTargetUrl());
     }
@@ -170,15 +170,15 @@ class SlotBookingControllerTest extends TestCase
 
         $distributionRepositoryMock = $this->createMock(DistributionRepository::class);
         $distributionRepositoryMock->method('findCurrentDistributions')->willReturn([]);
-        $eventDp = $this->createMock(EventDispatcherInterface::class);
+        $bookingRuleCheckerMock = $this->createMock(BookingService::class);
 
-        $controller = new SlotBookingController($this->transLatorMock(), $eventDp);
+        $controller = new SlotBookingController($this->translatorMock(), $bookingRuleCheckerMock);
         $controller->setContainer($containerMock);
         $response = $controller->index($distributionRepositoryMock);
         $this->assertEquals('done', $response->getContent());
     }
 
-    private function transLatorMock()
+    private function translatorMock()
     {
         $mock = $this->createMock(TranslatorInterface::class);
         $mock->method('trans')->willReturnArgument(0);
