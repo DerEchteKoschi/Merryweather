@@ -5,23 +5,11 @@
 {% block javascripts %}
     {% if appConfig.mercureActive %}
     <script>
-        const me = {{ app.user.id }};
         const eventSource = new EventSource("{{ mercure('booking')|escape('js') }}");
         eventSource.onmessage = event => {
-            const data = JSON.parse(event.data);
-            if (!data.hasOwnProperty('owner') || !data.hasOwnProperty('slotId')) {
-                console.log('incompatible data received', data);
-                return;
-            }
-            if (data.owner === me) {
-                $.ajax("{{ path('app_slot_list') }}").done(function (response) {
-                    $('#slotlist').replaceWith(response);
-                });
-            } else {
-                $.ajax("{{ path('app_slot_row', {slotId: -1}) }}".replace('-1', data.slotId)).done(function (response) {
-                    $('#slot_' + data.slotId).replaceWith(response);
-                });
-            }
+            $.ajax("{{ path('app_slot_list') }}").done(function (response) {
+                $('#slotlist').replaceWith(response);
+            });
         }
     </script>
     {%  endif %}

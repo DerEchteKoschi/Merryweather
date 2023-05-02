@@ -28,7 +28,7 @@ class SlotMercurePublisherSubscriber implements EventSubscriberInterface, Logger
         if ($this->appConfig->isMercureActive()) {
             $update = new Update(
                 'booking',
-                json_encode(['event' => $type, 'slotId' => $event->getSlot()->id, 'owner' => $event->getSlot()->user->id])
+                json_encode(['event' => $type])
             );
 
             $res = $this->hub->publish($update);
