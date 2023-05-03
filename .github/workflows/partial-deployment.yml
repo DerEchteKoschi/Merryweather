@@ -1,4 +1,4 @@
-name: deployment
+name: deployment (partial)
 run-name: Deploy to ${{ vars.WEB_HOST }} by @${{ github.actor }}
 
 # Controls when the workflow will run
