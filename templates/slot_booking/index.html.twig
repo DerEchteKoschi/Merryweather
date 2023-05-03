@@ -5,14 +5,28 @@
 {% block javascripts %}
     {% if appConfig.mercureActive %}
     <script>
-        const eventSource = new EventSource("{{ mercure('booking')|escape('js') }}");
-        eventSource.onmessage = event => {
+        function reloadList() {
             $.ajax("{{ path('app_slot_list') }}").done(function (response) {
                 $('#slotlist').replaceWith(response);
             });
         }
+
+        const eventSource = new EventSource("{{ mercure('booking')|escape('js') }}");
+        eventSource.onmessage = reloadList;
+
+        let status = 1;
+        window.addEventListener("offline", () => {
+            status = 0;
+        });
+
+        window.addEventListener("online", () => {
+            if (status !== 1) {
+                status = 1;
+                reloadList();
+            }
+        });
     </script>
-    {%  endif %}
+    {% endif %}
 {% endblock %}
 
 {% block body %}
