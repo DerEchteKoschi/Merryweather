@@ -48,20 +48,10 @@ jobs:
       - name: prepare files to deploy
         run: |
           mkdir deploy
-#          mkdir deploy/public
           sudo mv var deploy/
-#          mv public/index.php index.php_bak
-#          mv public/maintenance.html deploy/public/index.php
-#      - run: cd deploy/public; ls
-#      - name: activate maintenance info
-#        run: lftp -e "put ./deploy/public/index.php -o /public/index.php; exit" -u ${{ vars.DEPLOYMENT_USER }},${{ secrets.DEPLOYMENT_PASSWORD }} ${{ vars.DEPLOYMENT_HOST }}
       - name: clear cache
         run: lftp -e "rm -r var/cache/; exit" -u ${{ vars.DEPLOYMENT_USER }},${{ secrets.DEPLOYMENT_PASSWORD }} ${{ vars.DEPLOYMENT_HOST }}
       - name: copy files to target
         run: cd deploy;lftp -e "mirror -R --parallel=20 . .; exit" -u ${{ vars.DEPLOYMENT_USER }},${{ secrets.DEPLOYMENT_PASSWORD }} ${{ vars.DEPLOYMENT_HOST }}
-#      - name: deactivate maintenance info
-#        run: lftp -e "put ./index.php_bak -o /public/index.php; exit" -u ${{ vars.DEPLOYMENT_USER }},${{ secrets.DEPLOYMENT_PASSWORD }} ${{ vars.DEPLOYMENT_HOST }}
-#      - name: execute migrations
-#        run: curl --fail-with-body https://deployment:${{ steps.generate_number.outputs.random_number }}@${{ vars.WEB_HOST }}/deploy.php
 
 
