@@ -5,12 +5,11 @@ run-name: Deploy to ${{ vars.WEB_HOST }} by @${{ github.actor }}
 on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
-
-inputs:
-  cache-deploy:
-    description: 'deploy the cache'
-    required: true
-    default: true
+  inputs:
+    cache-deploy:
+      description: 'deploy the cache'
+      required: true
+      default: true
 
 jobs:
   # This workflow contains a single job called "build"
