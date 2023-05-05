@@ -209,10 +209,8 @@ class DistributionCrudController extends AbstractCrudController
                 $user = $slot->getUser();
                 $this->bookingService->cancelSlot($slot, true);
                 $this->addFlash('success', $this->translator->trans('cancel_succesfull', ['username' => $user->getDisplayName()]));
-
             } catch (BookingException $bookingException) {
                 $this->addFlash($bookingException->getCode() === BookingException::CRITICAL ? 'danger' : 'warning', $this->translator->trans($bookingException->getMessage()));
-
             }
         } else {
             $this->addFlash('warning', $this->translator->trans('feature_deactivated'));

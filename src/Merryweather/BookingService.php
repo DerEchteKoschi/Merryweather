@@ -20,11 +20,11 @@ class BookingService implements LoggerAwareInterface
     use LoggerAwareTrait;
 
     public function __construct(
-        private readonly AppConfig $appConfig,
-        private readonly UserRepository $userRepository,
-        private readonly SlotRepository $slotRepository,
+        private readonly AppConfig                $appConfig,
+        private readonly UserRepository           $userRepository,
+        private readonly SlotRepository           $slotRepository,
         private readonly EventDispatcherInterface $eventDispatcher,
-        private readonly Security $security
+        private readonly Security                 $security
     ) {
     }
 
@@ -165,20 +165,18 @@ class BookingService implements LoggerAwareInterface
 
     public function userCanBook(User $user, Slot $slot): bool
     {
-        $can = true;
-        $can = $can && ($slot->getDistribution() !== null);
-        $can = $can && !$this->isSlotInPast($slot);
-        $can = $can && ($slot->getUser() === null);
-        $can = $can && $this->hasBookednoOtherSlotOfSameDistribution($slot, $user);
-        $can = $can && $user->getScore() >= $this->pointsNeededForSlot($slot);
-        return $can;
+        return ($slot->getDistribution() !== null)
+            && !$this->isSlotInPast($slot)
+            && ($slot->getUser() === null)
+            && $this->hasBookednoOtherSlotOfSameDistribution($slot, $user)
+            && $user->getScore() >= $this->pointsNeededForSlot($slot);
     }
 
     public function userCanCancel(User $user, Slot $slot): bool
     {
         return ($slot->getDistribution() !== null)
-               && !$this->isSlotInPast($slot)
-               && ($slot->getUser() === $user);
+            && !$this->isSlotInPast($slot)
+            && ($slot->getUser() === $user);
     }
 
     /**
@@ -200,8 +198,8 @@ class BookingService implements LoggerAwareInterface
 
     /**
      * @param int[][] $dayConfig
-     * @param int     $range
-     * @param int     $day
+     * @param int $range
+     * @param int $day
      * @return int[]
      */
     private static function configNeededForDay(array $dayConfig, int $range, int $day): array
@@ -221,10 +219,10 @@ class BookingService implements LoggerAwareInterface
 
     /**
      * @param int[][] $scoreConfig
-     * @param int     $slotPosition
-     * @param int     $totalNoOfSlots
-     * @param int     $dayIndex
-     * @param int     $dayCount
+     * @param int $slotPosition
+     * @param int $totalNoOfSlots
+     * @param int $dayIndex
+     * @param int $dayCount
      * @return int
      */
     private static function getCost(array $scoreConfig, int $slotPosition, int $totalNoOfSlots, int $dayIndex, int $dayCount): int
