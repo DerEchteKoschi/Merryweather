@@ -1,0 +1,16 @@
+<div id="messages">
+    {% set flashes = app.flashes %}
+    {% set num = flashes|length %}
+        <article class="my-3">
+    {% if num > 0 %}
+            {% for type,messages in flashes %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ type }} alert-dismissible fade show" role="alert">
+                        {{ message|raw }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endfor %}
+    {% endif %}
+        </article>
+</div>

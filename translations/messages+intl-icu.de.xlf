@@ -441,6 +441,10 @@
         <source>en</source>
         <target>english</target>
       </trans-unit>
+      <trans-unit id="offline">
+        <source>offline</source>
+        <target>Ihr Gerät ist offline.</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

@@ -14,6 +14,7 @@ use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBag;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -95,7 +96,8 @@ class SlotBookingControllerTest extends TestCase
         $controller = new SlotBookingController($this->translatorMock(), $bookingServiceMock);
         $controller->setContainer($containerMock);
         $controller->setLogger(new NullLogger());
-        $response = $controller->book(1, );
+        $request = new Request();
+        $response = $controller->book(1, $request);
         $this->assertEquals(302, $response->getStatusCode());
         $this->assertEquals('app_slots', $response->getTargetUrl());
     }
@@ -148,8 +150,8 @@ class SlotBookingControllerTest extends TestCase
         $controller = new SlotBookingController($this->translatorMock(), $bookingRuleCheckerMock);
         $controller->setContainer($containerMock);
         $controller->setLogger(new NullLogger());
-
-        $response = $controller->cancel(1);
+        $request = new Request();
+        $response = $controller->cancel(1, $request);
         $this->assertEquals(302, $response->getStatusCode());
         $this->assertEquals('app_slots', $response->getTargetUrl());
     }
