@@ -1,8 +1,5 @@
 <nav class="navbar sticky-top navbar-expand-md bg-primary-subtle" aria-label="{{ 'mainmenu'|trans }}">
     <div class="container-fluid">
-        <a class="navbar-brand" href="/">
-            <img src="{{ asset('/img/logo.png') }}" alt="MerryWeather" width="30" height="24">
-        </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -21,7 +18,7 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle {% if currentPath == path('app_profile') %}active{% endif %}" href="#" role="button" data-bs-toggle="dropdown">
                         <i class=" fa fa-user{{ is_granted('ROLE_ADMIN') ? '-gear' : '' }}"></i>
-                        {{ app.user }} {{ userScore() }}
+                        {{ app.user }}
                     </a>
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="{{ path('app_profile') }}"><i class=" fa fa-address-card"></i>{{ 'my_profile'|trans }}</a></li>

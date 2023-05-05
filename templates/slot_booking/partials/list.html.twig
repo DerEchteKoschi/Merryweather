@@ -6,7 +6,7 @@
             <h5 class="container">{{ dist.text }}</h5>
             <div  class="list-group" >
                 {% for slot in dist.slots %}
-                    {{ include('slot_booking/listitem.html.twig') }}
+                    {{ include('slot_booking/partials/listitem.html.twig') }}
                 {% endfor %}
             </div>
         {% endfor %}
