@@ -1,4 +1,6 @@
-name: Test
+name: Tests
+run-name: running tests triggered by @${{ github.event_name }} on @${{ github.ref_name }}
+
 on:
   push:
     branches:
@@ -19,9 +21,22 @@ jobs:
       - run: composer install --working-dir=tools/phpstan
       - run: XDEBUG_MODE=off tools/phpstan/vendor/bin/phpstan analyse -c phpstan.neon
 
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: php-actions/composer@v6 # or alternative dependency management
+      - name: services
+        run: XDEBUG_MODE=off bin/console lint:container
+      - name: config
+        run: XDEBUG_MODE=off bin/console lint:yaml config/**/*.yaml
+      - name: templates
+        run: XDEBUG_MODE=off bin/console lint:twig templates
+      - name: translations
+        run: XDEBUG_MODE=off bin/console lint:xliff /translations/*
+
   unittest:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v3
       - uses: php-actions/composer@v6 # or alternative dependency management
