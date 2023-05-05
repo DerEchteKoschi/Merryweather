@@ -5,16 +5,93 @@ namespace App\Merryweather;
 use App\Entity\Distribution;
 use App\Entity\Slot;
 use App\Entity\User;
+use App\Events\SlotBookedEvent;
+use App\Events\SlotCanceledEvent;
+use App\Repository\SlotRepository;
 use App\Repository\UserRepository;
+use Doctrine\ORM\OptimisticLockException;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
+use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
-class BookingRuleChecker implements LoggerAwareInterface
+class BookingService implements LoggerAwareInterface
 {
     use LoggerAwareTrait;
 
-    public function __construct(private readonly AppConfig $appConfig, private readonly UserRepository $userRepository)
+    public function __construct(
+        private readonly AppConfig                $appConfig,
+        private readonly UserRepository           $userRepository,
+        private readonly SlotRepository           $slotRepository,
+        private readonly EventDispatcherInterface $eventDispatcher,
+        private readonly Security                 $security
+    ) {
+    }
+
+    /**
+     * @throws BookingException
+     */
+    public function bookSlot(int|Slot $slot): void
     {
+        /** @var User $user */
+        $user = $this->security->getUser();
+
+        if (!($slot instanceof Slot)) {
+            $slot = $this->slotRepository->find($slot);
+        }
+        if ($slot === null) {
+            throw BookingException::slotNotFound();
+        }
+        if ($slot->getUser() === null) {
+            try {
+                $this->slotRepository->lock($slot);
+                if ($this->userCanBook($user, $slot)) {
+                    $slot->setUser($user);
+                    $pointsPayed = $this->lowerUserScoreBySlot($user, $slot);
+                    $slot->setAmountPaid($pointsPayed);
+                    $this->slotRepository->save($slot, true);
+                    $this->userRepository->save($user, true);
+                    $this->logger->info(sprintf('User %s booked Slot %s', $user, $slot->getText()));
+                    $this->eventDispatcher->dispatch(new SlotBookedEvent(\App\Dto\Slot::fromEntity($slot)), SlotBookedEvent::NAME);
+                } else {
+                    $this->logger->warning(sprintf('User %s tried to book Slot %s', $user, $slot->getText()));
+                    throw BookingException::notBookable();
+                }
+            } catch (OptimisticLockException $ole) {
+                throw BookingException::failed();
+            }
+        } elseif ($slot->getUser() !== $user) {
+            throw BookingException::alreadyBooked();
+        }
+    }
+
+    /**
+     * @throws BookingException
+     */
+    public function cancelSlot(int|Slot $slot, bool $cancelByAdmin = false): void
+    {
+        /** @var User $user */
+        $user = $this->security->getUser();
+
+        if (!($slot instanceof Slot)) {
+            $slot = $this->slotRepository->find($slot);
+        }
+        if ($slot === null) {
+            throw BookingException::slotNotFound();
+        }
+        $adminHandled = ($cancelByAdmin && $this->security->isGranted('ROLE_ADMIN'));
+        if ($slot->getUser() === $user || $adminHandled) {
+            $this->raiseUserScoreBySlot($slot, $adminHandled);
+            $slot->setUser(null);
+            $this->userRepository->save($user);
+            $slot->setAmountPaid(null);
+            $this->slotRepository->save($slot, true);
+            $this->eventDispatcher->dispatch(new SlotCanceledEvent(\App\Dto\Slot::fromEntity($slot)), SlotCanceledEvent::NAME);
+            $this->logger->info(sprintf('User %s canceled Slot %s', $user, $slot->getText()));
+        } elseif ($slot->getUser() !== null) {
+            $this->logger->alert(sprintf('User %s tried to cancel Slot %s that belongs to %s', $user, $slot->getText(), $slot->getUser()));
+            throw BookingException::slotNotYours();
+        }
     }
 
     private function lowerUserScore(User $user, int $toSub = 1): void
@@ -29,7 +106,7 @@ class BookingRuleChecker implements LoggerAwareInterface
         $this->logger->info(sprintf('lowered score for user [%s] from %d to %d', $user, $previousScore, $score));
     }
 
-    public function lowerUserScoreBySlot(User $user, Slot $slot): int
+    private function lowerUserScoreBySlot(User $user, Slot $slot): int
     {
         $pointsNeeded = $this->pointsNeededForSlot($slot);
         $this->lowerUserScore($user, $pointsNeeded);
@@ -81,25 +158,25 @@ class BookingRuleChecker implements LoggerAwareInterface
         return $hasChanged;
     }
 
-    public function raiseUserScoreBySlot(User $user, Slot $slot, bool $refund = false): void
+    private function raiseUserScoreBySlot(Slot $slot, bool $refund = false): void
     {
-        $this->raiseUserScore($user, $refund ? ($slot->getAmountPaid() ?? $this->pointsNeededForSlot($slot)) : $this->pointsNeededForSlot($slot));
+        $this->raiseUserScore($slot->getUser(), $refund ? ($slot->getAmountPaid() ?? $this->pointsNeededForSlot($slot)) : $this->pointsNeededForSlot($slot));
     }
 
     public function userCanBook(User $user, Slot $slot): bool
     {
         return ($slot->getDistribution() !== null)
-               && !$this->isSlotInPast($slot)
-               && ($slot->getUser() === null)
-               && $this->hasBookednoOtherSlotOfSameDistribution($slot, $user)
-               && $user->getScore() >= $this->pointsNeededForSlot($slot);
+            && !$this->isSlotInPast($slot)
+            && ($slot->getUser() === null)
+            && $this->hasBookednoOtherSlotOfSameDistribution($slot, $user)
+            && $user->getScore() >= $this->pointsNeededForSlot($slot);
     }
 
     public function userCanCancel(User $user, Slot $slot): bool
     {
         return ($slot->getDistribution() !== null)
-               && !$this->isSlotInPast($slot)
-               && ($slot->getUser() === $user);
+            && !$this->isSlotInPast($slot)
+            && ($slot->getUser() === $user);
     }
 
     /**
@@ -107,7 +184,7 @@ class BookingRuleChecker implements LoggerAwareInterface
      * @param User $user
      * @return bool
      */
-    protected function hasBookednoOtherSlotOfSameDistribution(Slot $slot, User $user): bool
+    private function hasBookednoOtherSlotOfSameDistribution(Slot $slot, User $user): bool
     {
         $hasBookedNoSlotOfDistribution = true;
         foreach ($slot->getDistribution()->getSlots() as $checkSlot) {
@@ -121,8 +198,8 @@ class BookingRuleChecker implements LoggerAwareInterface
 
     /**
      * @param int[][] $dayConfig
-     * @param int     $range
-     * @param int     $day
+     * @param int $range
+     * @param int $day
      * @return int[]
      */
     private static function configNeededForDay(array $dayConfig, int $range, int $day): array
@@ -142,10 +219,10 @@ class BookingRuleChecker implements LoggerAwareInterface
 
     /**
      * @param int[][] $scoreConfig
-     * @param int     $slotPosition
-     * @param int     $totalNoOfSlots
-     * @param int     $dayIndex
-     * @param int     $dayCount
+     * @param int $slotPosition
+     * @param int $totalNoOfSlots
+     * @param int $dayIndex
+     * @param int $dayCount
      * @return int
      */
     private static function getCost(array $scoreConfig, int $slotPosition, int $totalNoOfSlots, int $dayIndex, int $dayCount): int

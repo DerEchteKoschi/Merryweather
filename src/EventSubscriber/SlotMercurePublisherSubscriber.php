@@ -9,12 +9,14 @@ use App\Merryweather\AppConfig;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\Mercure\Exception\RuntimeException;
 use Symfony\Component\Mercure\HubInterface;
 use Symfony\Component\Mercure\Update;
 
 class SlotMercurePublisherSubscriber implements EventSubscriberInterface, LoggerAwareInterface
 {
     use LoggerAwareTrait;
+
     public function __construct(private readonly HubInterface $hub, private readonly AppConfig $appConfig)
     {
     }
@@ -30,9 +32,13 @@ class SlotMercurePublisherSubscriber implements EventSubscriberInterface, Logger
                 'booking',
                 json_encode(['event' => $type])
             );
-
-            $res = $this->hub->publish($update);
-            $this->logger->info($res);
+            try {
+                $res = $this->hub->publish($update);
+                $this->logger->info($res);
+            } catch (RuntimeException $runtimeException) {
+                $this->logger->error('Mercure: ' . $runtimeException->getMessage());
+                $this->logger->error($runtimeException->getPrevious()?->getMessage());
+            }
         }
     }
 

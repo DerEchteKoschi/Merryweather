@@ -7,7 +7,7 @@
     <ul class="nav nav-pills nav-fill" id="myTab">
         {% for logfile in logfiles %}
             <li class="nav-item">
-                <a href="{{ logfile.url }}" class="nav-link fs-4{{ logfile.active?' active':'' }}">{{ logfile.name }}</a>
+                <a href="{{ logfile.url }}" class="nav-link fs-6{{ logfile.active?' active':'' }}">{{ logfile.name }}</a>
             </li>
         {% endfor %}
     </ul>

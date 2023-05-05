@@ -7,7 +7,8 @@ use App\Entity\Slot;
 use App\Entity\User;
 use App\Events\SlotCanceledEvent;
 use App\Merryweather\AppConfig;
-use App\Merryweather\BookingRuleChecker;
+use App\Merryweather\BookingException;
+use App\Merryweather\BookingService;
 use App\Repository\DistributionRepository;
 use App\Repository\SlotRepository;
 use App\Repository\UserRepository;
@@ -39,7 +40,7 @@ class DistributionCrudController extends AbstractCrudController
     /**
      * @codeCoverageIgnore
      */
-    public function __construct(private readonly AppConfig $config, private readonly TranslatorInterface $translator, private readonly BookingRuleChecker $bookingRuleChecker, private readonly EventDispatcherInterface $eventDispatcher)
+    public function __construct(private readonly AppConfig $config, private readonly TranslatorInterface $translator, private readonly BookingService $bookingService)
     {
     }
 
@@ -196,24 +197,20 @@ class DistributionCrudController extends AbstractCrudController
         int                $distributionId,
         SlotRepository     $slotRepository,
         UserRepository     $userRepository,
-        BookingRuleChecker $bookRuleChecker,
+        BookingService $bookRuleChecker,
         AdminUrlGenerator  $adminUrlGenerator
     ): Response {
         if ($this->config->isAdminCancelAllowed()) {
-            $slot = $slotRepository->find($slotId);
-            if ($slot === null) {
-                $this->addFlash('danger', $this->translator->trans('slot_not_found'));
-            } else {
-                $slotDto = \App\Dto\Slot::fromEntity($slot);
-                /** @var User $user */
+            try {
+                $slot = $slotRepository->find($slotId);
+                if ($slot === null) {
+                    throw BookingException::slotNotFound();
+                }
                 $user = $slot->getUser();
-                $slot->setUser(null);
-                $bookRuleChecker->raiseUserScoreBySlot($user, $slot, true);
-                $userRepository->save($user, true);
-                $slot->setAmountPaid(null);
-                $slotRepository->save($slot, true);
-                $this->eventDispatcher->dispatch(new SlotCanceledEvent($slotDto), SlotCanceledEvent::NAME);
+                $this->bookingService->cancelSlot($slot, true);
                 $this->addFlash('success', $this->translator->trans('cancel_succesfull', ['username' => $user->getDisplayName()]));
+            } catch (BookingException $bookingException) {
+                $this->addFlash($bookingException->getCode() === BookingException::CRITICAL ? 'danger' : 'warning', $this->translator->trans($bookingException->getMessage()));
             }
         } else {
             $this->addFlash('warning', $this->translator->trans('feature_deactivated'));
@@ -251,7 +248,7 @@ class DistributionCrudController extends AbstractCrudController
                 if (empty($header)) {
                     $tHeader[] = $currentDate;
                 }
-                $slotRow[] = $this->bookingRuleChecker->pointsNeededForSlot($slot, $currentDate->format('c'));
+                $slotRow[] = $this->bookingService->pointsNeededForSlot($slot, $currentDate->format('c'));
                 $currentDate = $currentDate->add($oneDay);
             }
             if (empty($header)) {

@@ -3,18 +3,11 @@
 namespace App\Controller;
 
 use App\Dto\Distribution;
-use App\Dto\Slot;
-use App\Entity\User;
-use App\Events\SlotBookedEvent;
-use App\Events\SlotCanceledEvent;
-use App\Merryweather\BookingRuleChecker;
+use App\Merryweather\BookingException;
+use App\Merryweather\BookingService;
 use App\Repository\DistributionRepository;
-use App\Repository\SlotRepository;
-use App\Repository\UserRepository;
-use Doctrine\ORM\OptimisticLockException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -27,39 +20,18 @@ class SlotBookingController extends AbstractController implements LoggerAwareInt
 {
     use LoggerAwareTrait;
 
-    public function __construct(private readonly TranslatorInterface $translator, private readonly EventDispatcherInterface $eventDispatcher)
+    public function __construct(private readonly TranslatorInterface $translator, private readonly BookingService $bookingService)
     {
     }
 
     #[Route('/book/{slotId}', name: 'app_slot_book')]
-    public function book(int $slotId, Request $request, SlotRepository $slotRepository, UserRepository $userRepository, BookingRuleChecker $bookRuleChecker): Response
+    public function book(int $slotId, Request $request): Response
     {
-        $slot = $slotRepository->find($slotId);
-        /** @var User $user */
-        $user = $this->getUser();
-        if ($slot === null) {
-            $this->addFlash('danger', $this->translator->trans('slot_not_found'));
-        } elseif ($slot->getUser() === null) {
-            try {
-                $slotRepository->lock($slot);
-                if ($bookRuleChecker->userCanBook($user, $slot)) {
-                    $slot->setUser($user);
-                    $pointsPayed = $bookRuleChecker->lowerUserScoreBySlot($user, $slot);
-                    $slot->setAmountPaid($pointsPayed);
-                    $slotRepository->save($slot, true);
-                    $userRepository->save($user, true);
-                    $this->logger->info(sprintf('User %s booked Slot %s', $user, $slot->getText()));
-                    $this->eventDispatcher->dispatch(new SlotBookedEvent(Slot::fromEntity($slot)), SlotBookedEvent::NAME);
-                    $this->addFlash('success', $this->translator->trans('booking_successful'));
-                } else {
-                    $this->logger->warning(sprintf('User %s tried to book Slot %s', $user, $slot->getText()));
-                    $this->addFlash('warning', $this->translator->trans('slot_not_bookable'));
-                }
-            } catch (OptimisticLockException $ole) {
-                $this->addFlash('warning', $this->translator->trans('booking_failed'));
-            }
-        } elseif ($slot->getUser() !== $user) {
-            $this->addFlash('warning', $this->translator->trans('slot_already_booked'));
+        try {
+            $this->bookingService->bookSlot($slotId);
+            $this->addFlash('success', $this->translator->trans('booking_successful'));
+        } catch (BookingException $bfe) {
+            $this->addFlash($bfe->getCode() === BookingException::CRITICAL ? 'danger' : 'warning', $this->translator->trans($bfe->getMessage()));
         }
         if ($request->isXmlHttpRequest()) {
             return $this->redirectToRoute('app_slot_list');
@@ -67,27 +39,15 @@ class SlotBookingController extends AbstractController implements LoggerAwareInt
         return $this->redirectToRoute('app_slots');
     }
 
+
     #[Route('/cancel/{slotId}', name: 'app_slot_cancel')]
-    public function cancel(int $slotId, Request $request, SlotRepository $slotRepository, UserRepository $userRepository, BookingRuleChecker $bookRuleChecker): Response
+    public function cancel(int $slotId, Request $request): Response
     {
-        $slot = $slotRepository->find($slotId);
-        /** @var User $user */
-        $user = $this->getUser();
-        if ($slot === null) {
-            $this->addFlash('danger', $this->translator->trans('slot_not_found'));
-        } elseif ($slot->getUser() === $user) {
-            $slotDto = Slot::fromEntity($slot);
-            $slot->setUser(null);
-            $bookRuleChecker->raiseUserScoreBySlot($user, $slot);
-            $userRepository->save($user, true);
-            $slot->setAmountPaid(null);
-            $slotRepository->save($slot, true);
-            $this->logger->info(sprintf('User %s canceled Slot %s', $user, $slot->getText()));
-            $this->eventDispatcher->dispatch(new SlotCanceledEvent($slotDto), SlotCanceledEvent::NAME);
-            $this->addFlash('success', 'Stornierung erfolgreich');
-        } elseif ($slot->getUser() !== null) {
-            $this->logger->alert(sprintf('User %s tried to cancel Slot %s that belongs to %s', $user, $slot->getText(), $slot->getUser()));
-            $this->addFlash('warning', $this->translator->trans('slot_not_yours'));
+        try {
+            $this->bookingService->cancelSlot($slotId);
+            $this->addFlash('success', $this->translator->trans('cancel_successful'));
+        } catch (BookingException $bfe) {
+            $this->addFlash($bfe->getCode() === BookingException::CRITICAL ? 'danger' : 'warning', $this->translator->trans($bfe->getMessage()));
         }
 
         if ($request->isXmlHttpRequest()) {

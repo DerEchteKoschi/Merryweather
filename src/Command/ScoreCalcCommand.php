@@ -3,7 +3,7 @@
 namespace App\Command;
 
 use App\Merryweather\AppConfig;
-use App\Merryweather\BookingRuleChecker;
+use App\Merryweather\BookingService;
 use App\Merryweather\CronCommand;
 use App\Repository\UserRepository;
 use Psr\Log\LoggerAwareInterface;
@@ -21,7 +21,7 @@ class ScoreCalcCommand extends Command implements CronCommand, LoggerAwareInterf
 {
     use LoggerAwareTrait;
 
-    public function __construct(private UserRepository $userRepository, private BookingRuleChecker $scoreChecker, private AppConfig $config)
+    public function __construct(private readonly UserRepository $userRepository, private readonly BookingService $bookingService, private readonly AppConfig $config)
     {
         parent::__construct(null);
     }
@@ -30,7 +30,7 @@ class ScoreCalcCommand extends Command implements CronCommand, LoggerAwareInterf
     {
         $users = $this->userRepository->findBy(['active' => true]);
         foreach ($users as $user) {
-            if (!$this->scoreChecker->raiseUserScore($user, $this->config->getScoreRaiseStep())) {
+            if (!$this->bookingService->raiseUserScore($user, $this->config->getScoreRaiseStep())) {
                 $this->logger->info($user->getDisplayName() . ' reached maximum score');
             }
         }
