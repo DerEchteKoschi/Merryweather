@@ -3,32 +3,59 @@
 {% block title %}{{ 'slotbooking'|trans }}{% endblock %}
 
 {% block javascripts %}
-    {% if appConfig.mercureActive %}
     <script>
         function reloadList() {
             $.ajax("{{ path('app_slot_list') }}").done(function (response) {
-                $('#slotlist').replaceWith(response);
+                $('#slotlist').replaceWith(response.list);
+                $('#messages').replaceWith(response.messages);
+                initSlotListReloader();
             });
         }
 
-        const eventSource = new EventSource("{{ mercure('booking')|escape('js') }}");
-        eventSource.onmessage = reloadList;
+        function initSlotListReloader() {
+            $('#slotlist a').click(
+                function (event) {
+                    event.preventDefault();
+                    $(this).closest('.modal').modal('hide');
+                    $.ajax({url: $(this).attr('href'), dataType: '*'}).done(function (response) {
+                        $('#slotlist').replaceWith(response.list);
+                        $('#messages').replaceWith(response.messages);
+                        initSlotListReloader();
+                    });
+                }
+            );
+        }
 
         let status = 1;
         window.addEventListener("offline", () => {
             status = 0;
+            $('a.btn-success, a.btn-danger').addClass('disabled');
+            $('#offline').show();
         });
 
         window.addEventListener("online", () => {
             if (status !== 1) {
                 status = 1;
-                reloadList();
+                window.setTimeout(reloadList, 1500);
+                $('#offline').hide();
             }
         });
+
+        $(document).ready(function () {
+            initSlotListReloader();
+        });
     </script>
+    {% if appConfig.mercureActive %}
+        <script>
+            const eventSource = new EventSource("{{ mercure('booking')|escape('js') }}");
+            eventSource.onmessage = reloadList;
+        </script>
     {% endif %}
 {% endblock %}
 
 {% block body %}
-{{ include('slot_booking/list.html.twig') }}
+    <div id="offline" class="alert alert-warning fade show" role="alert" style="display:none;">
+        <i class="fa-solid fa-bolt"></i> {{ 'offline'|trans }}
+    </div>
+    {{ include('slot_booking/partials/list.html.twig') }}
 {% endblock %}

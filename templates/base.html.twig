@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="theme-color" content="#cfe2ff" />
+    <meta name="theme-color" content="#cfe2ff"/>
     <title>{{ appTitle }}: {% block title %}{{ 'welcome'|trans }}{% endblock %}</title>
     <link rel="icon" href="{{ asset('/favicon.ico') }}">
     {% block stylesheets %}
@@ -12,36 +12,43 @@
     <link rel="stylesheet" href="{{ asset('/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('/css/app.css') }}">
     <link rel="stylesheet" href="{{ asset('/fa/css/all.css') }}">
-    <link rel="manifest" href='/manifest.{{ app.request.locale }}.json' />
-    {% block javascripts %}
-        {{ encore_entry_script_tags('app') }}
-    {% endblock %}
+    <link rel="manifest" href='/manifest.{{ app.request.locale }}.json'/>
     <script src='{{ asset('/js/jquery-3.6.3.min.js') }}'></script>
     <script src='{{ asset('/js/popper.js') }}'></script>
     <script src='{{ asset('/js/bootstrap.bundle.min.js') }}'></script>
+    {% block javascripts %}
+        {{ encore_entry_script_tags('app') }}
+
+    {% endblock %}
 </head>
 <body class="bg-light merryweather">
 {% if app.user %}
-    {% include('navbar.html.twig') %}
+    {% include('partials/navbar.html.twig') %}
 {% endif %}
-<div class="container-fluid bg-body" style="margin: 0.5em">
+<div class="container-fluid bg-body">
     <section>
-        {% set flashes = app.flashes %}
-        {% set num = flashes|length %}
-        {% if num > 0 %}
-            <article class="my-3">
-                {% for type,messages in flashes %}
-                    {% for message in messages %}
-                        <div class="alert alert-{{ type }} alert-dismissible fade show" role="alert">
-                            {{ message|raw }}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-                    {% endfor %}
-                {% endfor %}
-            </article>
-        {% endif %}
+        <div id="msgContainer">{% include('partials/messages.html.twig') %}</div>
         {% block body %}{% endblock %}
     </section>
+    <script>
+        const observedElement = document.getElementById("msgContainer");
+        const config = {childList: true};
+
+        const callback = (list) => {
+            for (const item of list) {
+                item.addedNodes.forEach(function (element) {
+                    $(element).find('.alert').each(function (index, alert) {
+                        window.setTimeout(function () {
+                            $(alert).alert('close');
+                        }, 3500 + 1500 * index);
+                    });
+                });
+            }
+        };
+
+        const mo = new MutationObserver(callback);
+        mo.observe(observedElement, config);
+    </script>
 </div>
 </body>
 </html>

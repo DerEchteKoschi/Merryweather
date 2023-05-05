@@ -12,6 +12,8 @@ use App\Repository\DistributionRepository;
 use App\Repository\SlotRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\OptimisticLockException;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
@@ -30,7 +32,7 @@ class SlotBookingController extends AbstractController implements LoggerAwareInt
     }
 
     #[Route('/book/{slotId}', name: 'app_slot_book')]
-    public function book(int $slotId, SlotRepository $slotRepository, UserRepository $userRepository, BookingRuleChecker $bookRuleChecker): Response
+    public function book(int $slotId, Request $request, SlotRepository $slotRepository, UserRepository $userRepository, BookingRuleChecker $bookRuleChecker): Response
     {
         $slot = $slotRepository->find($slotId);
         /** @var User $user */
@@ -59,12 +61,14 @@ class SlotBookingController extends AbstractController implements LoggerAwareInt
         } elseif ($slot->getUser() !== $user) {
             $this->addFlash('warning', $this->translator->trans('slot_already_booked'));
         }
-
+        if ($request->isXmlHttpRequest()) {
+            return $this->redirectToRoute('app_slot_list');
+        }
         return $this->redirectToRoute('app_slots');
     }
 
     #[Route('/cancel/{slotId}', name: 'app_slot_cancel')]
-    public function cancel(int $slotId, SlotRepository $slotRepository, UserRepository $userRepository, BookingRuleChecker $bookRuleChecker): Response
+    public function cancel(int $slotId, Request $request, SlotRepository $slotRepository, UserRepository $userRepository, BookingRuleChecker $bookRuleChecker): Response
     {
         $slot = $slotRepository->find($slotId);
         /** @var User $user */
@@ -86,6 +90,9 @@ class SlotBookingController extends AbstractController implements LoggerAwareInt
             $this->addFlash('warning', $this->translator->trans('slot_not_yours'));
         }
 
+        if ($request->isXmlHttpRequest()) {
+            return $this->redirectToRoute('app_slot_list');
+        }
         return $this->redirectToRoute('app_slots');
     }
 
@@ -99,22 +106,17 @@ class SlotBookingController extends AbstractController implements LoggerAwareInt
         ]);
     }
 
-    #[Route('/slot/{slotId}', name: 'app_slot_row')]
-    public function slotRow(int $slotId, SlotRepository $slotRepository): Response
-    {
-        $slot = $slotRepository->find($slotId);
-        return $this->render('slot_booking/listitem.html.twig', [
-            'slot' => Slot::fromEntity($slot)
-        ]);
-    }
-
-    #[Route('/slotsList', name: 'app_slot_list')]
+    #[Route('/slotslist', name: 'app_slot_list')]
     public function slotList(DistributionRepository $distributionRepository): Response
     {
         $dists = Distribution::fromList($distributionRepository->findCurrentDistributions());
 
-        return $this->render('slot_booking/list.html.twig', [
+        $response = [];
+        $response['messages'] = $this->renderView('partials/messages.html.twig');
+        $response['list'] =  $this->renderView('slot_booking/partials/list.html.twig', [
             'dists' => $dists
         ]);
+
+        return new JsonResponse($response);
     }
 }
