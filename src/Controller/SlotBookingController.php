@@ -3,15 +3,11 @@
 namespace App\Controller;
 
 use App\Dto\Distribution;
-use App\Dto\Slot;
 use App\Merryweather\BookingException;
 use App\Merryweather\BookingService;
 use App\Repository\DistributionRepository;
-use App\Repository\SlotRepository;
-use Doctrine\ORM\OptimisticLockException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

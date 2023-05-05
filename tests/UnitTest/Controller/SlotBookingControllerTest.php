@@ -5,6 +5,7 @@ namespace UnitTest\Controller;
 use App\Controller\SlotBookingController;
 use App\Entity\Slot;
 use App\Entity\User;
+use App\Merryweather\BookingException;
 use App\Merryweather\BookingService;
 use App\Repository\DistributionRepository;
 use App\Repository\SlotRepository;
@@ -33,11 +34,17 @@ class SlotBookingControllerTest extends TestCase
 
     public function bookData()
     {
-        //@todo fix yield [(new Slot())->setStartAt(new \DateTimeImmutable())];
+        yield [(new Slot())->setStartAt(new \DateTimeImmutable())];
         yield [new Slot(), false];
         yield [null, false];
         yield [(new Slot())->setUser((new User())->setPhone('123'))];
         yield [new Slot(), true, true];
+        yield [new Slot(), false, false, BookingException::alreadyBooked()];
+        yield [new Slot(), false, false, BookingException::slotNotFound()];
+        yield [new Slot(), false, false, BookingException::slotNotYours()];
+        yield [new Slot(), false, false, BookingException::failed()];
+        yield [new Slot(), false, false, BookingException::notBookable()];
+
     }
 
     public function cancelData()
@@ -45,16 +52,18 @@ class SlotBookingControllerTest extends TestCase
         yield [(new Slot())->setStartAt(new \DateTimeImmutable())];
         yield [new Slot(), false];
         yield [null, false];
-       //@todo fix yield [(new Slot())->setUser((new User())->setPhone('123'))->setStartAt(new \DateTimeImmutable())];
+        yield [(new Slot())->setUser((new User())->setPhone('123'))->setStartAt(new \DateTimeImmutable())];
         yield [(new Slot())->setUser((new User())->setPhone('321')), true, true];
     }
 
     /**
      * @param $slot
-     * @param $bookable
+     * @param bool $bookable
+     * @param bool $throwOle
+     * @param bool|BookingException $throwBe
      * @dataProvider bookData
      */
-    public function testBook($slot, $bookable = true, $throwOle = false)
+    public function testBook($slot, $bookable = true, $throwOle = false, $throwBe = false)
     {
         $routerMock = $this->createMock(Router::class);
         $routerMock->method('generate')->willReturnArgument(0);
@@ -87,11 +96,12 @@ class SlotBookingControllerTest extends TestCase
             $slotRepositoryMock->method('lock')->willThrowException(new OptimisticLockException('', null));
         }
 
-        $userRepositoryMock = $this->createMock(UserRepository::class);
+
         $bookingServiceMock = $this->createMock(BookingService::class);
-        $bookingServiceMock->method('userCanBook')->willReturn($bookable);
         $bookingServiceMock->setLogger(new NullLogger());
-        $eventDp = $this->createMock(EventDispatcherInterface::class);
+        if ($throwBe !== false) {
+            $bookingServiceMock->method('bookSlot')->willThrowException($throwBe);
+        }
 
         $controller = new SlotBookingController($this->translatorMock(), $bookingServiceMock);
         $controller->setContainer($containerMock);
@@ -141,11 +151,9 @@ class SlotBookingControllerTest extends TestCase
         $slotRepositoryMock = $this->createMock(SlotRepository::class);
         $slotRepositoryMock->method('find')->willReturn($slot);
 
-        $userRepositoryMock = $this->createMock(UserRepository::class);
         $bookingRuleCheckerMock = $this->createMock(BookingService::class);
         $bookingRuleCheckerMock->method('userCanCancel')->willReturn($cancellable);
         $bookingRuleCheckerMock->setLogger(new NullLogger());
-        $eventDp = $this->createMock(EventDispatcherInterface::class);
 
         $controller = new SlotBookingController($this->translatorMock(), $bookingRuleCheckerMock);
         $controller->setContainer($containerMock);

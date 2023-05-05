@@ -2,10 +2,9 @@ name: Tests
 run-name: running tests triggered by action '${{ github.event_name }}' on '${{ github.ref_name }}' by @${{ github.actor }}
 
 on:
-  workflow_dispatch:
-#  push:
-#    branches:
-#      - '**'
+  push:
+    branches:
+      - '**'
 jobs:
   codestyle:
     runs-on: ubuntu-latest

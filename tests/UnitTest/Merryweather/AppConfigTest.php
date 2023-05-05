@@ -31,6 +31,7 @@ class AppConfigTest extends TestCase
         $this->assertTrue($appConfig->isAdminCancelAllowed());
         $this->assertTrue($appConfig->isMercureActive());
         $this->assertSame([[1, 2, 3],[4,5]], $appConfig->getScoreConfig());
+        $this->assertSame('1,2,3;4,5', $appConfig->getScoreConfigRaw());
         $this->assertEquals(6, $appConfig->getScoreRaiseStep());
         $this->assertEquals(5, $appConfig->getScoreLimit());
         $this->assertEquals(6, $appConfig->getMonthCount());

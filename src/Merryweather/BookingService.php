@@ -165,11 +165,13 @@ class BookingService implements LoggerAwareInterface
 
     public function userCanBook(User $user, Slot $slot): bool
     {
-        return ($slot->getDistribution() !== null)
-               && !$this->isSlotInPast($slot)
-               && ($slot->getUser() === null)
-               && $this->hasBookednoOtherSlotOfSameDistribution($slot, $user)
-               && $user->getScore() >= $this->pointsNeededForSlot($slot);
+        $can = true;
+        $can = $can && ($slot->getDistribution() !== null);
+        $can = $can && !$this->isSlotInPast($slot);
+        $can = $can && ($slot->getUser() === null);
+        $can = $can && $this->hasBookednoOtherSlotOfSameDistribution($slot, $user);
+        $can = $can && $user->getScore() >= $this->pointsNeededForSlot($slot);
+        return $can;
     }
 
     public function userCanCancel(User $user, Slot $slot): bool
