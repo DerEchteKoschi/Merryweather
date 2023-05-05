@@ -1,0 +1,21 @@
+name: ghatest
+run-name: test...
+
+# Controls when the workflow will run
+on:
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  # This workflow contains a single job called "build"
+  deployment:
+    runs-on: ubuntu-latest
+    steps:
+      - name: prepare
+        run: sudo apt install lftp
+      - name: move old cache
+        run: lftp -e "mv var/cache/test var/cache/prod_bak; exit" -u ${{ vars.DEPLOYMENT_USER }},${{ secrets.DEPLOYMENT_PASSWORD }} ${{ vars.DEPLOYMENT_HOST }}
+      - name: delete old cache
+        continue-on-error: true
+        run: lftp -e "rm -r var/cache/prod_bak; exit" -u ${{ vars.DEPLOYMENT_USER }},${{ secrets.DEPLOYMENT_PASSWORD }} ${{ vars.DEPLOYMENT_HOST }}
+
