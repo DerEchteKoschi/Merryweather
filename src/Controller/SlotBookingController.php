@@ -29,7 +29,7 @@ class SlotBookingController extends AbstractController implements LoggerAwareInt
     }
 
     #[Route('/book/{slotId}', name: 'app_slot_book')]
-    public function book(int $slotId): Response
+    public function book(int $slotId, Request $request): Response
     {
         try {
             $this->bookingService->bookSlot($slotId);
@@ -45,7 +45,7 @@ class SlotBookingController extends AbstractController implements LoggerAwareInt
 
 
     #[Route('/cancel/{slotId}', name: 'app_slot_cancel')]
-    public function cancel(int $slotId): Response
+    public function cancel(int $slotId, Request $request): Response
     {
         try {
             $this->bookingService->cancelSlot($slotId);
