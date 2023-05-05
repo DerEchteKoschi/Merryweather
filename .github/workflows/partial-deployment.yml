@@ -49,8 +49,9 @@ jobs:
         run: |
           mkdir deploy
           sudo mv var deploy/
-#      - name: clear cache
-#        run: lftp -e "rm -r var/cache/; exit" -u ${{ vars.DEPLOYMENT_USER }},${{ secrets.DEPLOYMENT_PASSWORD }} ${{ vars.DEPLOYMENT_HOST }}
+      - name: clear cache
+        continue-on-error: true
+        run: lftp -e "rm -r var/cache/; exit" -u ${{ vars.DEPLOYMENT_USER }},${{ secrets.DEPLOYMENT_PASSWORD }} ${{ vars.DEPLOYMENT_HOST }}
       - name: copy files to target
         run: cd deploy;lftp -e "mirror -R --parallel=20 . .; exit" -u ${{ vars.DEPLOYMENT_USER }},${{ secrets.DEPLOYMENT_PASSWORD }} ${{ vars.DEPLOYMENT_HOST }}
 
