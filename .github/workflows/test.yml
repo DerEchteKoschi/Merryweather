@@ -1,5 +1,5 @@
 name: Tests
-run-name: running tests triggered by @${{ github.event_name }} on @${{ github.ref_name }}
+run-name: running tests triggered by action '${{ github.event_name }}' on '${{ github.ref_name }}' by @${{ github.actor }}
 
 on:
   push:
@@ -33,7 +33,7 @@ jobs:
       - name: templates
         run: XDEBUG_MODE=off bin/console lint:twig templates
       - name: translations
-        run: XDEBUG_MODE=off bin/console lint:xliff /translations/*
+        run: XDEBUG_MODE=off bin/console lint:xliff translations/*
 
   unittest:
     runs-on: ubuntu-latest
