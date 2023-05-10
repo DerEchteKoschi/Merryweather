@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Shared\UUID;
 use App\Repository\CrontabRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -9,10 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: CrontabRepository::class)]
 class Crontab
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
+    use UUID;
 
     #[ORM\Column(length: 255)]
     private ?string $expression = null;
