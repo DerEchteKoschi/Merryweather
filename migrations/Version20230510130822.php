@@ -98,7 +98,7 @@ final class Version20230510130822 extends AbstractMigration
             $newId = $this->genUUID((int)$slotId['id']);
             $this->connection->executeStatement('UPDATE slot SET id = "' . $newId . '" WHERE id= ' . $slotId['id']);
         }
-        $distIds = $this->connection->executeQuery('SELECT id FROM user')->fetchAllAssociative();
+        $distIds = $this->connection->executeQuery('SELECT id FROM distribution')->fetchAllAssociative();
         foreach ($distIds as $distId) {
             $newId = $this->genUUID((int)$distId['id']);
             $this->connection->executeStatement('UPDATE distribution SET id = "' . $newId . '" WHERE id= ' . $distId['id']);
@@ -128,7 +128,7 @@ final class Version20230510130822 extends AbstractMigration
             $newId++;
             $this->connection->executeStatement('UPDATE slot SET id = "' . $newId . '" WHERE id= ' . $slotId['id']);
         }
-        $distIds = $this->connection->executeQuery('SELECT id FROM user')->fetchAllAssociative();
+        $distIds = $this->connection->executeQuery('SELECT id FROM distribution')->fetchAllAssociative();
         $newId = 0;
         foreach ($distIds as $distId) {
             $newId++;
