@@ -14,7 +14,7 @@ use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-#[Route('/profile/{_locale}/{_tenant}')]
+#[Route('/profile/{_locale}')]
 class ProfileController extends AbstractController
 {
     public function __construct(private readonly TranslatorInterface $translator)

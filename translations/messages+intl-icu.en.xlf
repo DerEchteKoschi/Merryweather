@@ -445,6 +445,10 @@
         <source>offline</source>
         <target>Your device is offline.</target>
       </trans-unit>
+      <trans-unit id="cancel_successful">
+        <source>cancel_successful</source>
+        <target>Cancellation was succesful..</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

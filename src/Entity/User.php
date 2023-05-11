@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use App\Entity\Shared\ID;
+use App\Entity\Shared\UUID;
 use App\Repository\UserRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -12,16 +14,13 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface, \Stringable
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
+    use UUID;
 
     #[ORM\Column(length: 255, unique: true)]
     #[Assert\NotBlank]
     private ?string $display_name = null;
 
-    /** @var string[]  */
+    /** @var string[] */
     #[ORM\Column]
     private array $roles = [];
 
@@ -87,11 +86,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \String
     public function getFirstname(): ?string
     {
         return $this->firstname;
-    }
-
-    public function getId(): ?int
-    {
-        return $this->id;
     }
 
     public function getLastLogin(): ?\DateTimeImmutable

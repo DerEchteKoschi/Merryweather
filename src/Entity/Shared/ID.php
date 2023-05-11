@@ -2,11 +2,11 @@
 
 namespace App\Entity\Shared;
 
+use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Doctrine\UuidV7Generator;
 use Ramsey\Uuid\UuidInterface;
-use Doctrine\ORM\Mapping as ORM;
 
-trait UUID
+trait ID
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
