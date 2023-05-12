@@ -50,13 +50,14 @@ final class Version20230510130822 extends AbstractMigration
     public function up(Schema $schema): void
     {
         $this->addSql('ALTER TABLE slot DROP FOREIGN KEY FK_AC0E20676EB6DDB5');
+        $this->addSql('ALTER TABLE slot DROP FOREIGN KEY FK_AC0E2067A76ED395');
         $this->addSql('ALTER TABLE app_config CHANGE id id CHAR(36) NOT NULL COMMENT \'(DC2Type:uuid)\'');
         $this->addSql('ALTER TABLE crontab CHANGE id id CHAR(36) NOT NULL COMMENT \'(DC2Type:uuid)\'');
 
         $this->addSql('ALTER TABLE distribution CHANGE id id CHAR(36) NOT NULL COMMENT \'(DC2Type:uuid)\'');
         $this->addSql('ALTER TABLE slot CHANGE id id CHAR(36) NOT NULL COMMENT \'(DC2Type:uuid)\', CHANGE distribution_id distribution_id CHAR(36) NOT NULL COMMENT \'(DC2Type:uuid)\', CHANGE user_id user_id CHAR(36) DEFAULT NULL COMMENT \'(DC2Type:uuid)\'');
         $this->addSql('ALTER TABLE user CHANGE id id CHAR(36) NOT NULL COMMENT \'(DC2Type:uuid)\'');
-
+        $this->addSql('ALTER TABLE slot ADD CONSTRAINT FK_AC0E2067A76ED395 FOREIGN KEY (user_id) REFERENCES user (id)');
     }
 
     public function down(Schema $schema): void
