@@ -42,6 +42,8 @@ class UserFixture extends Fixture
         $user->setScore(5);
         $user->setPassword($this->userPasswordHasher->hashPassword($user, $user->getDisplayName()));
 
+        $this->addReference($displayName, $user);
+
         return $user;
     }
 }

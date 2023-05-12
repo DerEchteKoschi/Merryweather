@@ -5,11 +5,11 @@ namespace App\Dto;
 class User
 {
     /**
-     * @param int|null    $id
+     * @param string|null    $id
      * @param string|null $displayName
      * @param string|null $phone
      */
-    public function __construct(public ?int $id, public ?string $displayName, public ?string $phone)
+    public function __construct(public ?string $id, public ?string $displayName, public ?string $phone)
     {
     }
 
