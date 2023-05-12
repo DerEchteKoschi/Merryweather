@@ -22,7 +22,7 @@ class DistributionFixture extends Fixture implements DependentFixtureInterface
     /**
      * @param ObjectManager $manager
      */
-    protected function createDistribution(ObjectManager $manager, $from, $till): void
+    protected function createDistribution(ObjectManager $manager, string $from, string $till): void
     {
         $dist = new Distribution();
         $dist->setActiveTill(new DateTimeImmutable($till));
