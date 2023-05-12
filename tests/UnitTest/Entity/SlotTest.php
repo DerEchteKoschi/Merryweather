@@ -21,7 +21,6 @@ class SlotTest extends TestCase
     public function testEntity()
     {
         $e = new Slot();
-        $this->assertNull($e->getId());
         $this->assertNull($e->getText());
         $this->assertNull($e->getUser());
         $this->assertNull($e->getDistribution());

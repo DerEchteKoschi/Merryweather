@@ -1,6 +1,7 @@
 <?php
 
 namespace UnitTest\Merryweather;
+require_once(__DIR__ . '/../Test/UUIDGen.php');
 
 use App\Entity\Distribution;
 use App\Entity\Slot;
@@ -12,10 +13,10 @@ use App\Repository\UserRepository;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use PHPUnit\Framework\TestCase;
-use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use Test\UUIDGen;
 
 /**
  * @small
@@ -23,6 +24,7 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
  */
 class BookingServiceTest extends TestCase
 {
+    use UUIDGen;
     private $appConfigMock;
     private $userRepositoryMock;
     private $securityMock;
@@ -42,7 +44,7 @@ class BookingServiceTest extends TestCase
         $id = 1;
         foreach (['-10 minutes', 'now', '+10 minutes'] as $dateString) {
             $slotMock = $this->createMock(Slot::class);
-            $slotMock->method('getId')->willReturn($id);
+            $slotMock->method('getId')->willReturn($this->genFakeUUID($id));
             $slotMock->method('getText')->willReturn('ID ' . $id++);
             $slotMock->method('getDistribution')->willReturn($distMock);
             $slotMock->method('getStartAt')->willReturn(new DateTimeImmutable($dateString));
@@ -101,7 +103,11 @@ class BookingServiceTest extends TestCase
 
     public function testBookAndCancel()
     {
-        $user = (new User())->setScore(2);
+        $user = $this->createMock(User::class);
+        $user->method('getScore')->willReturn(2);
+        $user->method('getId')->willReturn('');
+
+
 
         $this->securityMock->method('getUser')->willReturn($user);
         $bookingService = $this->createBookingService();

@@ -17,11 +17,6 @@ class AppConfig
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $value = null;
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
-
     public function getConfigKey(): ?string
     {
         return $this->configKey;
