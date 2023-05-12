@@ -90,22 +90,22 @@ final class Version20230510130822 extends AbstractMigration
         foreach ($userIds as $userId) {
             $slotIds = $this->connection->executeQuery('SELECT id FROM slot WHERE user_id = ' . $userId['id'])->fetchAllAssociative();
             $newId = $this->genUUID((int)$userId['id']);
-            $this->update('UPDATE slot SET user_id = NULL WHERE user_id= ' . $userId['id']);
-            $this->update('UPDATE user SET id = "' . $newId . '" WHERE id= ' . $userId['id']);
+            $this->update('UPDATE slot SET user_id = NULL WHERE user_id= "' . $userId['id'] . '"');
+            $this->update('UPDATE user SET id = "' . $newId . '" WHERE id= "' . $userId['id'] . '"');
             foreach ($slotIds as $slotId) {
-                $this->update('UPDATE slot SET user_id = "' . $newId . '" WHERE id= ' . $slotId['id']);
+                $this->update('UPDATE slot SET user_id = "' . $newId . '" WHERE id= "' . $slotId['id'] . '"');
             }
         }
         $slotIds = $this->connection->executeQuery('SELECT id FROM slot')->fetchAllAssociative();
         foreach ($slotIds as $slotId) {
             $newId = $this->genUUID((int)$slotId['id']);
-            $this->update('UPDATE slot SET id = "' . $newId . '" WHERE id= ' . $slotId['id']);
+            $this->update('UPDATE slot SET id = "' . $newId . '" WHERE id= "' . $slotId['id'] . '"');
         }
         $distIds = $this->connection->executeQuery('SELECT id FROM distribution')->fetchAllAssociative();
         foreach ($distIds as $distId) {
             $newId = $this->genUUID((int)$distId['id']);
-            $this->update('UPDATE distribution SET id = "' . $newId . '" WHERE id= ' . $distId['id']);
-            $this->update('UPDATE slot SET distribution_id = "' . $newId . '" WHERE distribution_id= ' . $distId['id']);
+            $this->update('UPDATE distribution SET id = "' . $newId . '" WHERE id= "' . $distId['id'] . '"');
+            $this->update('UPDATE slot SET distribution_id = "' . $newId . '" WHERE distribution_id= "' . $distId['id'] . '"');
         }
         echo $this->sql;
     }
@@ -120,24 +120,24 @@ final class Version20230510130822 extends AbstractMigration
         foreach ($userIds as $userId) {
             $slotIds = $this->connection->executeQuery('SELECT id FROM slot WHERE user_id = ' . $userId['id'])->fetchAllAssociative();
             $newId++;
-            $this->update('UPDATE slot SET user_id = NULL WHERE user_id= ' . $userId['id']);
-            $this->update('UPDATE user SET id = "' . $newId . '" WHERE id= ' . $userId['id']);
+            $this->update('UPDATE slot SET user_id = NULL WHERE user_id= "' . $userId['id'] . '"');
+            $this->update('UPDATE user SET id = "' . $newId . '" WHERE id= "' . $userId['id'] . '"');
             foreach ($slotIds as $slotId) {
-                $this->update('UPDATE slot SET user_id = "' . $newId . '" WHERE id= ' . $slotId['id']);
+                $this->update('UPDATE slot SET user_id = "' . $newId . '" WHERE id= "' . $slotId['id'] .'"');
             }
         }
         $slotIds = $this->connection->executeQuery('SELECT id FROM slot')->fetchAllAssociative();
         $newId =0;
         foreach ($slotIds as $slotId) {
             $newId++;
-            $this->update('UPDATE slot SET id = "' . $newId . '" WHERE id= ' . $slotId['id']);
+            $this->update('UPDATE slot SET id = "' . $newId . '" WHERE id= "' . $slotId['id'] . '"');
         }
         $distIds = $this->connection->executeQuery('SELECT id FROM distribution')->fetchAllAssociative();
         $newId = 0;
         foreach ($distIds as $distId) {
             $newId++;
-            $this->update('UPDATE distribution SET id = "' . $newId . '" WHERE id= ' . $distId['id']);
-            $this->update('UPDATE slot SET distribution_id = "' . $newId . '" WHERE distribution_id= ' . $distId['id']);
+            $this->update('UPDATE distribution SET id = "' . $newId . '" WHERE id= "' . $distId['id'] . '"');
+            $this->update('UPDATE slot SET distribution_id = "' . $newId . '" WHERE distribution_id= "' . $distId['id'] . '"');
         }
     }
 
