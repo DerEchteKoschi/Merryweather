@@ -31,7 +31,7 @@ class BookingService implements LoggerAwareInterface
     /**
      * @throws BookingException
      */
-    public function bookSlot(int|Slot $slot): void
+    public function bookSlot(string|Slot $slot): void
     {
         /** @var User $user */
         $user = $this->security->getUser();
@@ -68,7 +68,7 @@ class BookingService implements LoggerAwareInterface
     /**
      * @throws BookingException
      */
-    public function cancelSlot(int|Slot $slot, bool $cancelByAdmin = false): void
+    public function cancelSlot(string|Slot $slot, bool $cancelByAdmin = false): void
     {
         /** @var User $user */
         $user = $this->security->getUser();

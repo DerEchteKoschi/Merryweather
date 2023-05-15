@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Shared\UUID;
 use App\Repository\DistributionRepository;
 use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -12,10 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: DistributionRepository::class)]
 class Distribution implements \Stringable
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
+    use UUID;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?DateTimeInterface $active_from = null;
@@ -61,11 +59,6 @@ class Distribution implements \Stringable
     public function getActiveTill(): ?DateTimeInterface
     {
         return $this->active_till;
-    }
-
-    public function getId(): ?int
-    {
-        return $this->id;
     }
 
     /**

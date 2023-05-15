@@ -8,13 +8,13 @@ use Stringable;
 class Distribution implements Stringable
 {
     /**
-     * @param int                    $id
+     * @param string                    $id
      * @param string                 $text
      * @param DateTimeInterface|null $activeFrom
      * @param DateTimeInterface|null $activeTill
      * @param Slot[]                 $slots
      */
-    private function __construct(public int $id, public string $text, public ?DateTimeInterface $activeFrom, public ?DateTimeInterface $activeTill, public array $slots)
+    private function __construct(public string $id, public string $text, public ?DateTimeInterface $activeFrom, public ?DateTimeInterface $activeTill, public array $slots)
     {
     }
 

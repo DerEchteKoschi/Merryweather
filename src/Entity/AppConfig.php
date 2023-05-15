@@ -2,27 +2,20 @@
 
 namespace App\Entity;
 
+use App\Entity\Shared\UUID;
 use App\Repository\AppConfigRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: AppConfigRepository::class)]
 class AppConfig
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
+    use UUID;
 
     #[ORM\Column(length: 255, unique: true)]
     private ?string $configKey = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $value = null;
-
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
 
     public function getConfigKey(): ?string
     {

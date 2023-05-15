@@ -15,7 +15,6 @@ class CrontabTest extends TestCase
     public function testEntity()
     {
         $e = new Crontab();
-        $this->assertNull($e->getId());
         $this->assertNull($e->getArguments());
         $e->setArguments('-v -x blah');
         $this->assertEquals('-v -x blah', $e->getArguments());

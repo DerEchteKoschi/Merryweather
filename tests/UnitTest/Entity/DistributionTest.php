@@ -16,7 +16,6 @@ class DistributionTest extends TestCase
     public function testEntity()
     {
         $e = new Distribution();
-        $this->assertNull($e->getId());
         $this->assertNull($e->getText());
         $this->assertNotNull($e->getSlots());
         $this->assertCount(0, $e->getSlots());

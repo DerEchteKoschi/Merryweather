@@ -15,7 +15,6 @@ class UserTest extends TestCase
     public function testEntity()
     {
         $e = new User();
-        $this->assertNull($e->getId());
         $this->assertNull($e->getPhone());
         $this->assertNull($e->getDisplayName());
         $this->assertNull($e->getScore());

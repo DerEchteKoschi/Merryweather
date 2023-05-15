@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Shared\UUID;
 use App\Repository\SlotRepository;
 use DateTimeImmutable;
 use Doctrine\DBAL\Types\Types;
@@ -10,10 +11,8 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: SlotRepository::class)]
 class Slot
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
+    use UUID;
+
     #[ORM\Version, ORM\Column(type: 'integer')]
     private int $version = 1;
     #[ORM\ManyToOne(inversedBy: 'slots')]
@@ -32,11 +31,6 @@ class Slot
     public function getDistribution(): ?Distribution
     {
         return $this->distribution;
-    }
-
-    public function getId(): ?int
-    {
-        return $this->id;
     }
 
     public function getStartAt(): DateTimeImmutable

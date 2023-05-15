@@ -1,6 +1,7 @@
 <?php
 
 namespace UnitTest\Twig;
+require_once(__DIR__ . '/../Test/UUIDGen.php');
 
 use App\Entity\Slot;
 use App\Entity\User;
@@ -15,6 +16,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Test\UUIDGen;
 
 /**
  * @small
@@ -22,6 +24,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class MerryweatherExtensionRuntimeTest extends TestCase
 {
+    use UUIDGen;
     public function logTestProvider(): Generator
     {
         $dt = new DateTimeImmutable('now');
@@ -133,7 +136,7 @@ class MerryweatherExtensionRuntimeTest extends TestCase
     protected function getSlotMock(): Slot|MockObject
     {
         $slot = $this->createMock(Slot::class);
-        $slot->method('getId')->willReturn(1);
+        $slot->method('getId')->willReturn($this->genFakeUUID(1));
         $slot->method('getUser')->willReturn(null);
         $slot->method('getStartAt')->willReturn(new DateTimeImmutable('01.01.2023 00:00'));
         $slot->method('getText')->willReturn('text');

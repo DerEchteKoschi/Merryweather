@@ -12,6 +12,8 @@
         "doctrine/orm": "^2.14",
         "dragonmantank/cron-expression": "*",
         "easycorp/easyadmin-bundle": "^4.5",
+        "hakam/multi-tenancy-bundle": "^2.0",
+        "ramsey/uuid-doctrine": "^2.0",
         "symfony/asset": "6.2.*",
         "symfony/console": "6.2.*",
         "symfony/dotenv": "6.2.*",
