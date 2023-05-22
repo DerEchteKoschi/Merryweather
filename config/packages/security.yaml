@@ -30,7 +30,7 @@ security:
                 secret: '%kernel.secret%' # required
                 lifetime: '%env(int:SESSION_LIFETIME)%'
                 always_remember_me: true
-                signature_properties: ['password']
+                signature_properties: ['password', 'active']
                 token_provider:
                     doctrine: true
             # activate different ways to authenticate
