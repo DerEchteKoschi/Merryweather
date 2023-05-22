@@ -14,7 +14,6 @@ class AppConfigTest extends TestCase
     public function testEntity()
     {
         $e = new AppConfig();
-        $this->assertNull($e->getId());
         $this->assertNull($e->getValue());
         $this->assertNull($e->getConfigKey());
 

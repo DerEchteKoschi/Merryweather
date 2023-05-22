@@ -43,11 +43,6 @@ class Crontab
         return $this->expression;
     }
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
-
     public function getLastExecution(): ?\DateTimeImmutable
     {
         return $this->last_execution;
